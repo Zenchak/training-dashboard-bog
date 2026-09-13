@@ -1,6 +1,305 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Training 2026</title><style>
-:root{--bg:#07111f;--p:#0e1d30;--p2:#132842;--t:#eef7ff;--m:#94abc1;--b:#39d98a;--r:#ff9f43;--s:#35b8ff;--h:#c99cff;--w:#ffd166;--tr:#f76c6c}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0d223b,#07111f 260px);color:var(--t);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.wrap{max-width:1200px;margin:auto;padding:20px 14px 60px}h1{font-size:clamp(34px,7vw,60px);margin:4px 0 8px;letter-spacing:-.04em}.sub{color:var(--m);font-size:13px}.tag{display:inline-block;color:#73e7ff;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.13em}.grid{display:grid;gap:12px}.kpis{grid-template-columns:repeat(6,1fr);margin:20px 0}.card{background:linear-gradient(180deg,#11243a,#0a192a);border:1px solid #203b56;border-radius:18px;padding:15px}.k .l,.small{color:var(--m);font-size:11px}.k .v{font-weight:850;font-size:24px;margin-top:5px}.disc{grid-template-columns:repeat(6,1fr)}.d{border-left:4px solid var(--c)}.d b{font-size:22px}.section{display:flex;justify-content:space-between;align-items:center;margin:24px 2px 10px}.section h2{font-size:19px;margin:0}.charts{grid-template-columns:1fr 1fr}.chart{height:300px}.chart canvas{width:100%;height:230px;margin-top:12px}.records{grid-template-columns:repeat(4,1fr)}.record b{font-size:18px}.controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}.controls>*{background:#091827;color:var(--t);border:1px solid #28445f;border-radius:10px;padding:10px}.controls input{flex:1;min-width:180px}.table{overflow:auto;border:1px solid #203b56;border-radius:15px}table{border-collapse:collapse;width:100%;min-width:820px}th,td{padding:11px;border-bottom:1px solid #1c344c;font-size:12px;text-align:left}th{background:#0c1d30;color:#a7bdd1;position:sticky;top:0}.pill{display:inline-flex;gap:6px;align-items:center;background:#112a42;padding:5px 8px;border-radius:999px}.dot{width:8px;height:8px;border-radius:50%;background:var(--c)}footer{margin-top:16px;color:var(--m);font-size:11px;line-height:1.45}@media(max-width:900px){.kpis,.disc{grid-template-columns:repeat(3,1fr)}.records{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.charts{grid-template-columns:1fr}.kpis,.disc{grid-template-columns:repeat(2,1fr)}}
-</style></head><body><div class="wrap"><div class="tag">Bogdan · Training dashboard</div><h1>2026 in movimento</h1><div id="coverage" class="sub"></div><div id="kpis" class="grid kpis"></div><div class="section"><h2>Discipline</h2><span class="small">Totali registrati</span></div><div id="disc" class="grid disc"></div><div class="section"><h2>Andamento</h2><span class="small">Grafici interattivi</span></div><div class="grid charts"><div class="card chart"><b>Distanza mensile</b><canvas id="monthly"></canvas></div><div class="card chart"><b>Km bici cumulativi</b><canvas id="cum"></canvas></div><div class="card chart"><b>Ore di allenamento</b><canvas id="hours"></canvas></div><div class="card chart"><b>Peso</b><canvas id="weight"></canvas></div></div><div class="section"><h2>Record</h2></div><div id="records" class="grid records"></div><div class="section"><h2>Diario completo</h2><span id="count" class="small"></span></div><div class="controls"><input id="q" placeholder="Cerca disciplina, luogo, nota…"><select id="type"><option value="">Tutte le discipline</option></select><select id="month"><option value="">Tutti i mesi</option></select><button id="reset">Reset</button><button id="csv">CSV</button></div><div class="table"><table><thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th><th>Note</th></tr></thead><tbody id="rows"></tbody></table></div><footer>Copertura: 25 aprile–12 settembre 2026. I campi mancanti restano vuoti; non vengono inventati valori. Il D+ del 25 luglio non è sommato ai totali perché il dato completo non è disponibile.</footer></div><script src="data.js"></script><script>
-const C={Bici:"#39d98a",Corsa:"#ff9f43",Nuoto:"#35b8ff",Trekking:"#c99cff",Camminata:"#ffd166",Trail:"#f76c6c"},MS=["2026-04","2026-05","2026-06","2026-07","2026-08","2026-09"],ML={"2026-04":"Apr","2026-05":"Mag","2026-06":"Giu","2026-07":"Lug","2026-08":"Ago","2026-09":"Set"};function sec(x){let a=x.split(":").map(Number);return a[0]*3600+a[1]*60+a[2]}function hrs(x){return sec(x)/3600}function n(x,d=1){return new Intl.NumberFormat("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d}).format(x)}function dt(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(s+"T12:00:00"))}function fh(v){let h=Math.floor(v),m=Math.round((v-h)*60);return h+"h "+String(m).padStart(2,"0")+"m"}function met(a){if(a.type=="Bici")return n(a.km/hrs(a.duration),1)+" km/h";if(a.type=="Nuoto"){let p=sec(a.duration)/(a.km*10);return Math.floor(p/60)+":"+String(Math.round(p%60)).padStart(2,"0")+"/100m"}let p=sec(a.duration)/a.km;return Math.floor(p/60)+":"+String(Math.round(p%60)).padStart(2,"0")+"/km"}A.forEach(a=>{a.month=a.date.slice(0,7);a.metric=met(a)});let th=A.reduce((s,a)=>s+hrs(a.duration),0),tk=A.reduce((s,a)=>s+a.km,0),dp=A.reduce((s,a)=>s+(a.dplus||0),0),bk=A.filter(a=>a.type=="Bici").reduce((s,a)=>s+a.km,0),wd=W.at(-1).kg-W[0].kg;coverage.textContent=`${A.length} attività · ${fh(th)} · 25 aprile → 12 settembre 2026`;kpis.innerHTML=[["Attività",A.length,"sessioni"],["Distanza",n(tk,2)+" km","tutte le discipline"],["Tempo",fh(th),"durata attiva"],["Bici",n(bk,2)+" km",A.filter(a=>a.type=="Bici").length+" uscite"],["D+ noto",Math.round(dp).toLocaleString("it-IT")+" m","campi disponibili"],["Peso",n(W.at(-1).kg,1)+" kg",(wd<0?"−":"+")+n(Math.abs(wd),1)+" kg"]].map(x=>`<div class="card k"><div class="l">${x[0]}</div><div class="v">${x[1]}</div><div class="small">${x[2]}</div></div>`).join("");let T=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto"];disc.innerHTML=T.map(t=>{let z=A.filter(a=>a.type==t),km=z.reduce((s,a)=>s+a.km,0),h=z.reduce((s,a)=>s+hrs(a.duration),0);return `<div class="card d" style="--c:${C[t]}"><div class="small">${t}</div><b>${n(km,2)} km</b><div class="small">${z.length} attività · ${fh(h)}</div></div>`}).join("");let lb=[...A].filter(a=>a.type=="Bici").sort((a,b)=>b.km-a.km)[0],lr=[...A].filter(a=>["Corsa","Trail"].includes(a.type)).sort((a,b)=>b.km-a.km)[0],mc=[...A].filter(a=>Number.isFinite(a.dplus)).sort((a,b)=>b.dplus-a.dplus)[0],ls=[...A].sort((a,b)=>sec(b.duration)-sec(a.duration))[0];records.innerHTML=[["Bici più lunga",n(lb.km,2)+" km",dt(lb.date)],["Corsa/trail più lungo",n(lr.km,2)+" km",dt(lr.date)],["D+ più alto",mc.dplus.toLocaleString("it-IT")+" m",dt(mc.date)],["Sessione più lunga",ls.duration,dt(ls.date)]].map(x=>`<div class="card record"><div class="small">${x[0]}</div><b>${x[1]}</b><div class="small">${x[2]}</div></div>`).join("");
-function cv(id){let e=document.getElementById(id),r=e.getBoundingClientRect(),d=devicePixelRatio||1;e.width=r.width*d;e.height=r.height*d;let c=e.getContext("2d");c.scale(d,d);return[c,r.width,r.height,e]}function axes(c,w,h,max,min=0){let l=40,r=8,t=10,b=25;c.strokeStyle="#2b4662";c.fillStyle="#90a8be";c.font="10px system-ui";for(let i=0;i<5;i++){let y=t+(h-t-b)*i/4,v=max-(max-min)*i/4;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke();c.fillText(Math.round(v*10)/10,2,y+3)}return[l,r,t,b]}function bars(){let[c,w,h,e]=cv("monthly"),D=MS.map(m=>({m,v:A.filter(a=>a.month==m).reduce((s,a)=>s+a.km,0)})),mx=Math.ceil(Math.max(...D.map(x=>x.v))/100)*100,[l,r,t,b]=axes(c,w,h,mx),g=(w-l-r)/D.length,bw=Math.min(55,g*.58);D.forEach((x,i)=>{let bh=(h-t-b)*x.v/mx,xx=l+i*g+(g-bw)/2;c.fillStyle="#6ae4ff";c.fillRect(xx,h-b-bh,bw,bh);c.fillStyle="#9bb0c7";c.textAlign="center";c.fillText(ML[x.m],xx+bw/2,h-6)});c.textAlign="left"}function line(id,D,color,min0=true){let[c,w,h,e]=cv(id),v=D.map(x=>x.v),mn=min0?0:Math.min(...v)-1,mx=Math.max(...v)+(min0?Math.max(...v)*.05:1),[l,r,t,b]=axes(c,w,h,mx,mn),xs=(w-l-r)/Math.max(1,D.length-1),P=D.map((x,i)=>({x:l+i*xs,y:t+(mx-x.v)/(mx-mn)*(h-t-b),...x}));c.strokeStyle=color;c.lineWidth=2.5;c.beginPath();P.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.stroke();P.forEach(p=>{c.beginPath();c.arc(p.x,p.y,3,0,Math.PI*2);c.fillStyle=color;c.fill()});let N=Math.min(6,P.length);for(let i=0;i<N;i++){let p=P[Math.round(i*(P.length-1)/Math.max(1,N-1))];c.fillStyle="#9bb0c7";c.textAlign="center";c.fillText(p.label,p.x,h-6)}c.textAlign="left"}function charts(){bars();let s=0;line("cum",A.filter(a=>a.type=="Bici").sort((a,b)=>a.date.localeCompare(b.date)).map(a=>({label:a.date.slice(5),v:s+=a.km})),"#39d98a");line("hours",MS.map(m=>({label:ML[m],v:A.filter(a=>a.month==m).reduce((s,a)=>s+hrs(a.duration),0)})),"#c99cff");line("weight",W.map(x=>({label:x.date.slice(5),v:x.kg})),"#ff9f43",false)}T.forEach(t=>type.insertAdjacentHTML("beforeend",`<option>${t}</option>`));MS.forEach(m=>month.insertAdjacentHTML("beforeend",`<option value="${m}">${ML[m]} 2026</option>`));function table(){let z=A.filter(a=>(!type.value||a.type==type.value)&&(!month.value||a.month==month.value)&&(!q.value||JSON.stringify(a).toLowerCase().includes(q.value.toLowerCase()))).sort((a,b)=>b.date.localeCompare(a.date));count.textContent=z.length+" attività";rows.innerHTML=z.map(a=>`<tr><td>${dt(a.date)}</td><td><span class="pill" style="--c:${C[a.type]}"><i class="dot"></i>${a.type}</span></td><td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td>${a.dplus==null?"—":a.dplus+" m"}</td><td>${a.metric}</td><td>${a.location||"—"}</td><td>${a.note||""}</td></tr>`).join("");window.filtered=z}q.oninput=type.oninput=month.oninput=table;reset.onclick=()=>{q.value="";type.value="";month.value="";table()};csv.onclick=()=>{let h="data;tipo;km;durata;dplus;luogo;note\n"+filtered.map(a=>[a.date,a.type,a.km,a.duration,a.dplus??"",a.location??"",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")).join("\n"),u=URL.createObjectURL(new Blob([h],{type:"text/csv"})),x=document.createElement("a");x.href=u;x.download="allenamenti_2026.csv";x.click();URL.revokeObjectURL(u)};table();charts();addEventListener("resize",()=>{clearTimeout(window.rr);window.rr=setTimeout(charts,100)});
-</script></body></html>
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Training · Bogdan</title>
+<style>
+:root{
+  --bg:#06101c;--panel:#0d1c2d;--panel2:#11263d;--line:#25435f;--text:#f4f8fc;--muted:#91a9bf;
+  --accent:#67e8f9;--accent2:#7c9cff;--bike:#39d98a;--run:#ff9f43;--swim:#35b8ff;
+  --hike:#c99cff;--walk:#ffd166;--trail:#f76c6c;--shadow:0 16px 45px rgba(0,0,0,.22)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 12% -5%,rgba(69,130,190,.27),transparent 27rem),
+    radial-gradient(circle at 92% 7%,rgba(103,232,249,.10),transparent 24rem),
+    var(--bg);
+}
+.wrap{max-width:1240px;margin:auto;padding:18px 14px 70px}
+.hero{
+  position:relative;overflow:hidden;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;
+  padding:26px 24px;margin:5px 0 14px;border:1px solid rgba(129,183,226,.17);border-radius:24px;
+  background:linear-gradient(135deg,rgba(18,43,69,.96),rgba(8,22,38,.94));box-shadow:var(--shadow)
+}
+.hero:after{
+  content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-120px;top:-170px;
+  background:radial-gradient(circle,rgba(103,232,249,.18),transparent 65%);pointer-events:none
+}
+.brand{display:flex;align-items:center;gap:10px;color:var(--accent);font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:850}
+.brand .logo{font-size:22px;filter:drop-shadow(0 4px 14px rgba(103,232,249,.22))}
+.hero h1{font-size:clamp(36px,7vw,64px);line-height:.96;letter-spacing:-.045em;margin:9px 0 9px}
+.hero p{margin:0;color:var(--muted);font-size:13px}
+.hero-art{font-size:44px;letter-spacing:3px;white-space:nowrap;opacity:.95;filter:drop-shadow(0 8px 18px rgba(0,0,0,.25))}
+.yearbar{
+  position:sticky;top:8px;z-index:20;display:flex;align-items:center;gap:8px;overflow:auto;padding:8px;
+  margin:0 0 16px;border:1px solid rgba(129,183,226,.16);border-radius:16px;background:rgba(7,18,31,.86);
+  backdrop-filter:blur(15px);box-shadow:0 8px 26px rgba(0,0,0,.17)
+}
+.yearbar .label{font-size:11px;color:var(--muted);font-weight:800;padding:0 6px;white-space:nowrap}
+.yearbtn{
+  border:1px solid #274966;background:#0d2136;color:#c9d9e8;border-radius:11px;padding:9px 14px;font-weight:800;
+  cursor:pointer;transition:.2s;white-space:nowrap
+}
+.yearbtn:hover{transform:translateY(-1px);border-color:#4c7da7}
+.yearbtn.active{color:#06111d;background:linear-gradient(135deg,var(--accent),#8fb7ff);border-color:transparent;box-shadow:0 5px 18px rgba(103,232,249,.22)}
+.grid{display:grid;gap:12px}
+.kpis{grid-template-columns:repeat(6,1fr);margin:0 0 16px}
+.card{
+  background:linear-gradient(180deg,rgba(17,38,61,.96),rgba(9,23,39,.96));border:1px solid rgba(129,183,226,.15);
+  border-radius:18px;box-shadow:var(--shadow)
+}
+.kpi{padding:16px;position:relative;overflow:hidden}
+.kpi .ico{font-size:20px;margin-bottom:12px}.kpi .label{font-size:11px;color:var(--muted);font-weight:750}
+.kpi .value{font-size:24px;font-weight:870;letter-spacing:-.035em;margin-top:4px}.kpi .sub{font-size:10px;color:var(--muted);margin-top:5px}
+.section-title{display:flex;justify-content:space-between;gap:12px;align-items:end;margin:25px 4px 10px}
+.section-title h2{font-size:19px;margin:0;display:flex;align-items:center;gap:8px}.section-title span{font-size:11px;color:var(--muted)}
+.disciplines{grid-template-columns:repeat(6,1fr)}
+.disc{padding:15px;position:relative;overflow:hidden;min-height:120px}
+.disc:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--c)}
+.disc .top{display:flex;justify-content:space-between;align-items:center}.disc .ico{font-size:23px}.disc .name{font-size:11px;color:var(--muted);font-weight:800}
+.disc .big{font-size:22px;font-weight:850;margin:8px 0 3px}.disc .mini{font-size:10px;color:var(--muted)}
+.charts{grid-template-columns:1.2fr 1fr}
+.chart{padding:16px;min-height:315px}.chart h3{font-size:14px;margin:0 0 3px;display:flex;gap:7px;align-items:center}.chart p{margin:0;color:var(--muted);font-size:10px}
+.chart canvas{width:100%;height:235px;margin-top:10px}
+.records{grid-template-columns:repeat(4,1fr)}
+.record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
+.record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 11px}
+.controls>*{background:#091827;color:var(--text);border:1px solid #28445f;border-radius:11px;padding:10px 12px;font:inherit;font-size:12px}
+.controls input{flex:1;min-width:190px}.controls button{cursor:pointer}.controls button:hover{border-color:#4c7194}
+.tablewrap{overflow:auto;border:1px solid rgba(129,183,226,.15);border-radius:16px;background:rgba(8,22,38,.75);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:870px}
+th,td{padding:11px 12px;border-bottom:1px solid rgba(51,83,112,.34);font-size:11px;text-align:left}
+th{background:#0c1d30;color:#a7bdd1;position:sticky;top:0;text-transform:uppercase;letter-spacing:.045em;font-size:10px}
+tr:hover td{background:rgba(71,118,158,.08)}
+.pill{display:inline-flex;gap:7px;align-items:center;background:#112a42;padding:5px 8px;border-radius:999px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.note{max-width:300px;color:#abc0d2}
+.empty{padding:36px;text-align:center;color:var(--muted)}
+footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding:0 4px}
+@media(max-width:1020px){.kpis{grid-template-columns:repeat(3,1fr)}.disciplines{grid-template-columns:repeat(3,1fr)}.records{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){
+  .wrap{padding-left:10px;padding-right:10px}.hero{grid-template-columns:1fr;padding:21px 17px}.hero-art{font-size:34px}
+  .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:290px}.chart canvas{height:220px}
+  .yearbar{top:4px}.section-title{align-items:center}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="brand"><span class="logo">◉</span> Bogdan · Training dashboard</div>
+      <h1><span id="heroYear">2026</span> in movimento</h1>
+      <p id="coverage"></p>
+    </div>
+    <div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div>
+  </header>
+
+  <nav class="yearbar" aria-label="Selezione anno">
+    <span class="label">📅 ANNO</span>
+    <div id="yearButtons" style="display:flex;gap:8px"></div>
+  </nav>
+
+  <section class="grid kpis" id="kpis"></section>
+
+  <div class="section-title"><h2>🎯 Discipline</h2><span>Totali dell'anno selezionato</span></div>
+  <section class="grid disciplines" id="disciplines"></section>
+
+  <div class="section-title"><h2>📈 Andamento</h2><span>Gennaio → dicembre</span></div>
+  <section class="grid charts">
+    <div class="card chart"><h3>📏 Distanza mensile</h3><p>Km complessivi registrati nel mese.</p><canvas id="monthly"></canvas></div>
+    <div class="card chart"><h3>🚴 Km bici cumulativi</h3><p>Progressione annuale delle uscite in bici.</p><canvas id="cum"></canvas></div>
+    <div class="card chart"><h3>⏱️ Ore di allenamento</h3><p>Tempo attivo registrato mese per mese.</p><canvas id="hours"></canvas></div>
+    <div class="card chart"><h3>⚖️ Peso</h3><p>Andamento delle misurazioni disponibili.</p><canvas id="weight"></canvas></div>
+  </section>
+
+  <div class="section-title"><h2>🏆 Record</h2><span>Migliori valori dell'anno</span></div>
+  <section class="grid records" id="records"></section>
+
+  <div class="section-title"><h2>📓 Diario completo</h2><span id="count"></span></div>
+  <div class="controls">
+    <input id="q" placeholder="🔎 Cerca disciplina, luogo o nota…">
+    <select id="typeFilter"><option value="">Tutte le discipline</option></select>
+    <select id="monthFilter"><option value="">Tutti i mesi</option></select>
+    <button id="resetBtn">↺ Reset</button>
+    <button id="csvBtn">↓ CSV</button>
+  </div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th><th>Note</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
+  </div>
+
+  <footer id="footerNote"></footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+const COLORS={Bici:"#39d98a",Corsa:"#ff9f43",Nuoto:"#35b8ff",Trekking:"#c99cff",Camminata:"#ffd166",Trail:"#f76c6c"};
+const ICONS={Bici:"🚴",Corsa:"🏃",Nuoto:"🏊",Trekking:"🥾",Camminata:"🚶",Trail:"⛰️"};
+const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto"];
+const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+const els={
+  heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
+  kpis:document.getElementById("kpis"),disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),
+  q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
+  rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
+  reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote")
+};
+function sec(x){const a=x.split(":").map(Number);return a[0]*3600+a[1]*60+a[2]}
+function hrs(x){return sec(x)/3600}
+function n(x,d=1){return new Intl.NumberFormat("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d}).format(x)}
+function dt(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(s+"T12:00:00"))}
+function shortDate(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short"}).format(new Date(s+"T12:00:00"))}
+function fh(v){const h=Math.floor(v),m=Math.round((v-h)*60);return `${h}h ${String(m).padStart(2,"0")}m`}
+function metric(a){
+  if(a.type==="Bici") return `${n(a.km/hrs(a.duration),1)} km/h`;
+  if(a.type==="Nuoto"){const p=sec(a.duration)/(a.km*10),m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/100m`}
+  const p=sec(a.duration)/a.km,m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/km`
+}
+A.forEach(a=>{a.year=Number(a.date.slice(0,4));a.month=Number(a.date.slice(5,7));a.metric=metric(a)});
+W.forEach(w=>w.year=Number(w.date.slice(0,4)));
+
+const years=[...new Set([...A.map(a=>a.year),...W.map(w=>w.year)])].sort((a,b)=>b-a);
+let selectedYear=years[0] || new Date().getFullYear();
+let AY=[],WY=[],filtered=[];
+
+function renderYearButtons(){
+  els.yearButtons.innerHTML=years.map(y=>`<button class="yearbtn ${y===selectedYear?"active":""}" data-year="${y}">${y}</button>`).join("");
+  els.yearButtons.querySelectorAll("button").forEach(b=>b.onclick=()=>{selectedYear=Number(b.dataset.year);renderAll()});
+}
+function yearlyData(){
+  AY=A.filter(a=>a.year===selectedYear);
+  WY=W.filter(w=>w.year===selectedYear);
+}
+function renderHero(){
+  els.heroYear.textContent=selectedYear;
+  if(!AY.length){els.coverage.textContent="Nessun allenamento registrato per questo anno";return}
+  const dates=AY.map(a=>a.date).sort();
+  const totalH=AY.reduce((s,a)=>s+hrs(a.duration),0);
+  els.coverage.textContent=`${AY.length} attività · ${fh(totalH)} · ${dt(dates[0])} → ${dt(dates.at(-1))}`;
+}
+function renderKPIs(){
+  const th=AY.reduce((s,a)=>s+hrs(a.duration),0),tk=AY.reduce((s,a)=>s+a.km,0),dp=AY.reduce((s,a)=>s+(a.dplus||0),0);
+  const bk=AY.filter(a=>a.type==="Bici").reduce((s,a)=>s+a.km,0);
+  const run=AY.filter(a=>["Corsa","Trail"].includes(a.type)).reduce((s,a)=>s+a.km,0);
+  const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
+  const firstW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date))[0]:null;
+  const wd=latestW&&firstW?latestW.kg-firstW.kg:null;
+  const items=[
+    ["🗓️","Attività",AY.length,"sessioni registrate"],
+    ["📍","Distanza",`${n(tk,2)} km`,"tutte le discipline"],
+    ["⏱️","Tempo",fh(th),"durata attiva"],
+    ["🚴","Bici",`${n(bk,2)} km`,`${AY.filter(a=>a.type==="Bici").length} uscite`],
+    ["🏃","Corsa + trail",`${n(run,2)} km`,"chilometri a piedi"],
+    ["⚖️","Peso",latestW?`${n(latestW.kg,1)} kg`:"—",wd==null?"nessuna misura":`${wd<0?"−":"+"}${n(Math.abs(wd),1)} kg nell'anno`]
+  ];
+  els.kpis.innerHTML=items.map(x=>`<div class="card kpi"><div class="ico">${x[0]}</div><div class="label">${x[1]}</div><div class="value">${x[2]}</div><div class="sub">${x[3]}</div></div>`).join("");
+}
+function renderDisciplines(){
+  els.disciplines.innerHTML=TYPES.map(t=>{
+    const z=AY.filter(a=>a.type===t),km=z.reduce((s,a)=>s+a.km,0),h=z.reduce((s,a)=>s+hrs(a.duration),0);
+    return `<div class="card disc" style="--c:${COLORS[t]}"><div class="top"><span class="name">${t}</span><span class="ico">${ICONS[t]}</span></div><div class="big">${n(km,2)} km</div><div class="mini">${z.length} attività · ${fh(h)}</div></div>`
+  }).join("");
+}
+function renderRecords(){
+  if(!AY.length){els.records.innerHTML="";return}
+  const bike=[...AY].filter(a=>a.type==="Bici").sort((a,b)=>b.km-a.km)[0];
+  const run=[...AY].filter(a=>["Corsa","Trail"].includes(a.type)).sort((a,b)=>b.km-a.km)[0];
+  const climb=[...AY].filter(a=>Number.isFinite(a.dplus)).sort((a,b)=>b.dplus-a.dplus)[0];
+  const long=[...AY].sort((a,b)=>sec(b.duration)-sec(a.duration))[0];
+  const rec=[
+    ["🚴","Bici più lunga",bike?`${n(bike.km,2)} km`:"—",bike?dt(bike.date):""],
+    ["🏃","Corsa / trail più lungo",run?`${n(run.km,2)} km`:"—",run?dt(run.date):""],
+    ["⛰️","D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
+    ["⌛","Sessione più lunga",long?long.duration:"—",long?`${dt(long.date)} · ${long.type}`:""]
+  ];
+  els.records.innerHTML=rec.map(x=>`<div class="card record"><div class="ico">${x[0]}</div><div class="t">${x[1]}</div><div class="v">${x[2]}</div><div class="d">${x[3]}</div></div>`).join("");
+}
+function prep(id){
+  const e=document.getElementById(id),r=e.getBoundingClientRect(),d=devicePixelRatio||1;
+  e.width=Math.max(1,r.width*d);e.height=Math.max(1,r.height*d);
+  const c=e.getContext("2d");c.setTransform(d,0,0,d,0,0);return[c,r.width,r.height]
+}
+function axes(c,w,h,max,min=0,label=v=>Math.round(v)){
+  const l=44,r=9,t=10,b=27;c.strokeStyle="#2b4662";c.fillStyle="#8fa7bf";c.font="10px system-ui";
+  for(let i=0;i<5;i++){const y=t+(h-t-b)*i/4,v=max-(max-min)*i/4;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke();c.fillText(label(v),3,y+3)}
+  return[l,r,t,b]
+}
+function emptyCanvas(id,msg="Nessun dato"){
+  const [c,w,h]=prep(id);c.fillStyle="#8fa7bf";c.font="12px system-ui";c.textAlign="center";c.fillText(msg,w/2,h/2);c.textAlign="left"
+}
+function drawMonthly(){
+  if(!AY.length){emptyCanvas("monthly");return}
+  const D=Array.from({length:12},(_,i)=>AY.filter(a=>a.month===i+1).reduce((s,a)=>s+a.km,0));
+  const maxVal=Math.max(...D),mx=Math.max(10,Math.ceil(maxVal/50)*50);
+  const [c,w,h]=prep("monthly"),[l,r,t,b]=axes(c,w,h,mx),g=(w-l-r)/12,bw=Math.max(5,Math.min(34,g*.60));
+  D.forEach((v,i)=>{const bh=(h-t-b)*v/mx,x=l+i*g+(g-bw)/2,y=h-b-bh;
+    const grad=c.createLinearGradient(0,y,0,h-b);grad.addColorStop(0,"#67e8f9");grad.addColorStop(1,"#5c7cff");c.fillStyle=grad;c.fillRect(x,y,bw,bh);
+    c.fillStyle="#91a9bf";c.textAlign="center";c.font="9px system-ui";c.fillText(ML[i],x+bw/2,h-7)
+  });c.textAlign="left"
+}
+function drawLine(id,D,color,{zero=true,label=v=>Math.round(v)}={}){
+  if(!D.length){emptyCanvas(id);return}
+  const vals=D.map(x=>x.v);let mn=zero?0:Math.min(...vals),mx=Math.max(...vals);
+  if(mx===mn){mx=mn+1} const pad=(mx-mn)*.08;if(!zero){mn-=pad;mx+=pad}else mx+=pad;
+  const [c,w,h]=prep(id),[l,r,t,b]=axes(c,w,h,mx,mn,label),xs=(w-l-r)/Math.max(1,D.length-1);
+  const P=D.map((x,i)=>({x:l+i*xs,y:t+(mx-x.v)/(mx-mn)*(h-t-b),...x}));
+  c.beginPath();P.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.strokeStyle=color;c.lineWidth=2.6;c.stroke();
+  P.forEach(p=>{c.beginPath();c.arc(p.x,p.y,3.1,0,Math.PI*2);c.fillStyle=color;c.fill()});
+  const N=Math.min(6,P.length);for(let i=0;i<N;i++){const p=P[Math.round(i*(P.length-1)/Math.max(1,N-1))];c.fillStyle="#91a9bf";c.textAlign="center";c.font="9px system-ui";c.fillText(p.label,p.x,h-7)}c.textAlign="left"
+}
+function drawCharts(){
+  drawMonthly();
+  let s=0;const bikes=AY.filter(a=>a.type==="Bici").sort((a,b)=>a.date.localeCompare(b.date)).map(a=>({label:shortDate(a.date),v:s+=a.km}));
+  drawLine("cum",bikes,COLORS.Bici);
+  const hd=Array.from({length:12},(_,i)=>({label:ML[i],v:AY.filter(a=>a.month===i+1).reduce((s,a)=>s+hrs(a.duration),0)}));
+  drawLine("hours",hd,COLORS.hike);
+  const wd=WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>({label:shortDate(x.date),v:x.kg}));
+  drawLine("weight",wd,COLORS.run,{zero:false,label:v=>n(v,1)});
+}
+function populateFilters(){
+  const tv=els.type.value,mv=els.month.value;
+  els.type.innerHTML='<option value="">Tutte le discipline</option>'+TYPES.map(t=>`<option value="${t}">${ICONS[t]} ${t}</option>`).join("");
+  els.month.innerHTML='<option value="">Tutti i mesi</option>'+ML.map((m,i)=>`<option value="${i+1}">${m} ${selectedYear}</option>`).join("");
+  if([...els.type.options].some(o=>o.value===tv)) els.type.value=tv;
+  if([...els.month.options].some(o=>o.value===mv)) els.month.value=mv; else els.month.value="";
+}
+function renderTable(){
+  const query=els.q.value.toLowerCase().trim(),type=els.type.value,month=Number(els.month.value||0);
+  filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||JSON.stringify(a).toLowerCase().includes(query))).sort((a,b)=>b.date.localeCompare(a.date));
+  els.count.textContent=`${filtered.length} attività`;
+  els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
+  els.rows.innerHTML=filtered.map(a=>`<tr>
+    <td>${dt(a.date)}</td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
+    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td>${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
+    <td>${a.metric}</td><td>${a.location||"—"}</td><td class="note">${a.note||""}</td></tr>`).join("");
+}
+function renderFooter(){
+  const missingD=AY.some(a=>a.dplus==null);
+  els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
+}
+function renderAll(){
+  yearlyData();renderYearButtons();renderHero();renderKPIs();renderDisciplines();renderRecords();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+}
+els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
+els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";renderTable()};
+els.csv.onclick=()=>{
+  const header="data;tipo;km;durata;dplus;ritmo_velocita;luogo;note\n";
+  const body=filtered.map(a=>[a.date,a.type,a.km,a.duration,a.dplus??"",a.metric,a.location??"",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")).join("\n");
+  const u=URL.createObjectURL(new Blob([header+body],{type:"text/csv;charset=utf-8"})),x=document.createElement("a");
+  x.href=u;x.download=`allenamenti_${selectedYear}.csv`;x.click();URL.revokeObjectURL(u)
+};
+window.addEventListener("resize",()=>{clearTimeout(window.__redraw);window.__redraw=setTimeout(drawCharts,120)});
+renderAll();
+</script>
+</body>
+</html>
