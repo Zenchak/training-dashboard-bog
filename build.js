@@ -56,3 +56,4 @@ if (html.includes(scriptEnd)) {
 
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
+fs.writeFileSync(path.join(out, 'nas-sync-test.txt'), 'OK NAS SYNC - 2026-09-14 21:55\n');
