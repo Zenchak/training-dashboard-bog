@@ -69,6 +69,28 @@ body{
 .records{grid-template-columns:repeat(4,1fr)}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
+.race-panel{padding:0;overflow:hidden}
+.race-note{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-bottom:1px solid rgba(129,183,226,.14);background:linear-gradient(90deg,rgba(103,232,249,.07),rgba(124,156,255,.04));color:#aec3d6;font-size:11px;line-height:1.45}
+.race-note .ico{font-size:20px;line-height:1}
+.race-table{min-width:1050px}
+.race-table td{vertical-align:top}
+.race-name{display:flex;align-items:center;gap:9px;font-weight:850;font-size:13px}
+.race-name .race-ico{font-size:22px}
+.race-dist{line-height:1.7;color:#dce8f3;white-space:nowrap}
+.race-prep{line-height:1.55;color:#b8cada;min-width:245px}
+.progressbox{min-width:155px}
+.progresshead{display:flex;justify-content:space-between;gap:8px;color:#cddbe8;font-weight:800;font-size:10px}
+.progressbar{height:7px;margin-top:7px;border-radius:999px;background:#0a1725;overflow:hidden;border:1px solid rgba(129,183,226,.13)}
+.progressbar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#67e8f9,#7c9cff)}
+.progresssub{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.35}
+.est{font-size:16px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.splits{margin-top:5px;color:var(--muted);font-size:9px;line-height:1.45}
+.rating{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:850;white-space:nowrap;border:1px solid}
+.rating.good{color:#95f2c2;background:rgba(57,217,138,.08);border-color:rgba(57,217,138,.28)}
+.rating.mid{color:#ffd89a;background:rgba(255,159,67,.08);border-color:rgba(255,159,67,.28)}
+.rating.build{color:#9fddff;background:rgba(53,184,255,.08);border-color:rgba(53,184,255,.28)}
+.rating.theory{color:#d7b9ff;background:rgba(201,156,255,.08);border-color:rgba(201,156,255,.28)}
+.legendline{padding:11px 15px;color:var(--muted);font-size:9px;line-height:1.45;border-top:1px solid rgba(129,183,226,.11)}
 .controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 11px}
 .controls>*{background:#091827;color:var(--text);border:1px solid #28445f;border-radius:11px;padding:10px 12px;font:inherit;font-size:12px}
 .controls input{flex:1;min-width:190px}.controls button{cursor:pointer}.controls button:hover{border-color:#4c7194}
@@ -122,6 +144,21 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   <div class="section-title"><h2>🏆 Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
+  <div class="section-title"><h2>🏁 Obiettivi triathlon</h2><span>Distanze, preparazione e stima personale</span></div>
+  <section class="card race-panel">
+    <div class="race-note">
+      <span class="ico">🧭</span>
+      <div><b>Stima attuale:</b> usa i tuoi allenamenti 2026 come base. È una previsione orientativa, non una promessa di gara: percorso, mare, dislivello, vento, caldo, nutrizione e transizioni possono cambiare parecchio il tempo finale.</div>
+    </div>
+    <div class="tablewrap" style="border:0;border-radius:0;box-shadow:none;background:transparent">
+      <table class="race-table">
+        <thead><tr><th>Formato</th><th>Distanze gara</th><th>Traguardi di preparazione</th><th>Progresso distanze</th><th>Stima Bogdan</th><th>Valutazione</th></tr></thead>
+        <tbody id="raceGoals"></tbody>
+      </table>
+    </div>
+    <div class="legendline">Il “progresso distanze” confronta solo le tue distanze massime registrate con alcuni traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La valutazione del tempo è un confronto molto indicativo con un amatore/finisher, non una classifica ufficiale per categoria d’età.</div>
+  </section>
+
   <div class="section-title"><h2>📓 Diario completo</h2><span id="count"></span></div>
   <div class="controls">
     <input id="q" placeholder="🔎 Cerca disciplina, luogo o nota…">
@@ -149,7 +186,7 @@ const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
   heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
-  kpis:document.getElementById("kpis"),disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),
+  kpis:document.getElementById("kpis"),disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
   reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote")
@@ -224,6 +261,66 @@ function renderRecords(){
   ];
   els.records.innerHTML=rec.map(x=>`<div class="card record"><div class="ico">${x[0]}</div><div class="t">${x[1]}</div><div class="v">${x[2]}</div><div class="d">${x[3]}</div></div>`).join("");
 }
+
+const RACES=[
+  {
+    name:"Sprint",icon:"⚡",swim:.75,bike:20,run:5,
+    prep:{swim:1,bike:30,run:7},
+    prepText:"🏊 1 km continuo · 🚴 30 km · 🏃 7 km · brick 20+5",
+    estimate:"1h32–1h40",
+    splits:"Nuoto 18–20' · Bici 42–45' · Corsa 27–29' · transizioni ~5–6'",
+    rating:"Buono",ratingClass:"good"
+  },
+  {
+    name:"Olimpico",icon:"🥇",swim:1.5,bike:40,run:10,
+    prep:{swim:2,bike:60,run:12},
+    prepText:"🏊 2 km · 🚴 60 km · 🏃 12 km · brick 40+8",
+    estimate:"3h01–3h16",
+    splits:"Nuoto 36–39' · Bici 1h23–1h29 · Corsa 56–60' · transizioni ~6–8'",
+    rating:"Nella media → buono",ratingClass:"good"
+  },
+  {
+    name:"70.3",icon:"🟠",swim:1.9,bike:90,run:21.1,
+    prep:{swim:2.5,bike:100,run:18},
+    prepText:"🏊 2,5 km · 🚴 100–120 km · 🏃 18–22 km · brick 80+10/12",
+    estimate:"6h20–6h50",
+    splits:"Nuoto 46–50' · Bici 3h20–3h32 · Corsa 2h05–2h15 · transizioni ~8–12'",
+    rating:"Nella media finisher",ratingClass:"build"
+  },
+  {
+    name:"Full",icon:"🔴",swim:3.8,bike:180,run:42.2,
+    prep:{swim:4,bike:160,run:30},
+    prepText:"🏊 4–4,5 km · 🚴 160–180 km · 🏃 lungo 28–32 km · brick 120/140+15/20",
+    estimate:"13h40–15h00",
+    splits:"Nuoto 1h35–1h45 · Bici 7h00–7h30 · Maratona 4h50–5h20 · transizioni ~15–20'",
+    rating:"Finish valido · stima teorica",ratingClass:"theory"
+  }
+];
+
+function renderRaceGoals(){
+  const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
+  const maxSwim=Math.max(0,...AY.filter(a=>a.type==="Nuoto").map(a=>a.km));
+  const maxBike=Math.max(0,...AY.filter(a=>a.type==="Bici").map(a=>a.km));
+  const maxRun=Math.max(0,...allRun.map(a=>a.km));
+  els.raceGoals.innerHTML=RACES.map(r=>{
+    const parts=[
+      Math.min(1,maxSwim/r.prep.swim),
+      Math.min(1,maxBike/r.prep.bike),
+      Math.min(1,maxRun/r.prep.run)
+    ];
+    const pct=Math.round(parts.reduce((a,b)=>a+b,0)/parts.length*100);
+    let label=pct>=98?"Base distanze centrata":pct>=80?"Molto vicino":pct>=60?"In costruzione":"Da costruire";
+    return `<tr>
+      <td><div class="race-name"><span class="race-ico">${r.icon}</span>${r.name}</div></td>
+      <td class="race-dist">🏊 ${n(r.swim,2)} km<br>🚴 ${n(r.bike,1)} km<br>🏃 ${n(r.run,1)} km</td>
+      <td class="race-prep">${r.prepText}</td>
+      <td><div class="progressbox"><div class="progresshead"><span>${label}</span><span>${pct}%</span></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="progresssub">Max ${selectedYear}: 🏊 ${n(maxSwim,2)} · 🚴 ${n(maxBike,2)} · 🏃 ${n(maxRun,2)} km</div></div></td>
+      <td><div class="est">${r.estimate}</div><div class="splits">${r.splits}</div></td>
+      <td><span class="rating ${r.ratingClass}">${r.rating}</span></td>
+    </tr>`
+  }).join("");
+}
+
 function prep(id){
   const e=document.getElementById(id),r=e.getBoundingClientRect(),d=devicePixelRatio||1;
   e.width=Math.max(1,r.width*d);e.height=Math.max(1,r.height*d);
@@ -288,8 +385,9 @@ function renderFooter(){
   els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
 }
 function renderAll(){
-  yearlyData();renderYearButtons();renderHero();renderKPIs();renderDisciplines();renderRecords();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();renderYearButtons();renderHero();renderKPIs();renderDisciplines();renderRecords();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
+TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
 els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";renderTable()};
 els.csv.onclick=()=>{
