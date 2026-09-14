@@ -9,7 +9,7 @@ services:
       - sh
       - -c
       - |
-        apk add --no-cache git >/dev/null
+        apk add --no-cache git wget >/dev/null
         sync_repo() {
           name="$$1"
           url="$$2"
@@ -21,11 +21,27 @@ services:
             git -C "/sites/$$name" reset --hard origin/main
           fi
         }
+        mirror_racemap() {
+          target=/sites/race-map-bog/legacy
+          if [ ! -f "$$target/index.html" ]; then
+            echo "[$$(date)] Creo copia locale della vecchia mappa gare..."
+            mkdir -p "$$target"
+            wget --mirror --convert-links --adjust-extension --page-requisites --no-parent \
+              --directory-prefix="$$target" \
+              --no-host-directories \
+              https://6a9fda04e5e971aba29f9a03--illustrious-cupcake-c1bcb0.netlify.app/ || true
+            if [ ! -f "$$target/index.html" ]; then
+              found=$$(find "$$target" -name 'index.html' | head -n 1)
+              if [ -n "$$found" ]; then cp "$$found" "$$target/index.html"; fi
+            fi
+          fi
+        }
         while true; do
           echo "[$$(date)] Aggiorno i siti da GitHub..."
           sync_repo training-dashboard-bog https://github.com/Zenchak/training-dashboard-bog.git
           sync_repo race-map-bog https://github.com/Zenchak/race-map-bog.git
           sync_repo cerco-casa https://github.com/Zenchak/cerco-casa.git
+          mirror_racemap
           if [ -f /sites/training-dashboard-bog/build.js ]; then
             node /sites/training-dashboard-bog/build.js || true
           fi
@@ -33,12 +49,32 @@ services:
           sleep 60
         done
 
+  house-api:
+    image: node:22-alpine
+    container_name: bogdan-sites-house-api
+    restart: unless-stopped
+    depends_on:
+      - updater
+    environment:
+      - PORT=3000
+      - DATA_DIR=/data
+    volumes:
+      - sites_data:/sites:ro
+      - house_data:/data
+    command:
+      - sh
+      - -c
+      - |
+        while [ ! -f /sites/cerco-casa/server.js ]; do sleep 2; done
+        node /sites/cerco-casa/server.js
+
   web:
     image: nginx:1.27-alpine
     container_name: bogdan-sites-web
     restart: unless-stopped
     depends_on:
       - updater
+      - house-api
     ports:
       - "8081:8081"
       - "8082:8082"
@@ -49,3 +85,4 @@ services:
 
 volumes:
   sites_data:
+  house_data:
