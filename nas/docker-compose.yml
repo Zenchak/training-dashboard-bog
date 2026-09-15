@@ -37,7 +37,7 @@ services:
           fi
         }
         while true; do
-          echo "[$$(date)] Aggiorno i siti da GitHub..."
+          echo "[$$(date)] Aggiorno Zenchack Hub da GitHub..."
           sync_repo training-dashboard-bog https://github.com/Zenchak/training-dashboard-bog.git
           sync_repo race-map-bog https://github.com/Zenchak/race-map-bog.git
           sync_repo cerco-casa https://github.com/Zenchak/cerco-casa.git
@@ -82,10 +82,40 @@ services:
       - "127.0.0.1:8090:8090"
     volumes:
       - sites_data:/sites:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./htpasswd_bogdan:/etc/nginx/.htpasswd_bogdan:ro
       - ./htpasswd_casa:/etc/nginx/.htpasswd_casa:ro
-      - ./public-index.html:/etc/nginx/public/index.html:ro
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -eu
+        SRC=/sites/training-dashboard-bog/nas/nginx.conf
+        DST=/etc/nginx/conf.d/default.conf
+        while [ ! -s "$$SRC" ]; do
+          echo "Attendo configurazione Nginx da GitHub..."
+          sleep 2
+        done
+        cp "$$SRC" "$$DST"
+        nginx -t
+        nginx -g 'daemon off;' &
+        NGINX_PID=$$!
+        echo "Zenchack Hub web avviato. Controllo config automatico ogni 10 secondi."
+        while kill -0 "$$NGINX_PID" 2>/dev/null; do
+          sleep 10
+          if [ -s "$$SRC" ] && ! cmp -s "$$SRC" "$$DST"; then
+            echo "Nuova configurazione Nginx rilevata: verifico..."
+            cp "$$DST" /tmp/default.conf.lastgood
+            cp "$$SRC" "$$DST"
+            if nginx -t; then
+              nginx -s reload
+              echo "Configurazione Nginx aggiornata automaticamente."
+            else
+              echo "Configurazione non valida: ripristino l'ultima versione funzionante."
+              cp /tmp/default.conf.lastgood "$$DST"
+            fi
+          fi
+        done
+        wait "$$NGINX_PID"
 
 volumes:
   sites_data:
