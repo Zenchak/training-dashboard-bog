@@ -7,6 +7,19 @@ fs.mkdirSync(out, { recursive: true });
 
 let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 
+// Link alla pagina Gare direttamente dentro la dashboard Allenamenti.
+const raceButtonCss = `
+.hero-side{display:grid;justify-items:end;gap:12px;position:relative;z-index:2}
+.race-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#06111d;background:linear-gradient(135deg,var(--accent),#8fb7ff);border-radius:12px;padding:10px 14px;font-size:12px;font-weight:850;box-shadow:0 6px 18px rgba(103,232,249,.18);transition:.15s}
+.race-link:hover{transform:translateY(-1px);filter:brightness(1.05)}
+@media(max-width:720px){.hero-side{justify-items:start}.race-link{min-height:42px}}
+`;
+html = html.replace('</style>', raceButtonCss + '\n</style>');
+html = html.replace(
+  '<div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div>',
+  '<div class="hero-side"><div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div><a class="race-link" href="/gare/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\':8442/\'}">🏁 Gare</a></div>'
+);
+
 // After this shell is deployed once, training data are read directly from GitHub.
 // Updating data.js will therefore not require another Netlify production deploy.
 const liveLoader = `
