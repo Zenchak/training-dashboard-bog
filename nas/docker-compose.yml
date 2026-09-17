@@ -58,6 +58,9 @@ services:
     environment:
       - PORT=3000
       - DATA_DIR=/data
+      - GITHUB_TOKEN=${CERCO_CASA_GITHUB_TOKEN:-}
+      - GITHUB_REPO=Zenchak/cerco-casa
+      - GITHUB_BRANCH=main
     volumes:
       - sites_data:/sites:ro
       - house_data:/data
