@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Configura Face ID · Zenchack Hub</title>
+<style>
+:root{color-scheme:dark;--bg:#07111f;--card:#102238;--line:#274660;--text:#f4f8fc;--muted:#9bb0c4;--accent:#67e8f9;--ok:#7ee2b8;--danger:#ffb4ab}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(160deg,#07111f,#0d2034);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;display:grid;place-items:center;padding:24px}
+.card{width:min(470px,100%);background:var(--card);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+h1{font-size:24px;margin:0 0 7px}.sub{color:var(--muted);font-size:14px;line-height:1.45;margin-bottom:18px}.who{padding:12px 14px;border-radius:14px;background:#0b1a2b;border:1px solid var(--line);margin-bottom:16px;font-size:14px}
+button,a{width:100%;min-height:50px;border-radius:15px;font:inherit;font-weight:850;display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer}.primary{border:0;background:var(--accent);color:#06202a}.back{margin-top:10px;border:1px solid var(--line);color:var(--text);background:transparent}
+.status{min-height:22px;margin-top:14px;color:var(--muted);font-size:13px;line-height:1.4}.status.ok{color:var(--ok)}.status.err{color:var(--danger)}
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>Configura Face ID</h1>
+  <div class="sub">Questa operazione va fatta una sola volta su ciascun account. iCloud può poi sincronizzare la passkey sui tuoi dispositivi Apple.</div>
+  <div class="who" id="who">Controllo account…</div>
+  <button class="primary" id="registerBtn" type="button">＋ Registra passkey con Face ID</button>
+  <a class="back" href="/">Torna all’Hub</a>
+  <div class="status" id="status"></div>
+</main>
+<script>
+const who=document.getElementById('who'),statusEl=document.getElementById('status'),btn=document.getElementById('registerBtn');
+const b64uToBuf=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');s+='='.repeat((4-s.length%4)%4);const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer};
+const bufToB64u=buf=>{const a=new Uint8Array(buf);let s='';for(const b of a)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+async function json(url,opts){const r=await fetch(url,opts);let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||('Errore '+r.status));return d}
+function credToJson(c){const transports=c.response.getTransports?c.response.getTransports():[];return{id:c.id,rawId:bufToB64u(c.rawId),type:c.type,response:{clientDataJSON:bufToB64u(c.response.clientDataJSON),attestationObject:bufToB64u(c.response.attestationObject),transports}}}
+async function refresh(){try{const me=await json('/auth/me',{cache:'no-store'});who.textContent='Account: '+me.user+' · passkey registrate: '+me.passkeys;return me}catch{location.replace('/login/')}}
+refresh();
+btn.addEventListener('click',async()=>{
+  statusEl.className='status';statusEl.textContent='Apro Face ID…';btn.disabled=true;
+  try{
+    if(!window.PublicKeyCredential)throw new Error('Questo browser non supporta le passkey.');
+    const o=await json('/auth/register/options',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+    const pk={...o.publicKey,challenge:b64uToBuf(o.publicKey.challenge),user:{...o.publicKey.user,id:b64uToBuf(o.publicKey.user.id)},excludeCredentials:(o.publicKey.excludeCredentials||[]).map(x=>({...x,id:b64uToBuf(x.id)}))};
+    const cred=await navigator.credentials.create({publicKey:pk});
+    if(!cred)throw new Error('Registrazione annullata.');
+    const out=await json('/auth/register/verify',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({operationId:o.operationId,credential:credToJson(cred)})});
+    statusEl.className='status ok';statusEl.textContent='✓ Face ID configurato. Da ora puoi entrare senza digitare la password.';
+    await refresh();
+  }catch(e){statusEl.className='status err';statusEl.textContent=e.message||'Registrazione non riuscita.'}
+  finally{btn.disabled=false}
+});
+</script>
+</body>
+</html>
