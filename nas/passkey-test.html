@@ -23,10 +23,7 @@ h1{margin:0 0 7px;font-size:25px}.sub{color:var(--muted);font-size:14px;line-hei
   <div class="sub">Area di prova separata: l’Hub principale continua a usare il login stabile finché questo test non è verificato.</div>
   <div class="who" id="who">Nessuna sessione passkey attiva.</div>
   <div class="actions">
-    <div class="row">
-      <a class="btn secondary" href="/passkey-test/bootstrap/bogdan">👨 Configura Bogdan</a>
-      <a class="btn secondary" href="/passkey-test/bootstrap/camilla">👩 Configura Camilla</a>
-    </div>
+    <div class="who" id="bootstrap">Verifico l’account già autenticato sull’Hub…</div>
     <button class="primary" id="registerBtn" type="button">＋ Registra Face ID</button>
     <button class="secondary" id="loginBtn" type="button">◉ Prova accesso con Face ID</button>
     <a class="btn back" href="/">← Torna all’Hub</a>
@@ -35,7 +32,7 @@ h1{margin:0 0 7px;font-size:25px}.sub{color:var(--muted);font-size:14px;line-hei
   <div class="note">La biometria resta sull’iPhone. Il NAS salva solo la chiave pubblica della passkey.</div>
 </main>
 <script>
-const who=document.getElementById('who'),statusEl=document.getElementById('status'),reg=document.getElementById('registerBtn'),login=document.getElementById('loginBtn');
+const who=document.getElementById('who'),bootstrapEl=document.getElementById('bootstrap'),statusEl=document.getElementById('status'),reg=document.getElementById('registerBtn'),login=document.getElementById('loginBtn');
 const b64uToBuf=s=>{s=String(s||'').replace(/-/g,'+').replace(/_/g,'/');s+='='.repeat((4-s.length%4)%4);const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a.buffer};
 const bufToB64u=buf=>{const a=new Uint8Array(buf);let s='';for(const b of a)s+=String.fromCharCode(b);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
 async function api(path,opts){const r=await fetch('/passkey-api/'+path,{cache:'no-store',...opts});let d={};try{d=await r.json()}catch{}if(!r.ok){const e=new Error(d.error||('Errore '+r.status));e.data=d;throw e}return d}
@@ -44,7 +41,19 @@ function regJson(c){return{id:c.id,rawId:bufToB64u(c.rawId),type:c.type,response
 function loginJson(c){return{id:c.id,rawId:bufToB64u(c.rawId),type:c.type,response:{clientDataJSON:bufToB64u(c.response.clientDataJSON),authenticatorData:bufToB64u(c.response.authenticatorData),signature:bufToB64u(c.response.signature),userHandle:c.response.userHandle?bufToB64u(c.response.userHandle):null}}}
 async function refresh(){
   try{const me=await api('me');who.textContent='Sessione passkey: '+me.user+' · passkey registrate: '+me.passkeys;return me}
-  catch{who.textContent='Nessuna sessione passkey attiva. Prima premi “Configura Bogdan” o “Configura Camilla”.';return null}
+  catch{who.textContent='Nessuna sessione passkey attiva.';return null}
+}
+async function bootstrap(){
+  bootstrapEl.textContent='Collego la sessione del login stabile…';
+  try{
+    const out=await api('bootstrap',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+    bootstrapEl.textContent='Account autenticato: '+out.user;
+    bootstrapEl.style.color='var(--ok)';
+    await refresh();
+  }catch(e){
+    bootstrapEl.textContent='Bootstrap non riuscito: '+(e.message||'errore');
+    bootstrapEl.style.color='var(--danger)';
+  }
 }
 reg.addEventListener('click',async()=>{
   reg.disabled=true;setStatus('Apro Face ID…');
@@ -72,7 +81,7 @@ login.addEventListener('click',async()=>{
   }catch(e){setStatus(e.message||'Accesso non riuscito.','err')}
   finally{login.disabled=false}
 });
-refresh();
+bootstrap();
 </script>
 </body>
 </html>
