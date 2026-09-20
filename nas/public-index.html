@@ -19,7 +19,7 @@
     <a class="card" data-visible-profile="Bogdan" href="/training/"><div class="title">📊 Allenamenti</div><div class="desc">Dashboard training e storico</div></a>
     <a class="card" data-visible-profile="all" href="/casa/"><div class="title">🏡 Cerco Casa</div><div class="desc">Annunci, note e segnalazioni</div></a>
   </div>
-  <div class="foot"><span>HTTPS tramite Tailscale Funnel · login stabile con password</span><a href="/passkey-test/">🧪 Prova Face ID</a></div>
+  <div class="foot"><span>HTTPS tramite Tailscale Funnel · accesso con passkey</span><a href="/passkeys/">🔐 Face ID</a><a href="/auth/logout">Esci</a></div>
 </main>
 <dialog id="profileDialog">
   <div class="modal">
@@ -52,7 +52,22 @@
   document.getElementById('closeProfile').addEventListener('click',()=>dlg.close());
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
   document.querySelectorAll('[data-profile]').forEach(b=>b.addEventListener('click',()=>save(b.dataset.profile)));
+  async function syncProfileFromAuth(){
+    try{
+      const r=await fetch('/auth/me',{cache:'no-store'});
+      if(!r.ok)return;
+      const me=await r.json();
+      if(me.user==='Bogdan'||me.user==='Camilla'){
+        profile=me.user;
+        document.cookie=cookieName+'='+encodeURIComponent(profile)+'; Path=/; Max-Age=31536000; SameSite=Lax; Secure';
+        localStorage.setItem(cookieName,profile);
+        localStorage.setItem('note-author',profile);
+        paint();
+      }
+    }catch{}
+  }
   paint();
+  syncProfileFromAuth();
 })();
 </script>
 </body>
