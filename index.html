@@ -138,6 +138,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
     <div class="card chart"><h3>📏 Distanza mensile</h3><p>Km complessivi registrati nel mese.</p><canvas id="monthly"></canvas></div>
     <div class="card chart"><h3>🚴 Km bici cumulativi</h3><p>Progressione annuale delle uscite in bici.</p><canvas id="cum"></canvas></div>
     <div class="card chart"><h3>⏱️ Ore di allenamento</h3><p>Tempo attivo registrato mese per mese.</p><canvas id="hours"></canvas></div>
+    <div class="card chart"><h3>🔥 Kcal attività</h3><p id="kcalInfo">Consumo energetico mese per mese.</p><canvas id="kcal"></canvas></div>
     <div class="card chart"><h3>⚖️ Peso</h3><p>Andamento delle misurazioni disponibili.</p><canvas id="weight"></canvas></div>
   </section>
 
@@ -189,7 +190,8 @@ const els={
   kpis:document.getElementById("kpis"),disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
-  reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote")
+  reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote"),
+  kcalInfo:document.getElementById("kcalInfo")
 };
 function sec(x){const a=x.split(":").map(Number);return a[0]*3600+a[1]*60+a[2]}
 function hrs(x){return sec(x)/3600}
@@ -201,6 +203,32 @@ function metric(a){
   if(a.type==="Bici") return `${n(a.km/hrs(a.duration),1)} km/h`;
   if(a.type==="Nuoto"){const p=sec(a.duration)/(a.km*10),m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/100m`}
   const p=sec(a.duration)/a.km,m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/km`
+}
+function weightForDate(date){
+  if(!W.length) return 80;
+  return W.slice().sort((a,b)=>Math.abs(Date.parse(a.date)-Date.parse(date))-Math.abs(Date.parse(b.date)-Date.parse(date)))[0].kg;
+}
+function activityMet(a){
+  const h=Math.max(.01,hrs(a.duration)),speed=a.km/h;
+  if(a.type==="Bici") return speed<16?4:speed<19?6:speed<22?8:speed<25?10:speed<30?12:14;
+  if(a.type==="Corsa"){
+    const pace=sec(a.duration)/60/Math.max(.1,a.km);
+    return pace>7.5?6:pace>6?8:pace>5?10:pace>4?12:14;
+  }
+  if(a.type==="Trail") return 9;
+  if(a.type==="Trekking") return 6;
+  if(a.type==="Camminata") return speed<4?3:speed<5.5?4:5;
+  if(a.type==="Nuoto"){
+    const pace100=sec(a.duration)/Math.max(.1,a.km*10);
+    return pace100>165?6:pace100>135?8:10;
+  }
+  return 6;
+}
+function activityKcal(a){
+  const exact=Number(a.kcal);
+  if(Number.isFinite(exact)&&exact>0) return {value:exact,estimated:false};
+  const kg=weightForDate(a.date),minutes=sec(a.duration)/60,activeMet=Math.max(1,activityMet(a)-1);
+  return {value:Math.round(activeMet*3.5*kg/200*minutes),estimated:true};
 }
 A.forEach(a=>{a.year=Number(a.date.slice(0,4));a.month=Number(a.date.slice(5,7));a.metric=metric(a)});
 W.forEach(w=>w.year=Number(w.date.slice(0,4)));
@@ -360,6 +388,13 @@ function drawCharts(){
   drawLine("cum",bikes,COLORS.Bici);
   const hd=Array.from({length:12},(_,i)=>({label:ML[i],v:AY.filter(a=>a.month===i+1).reduce((s,a)=>s+hrs(a.duration),0)}));
   drawLine("hours",hd,COLORS.hike);
+  const kcalRows=AY.map(a=>({...activityKcal(a),month:a.month}));
+  const kd=Array.from({length:12},(_,i)=>({label:ML[i],v:kcalRows.filter(x=>x.month===i+1).reduce((s,x)=>s+x.value,0)}));
+  drawLine("kcal",kd,"#ffb454",{label:v=>Math.round(v).toLocaleString("it-IT")});
+  const kcalTotal=kcalRows.reduce((s,x)=>s+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
+  if(els.kcalInfo) els.kcalInfo.textContent=kcalTotal
+    ? `${Math.round(kcalTotal).toLocaleString("it-IT")} kcal nell’anno · ${estimatedCount ? "stima dove manca il dato Garmin" : "dati registrati"}`
+    : "Nessun dato disponibile.";
   const wd=WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>({label:shortDate(x.date),v:x.kg}));
   drawLine("weight",wd,COLORS.run,{zero:false,label:v=>n(v,1)});
 }
@@ -382,7 +417,8 @@ function renderTable(){
 }
 function renderFooter(){
   const missingD=AY.some(a=>a.dplus==null);
-  els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
+  const kcalEstimated=AY.some(a=>activityKcal(a).estimated);
+  els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""}${kcalEstimated?" Le kcal sono stimate da peso, durata e intensità quando il dato Garmin non è presente nell’attività.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
 }
 function renderAll(){
   yearlyData();renderYearButtons();renderHero();renderKPIs();renderDisciplines();renderRecords();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
