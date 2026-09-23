@@ -170,7 +170,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th><th>Note</th></tr></thead>
+      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th><th>Note</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
@@ -410,10 +410,10 @@ function renderTable(){
   filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||JSON.stringify(a).toLowerCase().includes(query))).sort((a,b)=>b.date.localeCompare(a.date));
   els.count.textContent=`${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
-  els.rows.innerHTML=filtered.map(a=>`<tr>
+  els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
     <td>${dt(a.date)}</td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
-    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td>${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
-    <td>${a.metric}</td><td>${a.location||"—"}</td><td class="note">${a.note||""}</td></tr>`).join("");
+    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td>${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
+    <td>${a.metric}</td><td>${a.location||"—"}</td><td class="note">${a.note||""}</td></tr>`}).join("");
 }
 function renderFooter(){
   const missingD=AY.some(a=>a.dplus==null);
@@ -427,8 +427,8 @@ TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
 els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";renderTable()};
 els.csv.onclick=()=>{
-  const header="data;tipo;km;durata;dplus;ritmo_velocita;luogo;note\n";
-  const body=filtered.map(a=>[a.date,a.type,a.km,a.duration,a.dplus??"",a.metric,a.location??"",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")).join("\n");
+  const header="data;tipo;km;durata;kcal;kcal_stimate;dplus;ritmo_velocita;luogo;note\n";
+  const body=filtered.map(a=>{const k=activityKcal(a);return [a.date,a.type,a.km,a.duration,Math.round(k.value),k.estimated?"si":"no",a.dplus??"",a.metric,a.location??"",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")}).join("\n");
   const u=URL.createObjectURL(new Blob([header+body],{type:"text/csv;charset=utf-8"})),x=document.createElement("a");
   x.href=u;x.download=`allenamenti_${selectedYear}.csv`;x.click();URL.revokeObjectURL(u)
 };
