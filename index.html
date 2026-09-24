@@ -458,7 +458,7 @@ function drawTrend(){
   const wp=pts(weightTrend);
   pathSmooth(c,wp);c.strokeStyle="#67e8f9";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
 
-  function drawExtrema(raw,trend,color,format){
+  function drawExtrema(raw,trend,color,format,{dx=0,minDy=16,maxDy=-12}={}){
     const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
     if(!rows.length)return;
     const min=rows.reduce((a,b)=>b.v<a.v?b:a),max=rows.reduce((a,b)=>b.v>a.v?b:a);
@@ -466,18 +466,25 @@ function drawTrend(){
     chosen.forEach(x=>{
       const y=Number.isFinite(trend[x.i])?t+plotH*(1-trend[x.i]/100):t+plotH/2;
       const px=xAt(x.i);
-      c.beginPath();c.arc(px,y,4,0,Math.PI*2);c.fillStyle=color;c.fill();
-      c.font="bold 9px system-ui";c.fillStyle=color;c.textAlign="center";
       const isMax=x.i===max.i;
-      const ty=isMax?Math.max(11,y-9):Math.min(h-b-2,y+15);
-      c.fillText((isMax?"max ":"min ")+format(x.v),px,ty);
+      const dy=isMax?maxDy:minDy;
+      const tx=Math.max(l+34,Math.min(w-r-34,px+dx));
+      const ty=Math.max(12,Math.min(h-b-4,y+dy));
+
+      c.beginPath();c.arc(px,y,4,0,Math.PI*2);c.fillStyle=color;c.fill();
+
+      c.beginPath();c.moveTo(px,y);c.lineTo(tx,ty+(dy<0?4:-4));
+      c.strokeStyle=color;c.globalAlpha=.45;c.lineWidth=1;c.stroke();c.globalAlpha=1;
+
+      c.font="bold 9px system-ui";c.fillStyle=color;c.textAlign="center";
+      c.fillText((isMax?"max ":"min ")+format(x.v),tx,ty);
     });
     c.textAlign="left";
   }
 
-  drawExtrema(hoursSelected,hoursTrend,"#aab4bf",v=>n(v,1)+" h");
-  drawExtrema(kcalSelected,kcalTrend,"#ffb454",v=>Math.round(v).toLocaleString("it-IT")+" kcal");
-  drawExtrema(weightSelected,weightTrend,"#67e8f9",v=>n(v,1)+" kg");
+  drawExtrema(hoursSelected,hoursTrend,"#aab4bf",v=>n(v,1)+" h",{dx:-34,minDy:18,maxDy:-18});
+  drawExtrema(kcalSelected,kcalTrend,"#ffb454",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{dx:34,minDy:-10,maxDy:18});
+  drawExtrema(weightSelected,weightTrend,"#67e8f9",v=>n(v,1)+" kg",{dx:0,minDy:18,maxDy:-14});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
