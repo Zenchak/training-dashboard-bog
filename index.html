@@ -63,9 +63,13 @@ body{
 .disc:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--c)}
 .disc .top{display:flex;justify-content:space-between;align-items:center}.disc .ico{font-size:23px}.disc .name{font-size:11px;color:var(--muted);font-weight:800}
 .disc .big{font-size:22px;font-weight:850;margin:8px 0 3px}.disc .mini{font-size:10px;color:var(--muted)}
-.charts{grid-template-columns:1.2fr 1fr}
-.chart{padding:16px;min-height:315px}.chart h3{font-size:14px;margin:0 0 3px;display:flex;gap:7px;align-items:center}.chart p{margin:0;color:var(--muted);font-size:10px}
-.chart canvas{width:100%;height:235px;margin-top:10px}
+.charts{grid-template-columns:1fr}
+.chart{padding:16px;min-height:345px}.chart h3{font-size:14px;margin:0 0 3px;display:flex;gap:7px;align-items:center}.chart p{margin:0;color:var(--muted);font-size:10px}
+.chart canvas{width:100%;height:265px;margin-top:10px}
+.trend-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:#c7d6e4}
+.trend-legend span{display:inline-flex;align-items:center;gap:6px}
+.trend-dot{width:9px;height:9px;border-radius:999px;display:inline-block}
+.trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#67e8f9}
 .records{grid-template-columns:repeat(4,1fr)}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
@@ -135,9 +139,16 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
 
   <div class="section-title"><h2>📈 Andamento</h2><span>Gennaio → dicembre</span></div>
   <section class="grid charts">
-    <div class="card chart"><h3>⏱️ Ore di allenamento</h3><p>Tempo attivo registrato mese per mese.</p><canvas id="hours"></canvas></div>
-    <div class="card chart"><h3>🔥 Kcal attività</h3><p id="kcalInfo">Consumo energetico mese per mese.</p><canvas id="kcal"></canvas></div>
-    <div class="card chart"><h3>⚖️ Peso</h3><p>Andamento delle misurazioni disponibili.</p><canvas id="weight"></canvas></div>
+    <div class="card chart">
+      <h3>📊 Trend allenamento</h3>
+      <p id="kcalInfo">Andamento smussato e normalizzato: ore come sfondo, kcal e peso come linee.</p>
+      <div class="trend-legend">
+        <span><i class="trend-dot hours"></i>Ore allenamento</span>
+        <span><i class="trend-dot kcal"></i>Kcal attive</span>
+        <span><i class="trend-dot weight"></i>Peso</span>
+      </div>
+      <canvas id="trend"></canvas>
+    </div>
   </section>
 
   <div class="section-title"><h2>🏆 Record</h2><span>Migliori valori dell'anno</span></div>
@@ -360,28 +371,90 @@ function axes(c,w,h,max,min=0,label=v=>Math.round(v)){
 function emptyCanvas(id,msg="Nessun dato"){
   const [c,w,h]=prep(id);c.fillStyle="#8fa7bf";c.font="12px system-ui";c.textAlign="center";c.fillText(msg,w/2,h/2);c.textAlign="left"
 }
-function drawLine(id,D,color,{zero=true,label=v=>Math.round(v)}={}){
-  if(!D.length){emptyCanvas(id);return}
-  const vals=D.map(x=>x.v);let mn=zero?0:Math.min(...vals),mx=Math.max(...vals);
-  if(mx===mn){mx=mn+1} const pad=(mx-mn)*.08;if(!zero){mn-=pad;mx+=pad}else mx+=pad;
-  const [c,w,h]=prep(id),[l,r,t,b]=axes(c,w,h,mx,mn,label),xs=(w-l-r)/Math.max(1,D.length-1);
-  const P=D.map((x,i)=>({x:l+i*xs,y:t+(mx-x.v)/(mx-mn)*(h-t-b),...x}));
-  c.beginPath();P.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));c.strokeStyle=color;c.lineWidth=2.6;c.stroke();
-  P.forEach(p=>{c.beginPath();c.arc(p.x,p.y,3.1,0,Math.PI*2);c.fillStyle=color;c.fill()});
-  const N=Math.min(6,P.length);for(let i=0;i<N;i++){const p=P[Math.round(i*(P.length-1)/Math.max(1,N-1))];c.fillStyle="#91a9bf";c.textAlign="center";c.font="9px system-ui";c.fillText(p.label,p.x,h-7)}c.textAlign="left"
+function smoothSeries(values){
+  return values.map((v,i)=>{
+    const slice=values.slice(Math.max(0,i-1),Math.min(values.length,i+2)).filter(Number.isFinite);
+    return slice.length?slice.reduce((a,b)=>a+b,0)/slice.length:null;
+  });
+}
+function normalizeSeries(values){
+  const valid=values.filter(Number.isFinite);
+  if(!valid.length) return values.map(()=>null);
+  const mn=Math.min(...valid),mx=Math.max(...valid);
+  if(mx===mn) return values.map(v=>Number.isFinite(v)?50:null);
+  return values.map(v=>Number.isFinite(v)?12+76*(v-mn)/(mx-mn):null);
+}
+function monthlyWeight(){
+  return ML.map((_,i)=>{
+    const month=i+1, vals=WY.filter(w=>Number(w.date.slice(5,7))===month).map(w=>w.kg);
+    return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+  });
+}
+function pathSmooth(c,pts){
+  const P=pts.filter(p=>Number.isFinite(p.y));
+  if(!P.length) return;
+  c.beginPath();c.moveTo(P[0].x,P[0].y);
+  for(let i=0;i<P.length-1;i++){
+    const p=P[i],n=P[i+1],mx=(p.x+n.x)/2;
+    c.bezierCurveTo(mx,p.y,mx,n.y,n.x,n.y);
+  }
+}
+function drawTrend(){
+  const [c,w,h]=prep("trend");
+  const l=34,r=14,t=16,b=30,plotW=w-l-r,plotH=h-t-b;
+  c.clearRect(0,0,w,h);
+
+  const hoursRaw=ML.map((_,i)=>AY.filter(a=>a.month===i+1).reduce((sum,a)=>sum+hrs(a.duration),0));
+  const kcalRows=AY.map(a=>({...activityKcal(a),month:a.month}));
+  const kcalRaw=ML.map((_,i)=>kcalRows.filter(x=>x.month===i+1).reduce((sum,x)=>sum+x.value,0));
+  const weightRaw=monthlyWeight();
+
+  const activeMonths=ML.map((_,i)=>AY.some(a=>a.month===i+1)||WY.some(w=>Number(w.date.slice(5,7))===i+1));
+  const hoursTrend=normalizeSeries(smoothSeries(hoursRaw.map((v,i)=>activeMonths[i]?v:null)));
+  const kcalTrend=normalizeSeries(smoothSeries(kcalRaw.map((v,i)=>activeMonths[i]?v:null)));
+  const weightTrend=normalizeSeries(smoothSeries(weightRaw));
+
+  // subtle grid + month labels
+  c.strokeStyle="rgba(127,150,170,.16)";c.lineWidth=1;
+  for(let j=0;j<4;j++){const y=t+plotH*j/3;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke()}
+  c.fillStyle="#91a9bf";c.font="9px system-ui";c.textAlign="center";
+  ML.forEach((m,i)=>{const x=l+plotW*i/11;c.fillText(m,x,h-8)});
+  c.textAlign="left";
+
+  const pts=arr=>arr.map((v,i)=>({x:l+plotW*i/11,y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
+
+  // Hours as a subdued grey background area.
+  const hp=pts(hoursTrend).filter(p=>Number.isFinite(p.y));
+  if(hp.length){
+    pathSmooth(c,hp);
+    c.lineTo(hp[hp.length-1].x,h-b);c.lineTo(hp[0].x,h-b);c.closePath();
+    const g=c.createLinearGradient(0,t,0,h-b);
+    g.addColorStop(0,"rgba(127,139,152,.28)");g.addColorStop(1,"rgba(127,139,152,.05)");
+    c.fillStyle=g;c.fill();
+    pathSmooth(c,hp);c.strokeStyle="rgba(155,166,178,.55)";c.lineWidth=1.5;c.stroke();
+  }
+
+  // Kcal line.
+  const kp=pts(kcalTrend);
+  pathSmooth(c,kp);c.strokeStyle="#ffb454";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+
+  // Weight line.
+  const wp=pts(weightTrend);
+  pathSmooth(c,wp);c.strokeStyle="#67e8f9";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+
+  const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
+  const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
+  const totalHours=AY.reduce((sum,a)=>sum+hrs(a.duration),0);
+  if(els.kcalInfo){
+    const details=[];
+    if(totalHours) details.push(`${fh(totalHours)} allenamento`);
+    if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
+    if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
+    els.kcalInfo.textContent="Curve smussate per leggere il trend, non i singoli valori" + (details.length?" · "+details.join(" · "):"");
+  }
 }
 function drawCharts(){
-  const hd=Array.from({length:12},(_,i)=>({label:ML[i],v:AY.filter(a=>a.month===i+1).reduce((s,a)=>s+hrs(a.duration),0)}));
-  drawLine("hours",hd,COLORS.hike);
-  const kcalRows=AY.map(a=>({...activityKcal(a),month:a.month}));
-  const kd=Array.from({length:12},(_,i)=>({label:ML[i],v:kcalRows.filter(x=>x.month===i+1).reduce((s,x)=>s+x.value,0)}));
-  drawLine("kcal",kd,"#ffb454",{label:v=>Math.round(v).toLocaleString("it-IT")});
-  const kcalTotal=kcalRows.reduce((s,x)=>s+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
-  if(els.kcalInfo) els.kcalInfo.textContent=kcalTotal
-    ? `${Math.round(kcalTotal).toLocaleString("it-IT")} kcal nell’anno · ${estimatedCount ? "stima dove manca il dato Garmin" : "dati registrati"}`
-    : "Nessun dato disponibile.";
-  const wd=WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>({label:shortDate(x.date),v:x.kg}));
-  drawLine("weight",wd,COLORS.run,{zero:false,label:v=>n(v,1)});
+  drawTrend();
 }
 function populateFilters(){
   const tv=els.type.value,mv=els.month.value;
