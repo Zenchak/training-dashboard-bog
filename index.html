@@ -135,8 +135,6 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
 
   <div class="section-title"><h2>📈 Andamento</h2><span>Gennaio → dicembre</span></div>
   <section class="grid charts">
-    <div class="card chart"><h3>📏 Distanza mensile</h3><p>Km complessivi registrati nel mese.</p><canvas id="monthly"></canvas></div>
-    <div class="card chart"><h3>🚴 Km bici cumulativi</h3><p>Progressione annuale delle uscite in bici.</p><canvas id="cum"></canvas></div>
     <div class="card chart"><h3>⏱️ Ore di allenamento</h3><p>Tempo attivo registrato mese per mese.</p><canvas id="hours"></canvas></div>
     <div class="card chart"><h3>🔥 Kcal attività</h3><p id="kcalInfo">Consumo energetico mese per mese.</p><canvas id="kcal"></canvas></div>
     <div class="card chart"><h3>⚖️ Peso</h3><p>Andamento delle misurazioni disponibili.</p><canvas id="weight"></canvas></div>
@@ -362,16 +360,6 @@ function axes(c,w,h,max,min=0,label=v=>Math.round(v)){
 function emptyCanvas(id,msg="Nessun dato"){
   const [c,w,h]=prep(id);c.fillStyle="#8fa7bf";c.font="12px system-ui";c.textAlign="center";c.fillText(msg,w/2,h/2);c.textAlign="left"
 }
-function drawMonthly(){
-  if(!AY.length){emptyCanvas("monthly");return}
-  const D=Array.from({length:12},(_,i)=>AY.filter(a=>a.month===i+1).reduce((s,a)=>s+a.km,0));
-  const maxVal=Math.max(...D),mx=Math.max(10,Math.ceil(maxVal/50)*50);
-  const [c,w,h]=prep("monthly"),[l,r,t,b]=axes(c,w,h,mx),g=(w-l-r)/12,bw=Math.max(5,Math.min(34,g*.60));
-  D.forEach((v,i)=>{const bh=(h-t-b)*v/mx,x=l+i*g+(g-bw)/2,y=h-b-bh;
-    const grad=c.createLinearGradient(0,y,0,h-b);grad.addColorStop(0,"#67e8f9");grad.addColorStop(1,"#5c7cff");c.fillStyle=grad;c.fillRect(x,y,bw,bh);
-    c.fillStyle="#91a9bf";c.textAlign="center";c.font="9px system-ui";c.fillText(ML[i],x+bw/2,h-7)
-  });c.textAlign="left"
-}
 function drawLine(id,D,color,{zero=true,label=v=>Math.round(v)}={}){
   if(!D.length){emptyCanvas(id);return}
   const vals=D.map(x=>x.v);let mn=zero?0:Math.min(...vals),mx=Math.max(...vals);
@@ -383,9 +371,6 @@ function drawLine(id,D,color,{zero=true,label=v=>Math.round(v)}={}){
   const N=Math.min(6,P.length);for(let i=0;i<N;i++){const p=P[Math.round(i*(P.length-1)/Math.max(1,N-1))];c.fillStyle="#91a9bf";c.textAlign="center";c.font="9px system-ui";c.fillText(p.label,p.x,h-7)}c.textAlign="left"
 }
 function drawCharts(){
-  drawMonthly();
-  let s=0;const bikes=AY.filter(a=>a.type==="Bici").sort((a,b)=>a.date.localeCompare(b.date)).map(a=>({label:shortDate(a.date),v:s+=a.km}));
-  drawLine("cum",bikes,COLORS.Bici);
   const hd=Array.from({length:12},(_,i)=>({label:ML[i],v:AY.filter(a=>a.month===i+1).reduce((s,a)=>s+hrs(a.duration),0)}));
   drawLine("hours",hd,COLORS.hike);
   const kcalRows=AY.map(a=>({...activityKcal(a),month:a.month}));
