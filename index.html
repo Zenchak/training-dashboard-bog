@@ -80,7 +80,7 @@ body{
 .race-panel{padding:0;overflow:hidden}
 .race-note{display:flex;gap:10px;align-items:flex-start;padding:14px 16px;border-bottom:1px solid rgba(129,183,226,.14);background:linear-gradient(90deg,rgba(103,232,249,.07),rgba(124,156,255,.04));color:#aec3d6;font-size:11px;line-height:1.45}
 .race-note .ico{font-size:20px;line-height:1}
-.race-table{min-width:1050px}
+.race-table{min-width:900px}
 .race-table td{vertical-align:top}
 .race-name{display:flex;align-items:center;gap:9px;font-weight:850;font-size:13px}
 .race-name .race-ico{font-size:22px}
@@ -92,6 +92,7 @@ body{
 .progressbar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#67e8f9,#7c9cff)}
 .progresssub{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.35}
 .est{font-size:16px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
+.estline{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .splits{margin-top:5px;color:var(--muted);font-size:9px;line-height:1.45}
 .race-stat{margin-top:7px;font-size:9px;line-height:1.45;color:#687587}
 .race-stat b{font-weight:850}
@@ -473,24 +474,24 @@ tr:hover td{background:#fafbfe}
     letter-spacing:0;
     text-align:center
   }
-  .race-table th:nth-child(1),.race-table td:nth-child(1){width:10%}
-  .race-table th:nth-child(2),.race-table td:nth-child(2){width:14%}
-  .race-table th:nth-child(3),.race-table td:nth-child(3){width:21%}
-  .race-table th:nth-child(4),.race-table td:nth-child(4){width:18%}
-  .race-table th:nth-child(5),.race-table td:nth-child(5){width:27%}
-  .race-table th:nth-child(6),.race-table td:nth-child(6){width:10%}
-  .race-name{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:7.8px;line-height:1.1;text-align:center}
-  .race-name .race-ico{font-size:12px}
-  .race-dist{line-height:1.4;white-space:normal;font-size:7px;text-align:center}
-  .race-prep{min-width:0;font-size:6.8px;line-height:1.3}
+  .race-table th:nth-child(1),.race-table td:nth-child(1){width:11%}
+  .race-table th:nth-child(2),.race-table td:nth-child(2){width:15%}
+  .race-table th:nth-child(3),.race-table td:nth-child(3){width:22%}
+  .race-table th:nth-child(4),.race-table td:nth-child(4){width:19%}
+  .race-table th:nth-child(5),.race-table td:nth-child(5){width:33%}
+  .race-name{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:8.2px;line-height:1.1;text-align:center}
+  .race-name .race-ico{font-size:13px}
+  .race-dist{line-height:1.4;white-space:normal;font-size:7.4px;text-align:center}
+  .race-prep{min-width:0;font-size:7.2px;line-height:1.3}
   .progressbox{min-width:0}
-  .progresshead{font-size:6.5px;gap:2px;line-height:1.2}
+  .progresshead{font-size:6.9px;gap:2px;line-height:1.2}
   .progressbar{height:5px;margin-top:4px}
-  .progresssub{font-size:6.2px;margin-top:4px;line-height:1.25}
-  .est{font-size:10px;line-height:1.1;white-space:normal}
-  .splits{font-size:6.6px;margin-top:3px;line-height:1.28}
-  .race-stat{font-size:6.4px;margin-top:4px;line-height:1.28}
-  .rating{display:flex;justify-content:center;text-align:center;padding:4px 2px;font-size:6.5px;line-height:1.15;white-space:normal}
+  .progresssub{font-size:6.5px;margin-top:4px;line-height:1.25}
+  .estline{gap:3px}
+  .est{font-size:10.5px;line-height:1.1;white-space:normal}
+  .splits{font-size:6.9px;margin-top:3px;line-height:1.28}
+  .race-stat{font-size:6.7px;margin-top:4px;line-height:1.28}
+  .rating{display:inline-flex;justify-content:center;text-align:center;padding:3px 4px;font-size:6.3px;line-height:1.1;white-space:normal}
   .legendline{padding:8px 9px;font-size:6.9px;line-height:1.35}
 
 }
@@ -541,7 +542,7 @@ tr:hover td{background:#fafbfe}
     </div>
     <div class="tablewrap" style="border:0;border-radius:0;box-shadow:none;background:transparent">
       <table class="race-table">
-        <thead><tr><th>Formato</th><th>Distanze gara</th><th>Traguardi di preparazione</th><th>Progresso distanze</th><th>Stima Bogdan</th><th>Valutazione</th></tr></thead>
+        <thead><tr><th>Formato</th><th>Distanze gara</th><th>Traguardi di preparazione</th><th>Progresso distanze</th><th>Stima / confidenza</th></tr></thead>
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
@@ -756,7 +757,7 @@ function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
   const bikeSpeed=representativeBikeSpeed();
   const runPace=representativePace("Corsa",3);
   if(!swimPace || !bikeSpeed || !runPace){
-    return {estimate:"Dati insufficienti",splits:"Servono dati in tutte e tre le discipline",rating:"Stima preliminare",ratingClass:"theory",center:null,low:null,high:null,swimSec:null,bikeSec:null,runSec:null,transSec:null};
+    return {estimate:"Dati insufficienti",splits:"Servono dati in tutte e tre le discipline",confidence:"Bassa",ratingClass:"theory",center:null,low:null,high:null,swimSec:null,bikeSec:null,runSec:null,transSec:null};
   }
 
   const baseByRace={
@@ -775,16 +776,23 @@ function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
   const spread=r.uncertainty + Math.max(0,(85-pct)/1000);
   const low=center*(1-spread),high=center*(1+spread);
 
-  let rating="Stima preliminare",ratingClass="theory";
-  if(pct>=95){rating="Stima solida";ratingClass="good"}
-  else if(pct>=80){rating="Buona base";ratingClass="good"}
-  else if(pct>=60){rating="In evoluzione";ratingClass="build"}
-  else if(pct>=40){rating="Da consolidare";ratingClass="mid"}
+  let confidence="Bassa",ratingClass="theory";
+  if(pct>=90){confidence="Alta";ratingClass="good"}
+  else if(pct>=75){confidence="Medio-alta";ratingClass="good"}
+  else if(pct>=55){confidence="Media";ratingClass="build"}
+  else if(pct>=35){confidence="Medio-bassa";ratingClass="mid"}
+
+  // Le distanze più lunghe hanno maggiore incertezza anche con una buona base.
+  if(r.name==="70.3" && confidence==="Alta") confidence="Medio-alta";
+  if(r.name==="Full"){
+    if(confidence==="Alta" || confidence==="Medio-alta") confidence="Media";
+    else if(confidence==="Media") confidence="Medio-bassa";
+  }
 
   return {
     estimate:`${fmtRace(low)}–${fmtRace(high)}`,
     splits:`Nuoto ${fmtSplit(swimSec)} · Bici ${fmtSplit(bikeSec)} · Corsa ${fmtSplit(runSec)} · transizioni ~${r.transition}'`,
-    rating,ratingClass,center,low,high,swimSec,bikeSec,runSec,transSec
+    confidence,ratingClass,center,low,high,swimSec,bikeSec,runSec,transSec
   };
 }
 
@@ -865,14 +873,13 @@ function renderRaceGoals(){
       <td class="race-prep">${r.prepText}</td>
       <td><div class="progressbox"><div class="progresshead"><span>${label}</span><span>${pct}%</span></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="progresssub">Max ${selectedYear}: 🏊 ${n(maxSwim,2)} · 🚴 ${n(maxBike,2)} · 🏃 ${n(maxRun,2)} km</div></div></td>
       <td>
-        <div class="est">${dyn.estimate}</div>
+        <div class="estline"><div class="est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span></div>
         <div class="splits">${dyn.splits}</div>
         <div class="race-stat">
           <div class="${standing.placementClass}"><b>↕ Posizione:</b> ${standing.placement}</div>
           <div class="${standing.gateClass}"><b>⏱ Cutoff:</b> ${standing.gate}</div>
         </div>
       </td>
-      <td><span class="rating ${dyn.ratingClass}">${dyn.rating}</span></td>
     </tr>`
   }).join("");
 }
