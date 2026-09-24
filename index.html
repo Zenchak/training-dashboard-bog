@@ -74,7 +74,7 @@ body{
 .trend-legend span{display:inline-flex;align-items:center;gap:6px}
 .trend-dot{width:9px;height:9px;border-radius:999px;display:inline-block}
 .trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#67e8f9}
-.records{grid-template-columns:repeat(4,1fr)}
+.records{grid-template-columns:repeat(3,1fr)}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
 .race-panel{padding:0;overflow:hidden}
@@ -605,7 +605,23 @@ function renderRecords(){
   const run=[...AY].filter(a=>["Corsa","Trail"].includes(a.type)).sort((a,b)=>b.km-a.km)[0];
   const climb=[...AY].filter(a=>Number.isFinite(a.dplus)).sort((a,b)=>b.dplus-a.dplus)[0];
   const long=[...AY].sort((a,b)=>sec(b.duration)-sec(a.duration))[0];
+
+  function bestRunAt(targetKm){
+    const z=AY.filter(a=>a.type==="Corsa" && a.km>=targetKm && sec(a.duration)>0)
+      .map(a=>({...a,targetSec:sec(a.duration)*targetKm/a.km}))
+      .sort((a,b)=>a.targetSec-b.targetSec);
+    return z[0]||null;
+  }
+  function fmtRecordTime(seconds){
+    if(!Number.isFinite(seconds)) return "—";
+    const t=Math.round(seconds),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),ss=t%60;
+    return h?`${h}:${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}`:`${m}:${String(ss).padStart(2,"0")}`;
+  }
+
+  const best5=bestRunAt(5),best10=bestRunAt(10);
   const rec=[
+    ["🏃","5 km più veloci",best5?fmtRecordTime(best5.targetSec):"—",best5?`${dt(best5.date)} · su ${n(best5.km,2)} km`:""],
+    ["🏃","10 km più veloci",best10?fmtRecordTime(best10.targetSec):"—",best10?`${dt(best10.date)} · su ${n(best10.km,2)} km`:""],
     ["🚴","Bici più lunga",bike?`${n(bike.km,2)} km`:"—",bike?dt(bike.date):""],
     ["🏃","Corsa / trail più lungo",run?`${n(run.km,2)} km`:"—",run?dt(run.date):""],
     ["⛰️","D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
