@@ -62,7 +62,7 @@ body{
 .kpi .value{font-size:24px;font-weight:870;letter-spacing:-.035em;margin-top:4px}.kpi .sub{font-size:10px;color:var(--muted);margin-top:5px}
 .section-title{display:flex;justify-content:space-between;gap:12px;align-items:end;margin:25px 4px 10px}
 .section-title h2{font-size:19px;margin:0;display:flex;align-items:center;gap:8px}.section-title span{font-size:11px;color:var(--muted)}
-.disciplines{grid-template-columns:repeat(6,1fr)}
+.disciplines{grid-template-columns:repeat(6,minmax(0,1fr))}
 .disc{padding:15px;position:relative;overflow:hidden;min-height:120px}
 .disc:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--c)}
 .disc .top{display:flex;justify-content:space-between;align-items:center}.disc .ico{font-size:23px}.disc .name{font-size:11px;color:var(--muted);font-weight:800}
@@ -314,8 +314,7 @@ tr:hover td{background:#fafbfe}
   .yearbar .label{font-size:9px;padding:0 3px}
   .yearbtn{padding:5px 9px;border-radius:8px;font-size:10px}
 
-  .kpis,.disciplines{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .kpis{margin-bottom:7px}
+  .disciplines{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
   .card{border-radius:12px}
 
   .kpi{
@@ -434,9 +433,7 @@ tr:hover td{background:#fafbfe}
     <div id="yearButtons" style="display:flex;gap:8px"></div>
   </nav>
 
-  <section class="grid kpis" id="kpis"></section>
-
-  <div class="section-title"><h2>◫ Discipline</h2><span>Totali dell'anno selezionato</span></div>
+  <div class="section-title"><h2>◫ Riepilogo</h2><span>Tempo e discipline principali</span></div>
   <section class="grid disciplines" id="disciplines"></section>
 
   <div class="section-title"><h2>↗ Andamento</h2><span>Solo mesi con dati</span></div>
@@ -498,7 +495,7 @@ const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
   heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
-  kpis:document.getElementById("kpis"),disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
+  disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
   reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote"),
@@ -563,26 +560,16 @@ function renderHero(){
   const totalH=AY.reduce((s,a)=>s+hrs(a.duration),0);
   els.coverage.textContent=`${AY.length} attività · ${fh(totalH)} · ${dt(dates[0])} → ${dt(dates.at(-1))}`;
 }
-function renderKPIs(){
-  const th=AY.reduce((s,a)=>s+hrs(a.duration),0),tk=AY.reduce((s,a)=>s+a.km,0),dp=AY.reduce((s,a)=>s+(a.dplus||0),0);
-  const bk=AY.filter(a=>a.type==="Bici").reduce((s,a)=>s+a.km,0);
-  const run=AY.filter(a=>["Corsa","Trail"].includes(a.type)).reduce((s,a)=>s+a.km,0);
-  const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
-  const firstW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date))[0]:null;
-  const wd=latestW&&firstW?latestW.kg-firstW.kg:null;
-  const items=[
-    ["📍","Distanza",`${n(tk,2)} km`,"tutte le discipline"],
-    ["⏱️","Tempo",fh(th),"durata attiva"],
-    ["🚴","Bici",`${n(bk,2)} km`,`${AY.filter(a=>a.type==="Bici").length} uscite`],
-    ["🏃","Corsa + trail",`${n(run,2)} km`,"chilometri a piedi"]
-  ];
-  els.kpis.innerHTML=items.map(x=>`<div class="card kpi"><div class="ico">${x[0]}</div><div class="label">${x[1]}</div><div class="value">${x[2]}</div><div class="sub">${x[3]}</div></div>`).join("");
-}
 function renderDisciplines(){
-  els.disciplines.innerHTML=TYPES.map(t=>{
-    const z=AY.filter(a=>a.type===t),km=z.reduce((s,a)=>s+a.km,0),h=z.reduce((s,a)=>s+hrs(a.duration),0);
-    return `<div class="card disc" style="--c:${COLORS[t]}"><div class="top"><span class="name">${t}</span><span class="ico">${ICONS[t]}</span></div><div class="big">${n(km,2)} km</div><div class="mini">${z.length} attività · ${fh(h)}</div></div>`
-  }).join("");
+  const th=AY.reduce((sum,a)=>sum+hrs(a.duration),0);
+  const cards=[
+    {name:"Tempo totale",icon:"⏱️",big:fh(th),mini:`${AY.length} attività`,color:"#7c9cff"},
+    ...["Bici","Corsa","Trail","Trekking","Nuoto"].map(t=>{
+      const z=AY.filter(a=>a.type===t),km=z.reduce((sum,a)=>sum+a.km,0),h=z.reduce((sum,a)=>sum+hrs(a.duration),0);
+      return {name:t,icon:ICONS[t],big:`${n(km,2)} km`,mini:`${z.length} attività · ${fh(h)}`,color:COLORS[t]};
+    })
+  ];
+  els.disciplines.innerHTML=cards.map(x=>`<div class="card disc" style="--c:${x.color}"><div class="top"><span class="name">${x.name}</span><span class="ico">${x.icon}</span></div><div class="big">${x.big}</div><div class="mini">${x.mini}</div></div>`).join("");
 }
 function renderRecords(){
   if(!AY.length){els.records.innerHTML="";return}
@@ -949,7 +936,7 @@ function renderFooter(){
   els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""}${kcalEstimated?" Le kcal sono stimate da peso, durata e intensità quando il dato Garmin non è presente nell’attività.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
 }
 function renderAll(){
-  yearlyData();renderYearButtons();renderHero();renderKPIs();renderDisciplines();renderRecords();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderRecords();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
 TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
