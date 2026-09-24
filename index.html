@@ -73,7 +73,7 @@ body{
 .trend-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:#c7d6e4}
 .trend-legend span{display:inline-flex;align-items:center;gap:6px}
 .trend-dot{width:9px;height:9px;border-radius:999px;display:inline-block}
-.trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#67e8f9}
+.trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#2563eb}
 .records{grid-template-columns:repeat(3,1fr)}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
@@ -524,7 +524,7 @@ tr:hover td{background:#fafbfe}
   <section class="grid charts">
     <div class="card chart">
       <h3>Trend allenamento</h3>
-      <p id="kcalInfo">Andamento smussato e normalizzato: ore come sfondo, kcal e peso come linee.</p>
+      <p id="kcalInfo">Ore mensili come colonne; kcal e peso come linee smussate e normalizzate.</p>
       <div class="trend-legend">
         <span><i class="trend-dot hours"></i>Ore allenamento</span>
         <span><i class="trend-dot kcal"></i>Kcal attive</span>
@@ -952,7 +952,7 @@ function drawTrend(){
 
   const pick=arr=>months.map(i=>arr[i]);
   const hoursSelected=pick(hoursRaw),kcalSelected=pick(kcalRaw),weightSelected=pick(weightRaw);
-  const hoursTrend=normalizeSeries(smoothSeries(hoursSelected));
+  const hoursTrend=normalizeSeries(hoursSelected);
   const kcalTrend=normalizeSeries(smoothSeries(kcalSelected));
   const weightTrend=normalizeSeries(smoothSeries(weightSelected));
 
@@ -965,24 +965,36 @@ function drawTrend(){
   months.forEach((mi,i)=>c.fillText(ML[mi],xAt(i),h-8));
   c.textAlign="left";
 
-  // Ore: area grigia di sfondo.
-  const hp=pts(hoursTrend).filter(p=>Number.isFinite(p.y));
-  if(hp.length){
-    pathSmooth(c,hp);
-    c.lineTo(hp[hp.length-1].x,h-b);c.lineTo(hp[0].x,h-b);c.closePath();
-    const g=c.createLinearGradient(0,t,0,h-b);
-    g.addColorStop(0,"rgba(144,154,166,.22)");g.addColorStop(1,"rgba(144,154,166,.035)");
-    c.fillStyle=g;c.fill();
-    pathSmooth(c,hp);c.strokeStyle="rgba(133,144,157,.55)";c.lineWidth=1.6;c.stroke();
-  }
+  // Ore: colonne mensili reali, con totale alla base.
+  const baseY=h-b;
+  const step=months.length>1?plotW/(months.length-1):plotW;
+  const barW=Math.max(12,Math.min(42,step*.55));
+  hoursTrend.forEach((v,i)=>{
+    if(!Number.isFinite(v) || !Number.isFinite(hoursSelected[i])) return;
+    const x=xAt(i),y=t+plotH*(1-v/100),bh=Math.max(2,baseY-y);
+    const g=c.createLinearGradient(0,y,0,baseY);
+    g.addColorStop(0,"rgba(127,139,152,.46)");
+    g.addColorStop(1,"rgba(127,139,152,.16)");
+    c.fillStyle=g;
+    c.fillRect(x-barW/2,y,barW,bh);
+    c.strokeStyle="rgba(111,123,138,.42)";
+    c.lineWidth=1;
+    c.strokeRect(x-barW/2+.5,y+.5,Math.max(1,barW-1),Math.max(1,bh-1));
+
+    c.font="700 8px system-ui";
+    c.fillStyle="#5f6d7d";
+    c.textAlign="center";
+    c.fillText(n(hoursSelected[i],1)+"h",x,baseY-5);
+  });
+  c.textAlign="left";
 
   // Kcal: arancione.
   const kp=pts(kcalTrend);
   pathSmooth(c,kp);c.strokeStyle="#ffb454";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
 
-  // Peso: ciano.
+  // Peso: blu scuro per maggiore leggibilità.
   const wp=pts(weightTrend);
-  pathSmooth(c,wp);c.strokeStyle="#67e8f9";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+  pathSmooth(c,wp);c.strokeStyle="#2563eb";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
 
   function drawExtrema(raw,trend,color,format,{dx=0,minDy=16,maxDy=-12}={}){
     const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
@@ -1008,9 +1020,8 @@ function drawTrend(){
     c.textAlign="left";
   }
 
-  drawExtrema(hoursSelected,hoursTrend,"#aab4bf",v=>n(v,1)+" h",{dx:-34,minDy:18,maxDy:-18});
   drawExtrema(kcalSelected,kcalTrend,"#ffb454",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{dx:34,minDy:-10,maxDy:18});
-  drawExtrema(weightSelected,weightTrend,"#67e8f9",v=>n(v,1)+" kg",{dx:0,minDy:18,maxDy:-14});
+  drawExtrema(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{dx:0,minDy:18,maxDy:-14});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
@@ -1020,7 +1031,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Curve smussate per leggere il trend" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Ore mensili in colonne; kcal e peso come trend smussati" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function drawCharts(){
