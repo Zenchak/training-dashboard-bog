@@ -35,6 +35,10 @@ body{
 .hero h1{font-size:clamp(36px,7vw,64px);line-height:.96;letter-spacing:-.045em;margin:9px 0 9px}
 .hero p{margin:0;color:var(--muted);font-size:13px}
 .hero-art{font-size:44px;letter-spacing:3px;white-space:nowrap;opacity:.95;filter:drop-shadow(0 8px 18px rgba(0,0,0,.25))}
+.hero-actions{display:flex;align-items:center;gap:8px;z-index:2}
+.hero-refresh{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(129,183,226,.25);background:#0b1d30;color:var(--text);border-radius:12px;padding:10px 12px;font:inherit;font-size:12px;font-weight:850;cursor:pointer;transition:.15s}
+.hero-refresh:hover{transform:translateY(-1px);border-color:var(--accent)}
+@media(max-width:720px){.hero-actions{justify-content:flex-start}.hero-refresh{min-height:42px}}
 .yearbar{
   position:sticky;top:8px;z-index:20;display:flex;align-items:center;gap:8px;overflow:auto;padding:8px;
   margin:0 0 16px;border:1px solid rgba(129,183,226,.16);border-radius:16px;background:rgba(7,18,31,.86);
@@ -124,7 +128,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
       <h1><span id="heroYear">2026</span> in movimento</h1>
       <p id="coverage"></p>
     </div>
-    <div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div>
+    <div class="hero-actions"><button class="hero-refresh" type="button" onclick="location.reload()">↻ Refresh</button><div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div></div>
   </header>
 
   <nav class="yearbar" aria-label="Selezione anno">
