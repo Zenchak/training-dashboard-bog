@@ -959,7 +959,7 @@ function drawTrend(){
   const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
   const pts=arr=>arr.map((v,i)=>({x:xAt(i),y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
 
-  c.strokeStyle="rgba(108,121,143,.14)";c.lineWidth=1;
+  c.strokeStyle="rgba(108,121,143,.10)";c.lineWidth=1;
   for(let j=0;j<4;j++){const y=t+plotH*j/3;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke()}
   c.fillStyle="#7f8a99";c.font="9px system-ui";c.textAlign="center";
   months.forEach((mi,i)=>c.fillText(ML[mi],xAt(i),h-8));
@@ -969,20 +969,41 @@ function drawTrend(){
   const baseY=h-b;
   const step=months.length>1?plotW/(months.length-1):plotW;
   const barW=Math.max(12,Math.min(42,step*.55));
+  function roundedBar(x,y,w,h,r=6){
+    const rr=Math.max(0,Math.min(r,w/2,h/2));
+    c.beginPath();
+    c.moveTo(x+rr,y);
+    c.lineTo(x+w-rr,y);
+    c.quadraticCurveTo(x+w,y,x+w,y+rr);
+    c.lineTo(x+w,y+h);
+    c.lineTo(x,y+h);
+    c.lineTo(x,y+rr);
+    c.quadraticCurveTo(x,y,x+rr,y);
+    c.closePath();
+  }
   hoursTrend.forEach((v,i)=>{
     if(!Number.isFinite(v) || !Number.isFinite(hoursSelected[i])) return;
-    const x=xAt(i),y=t+plotH*(1-v/100),bh=Math.max(2,baseY-y);
+    const x=xAt(i),y=t+plotH*(1-v/100),bh=Math.max(2,baseY-y),bx=x-barW/2;
     const g=c.createLinearGradient(0,y,0,baseY);
-    g.addColorStop(0,"rgba(127,139,152,.46)");
-    g.addColorStop(1,"rgba(127,139,152,.16)");
+    g.addColorStop(0,"rgba(111,123,138,.62)");
+    g.addColorStop(.55,"rgba(137,148,161,.34)");
+    g.addColorStop(1,"rgba(163,172,184,.10)");
+    c.save();
+    c.shadowColor="rgba(64,78,96,.12)";
+    c.shadowBlur=9;
+    c.shadowOffsetY=3;
+    roundedBar(bx,y,barW,bh,6);
     c.fillStyle=g;
-    c.fillRect(x-barW/2,y,barW,bh);
-    c.strokeStyle="rgba(111,123,138,.42)";
+    c.fill();
+    c.restore();
+
+    roundedBar(bx+.5,y+.5,Math.max(1,barW-1),Math.max(1,bh-.5),6);
+    c.strokeStyle="rgba(105,118,134,.18)";
     c.lineWidth=1;
-    c.strokeRect(x-barW/2+.5,y+.5,Math.max(1,barW-1),Math.max(1,bh-1));
+    c.stroke();
 
     c.font="700 8px system-ui";
-    c.fillStyle="#5f6d7d";
+    c.fillStyle="#687587";
     c.textAlign="center";
     c.fillText(n(hoursSelected[i],1)+"h",x,baseY-5);
   });
@@ -990,11 +1011,13 @@ function drawTrend(){
 
   // Kcal: arancione.
   const kp=pts(kcalTrend);
-  pathSmooth(c,kp);c.strokeStyle="#ffb454";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+  c.save();c.shadowColor="rgba(255,180,84,.18)";c.shadowBlur=7;
+  pathSmooth(c,kp);c.strokeStyle="#ffac3f";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();c.restore();
 
   // Peso: blu scuro per maggiore leggibilità.
   const wp=pts(weightTrend);
-  pathSmooth(c,wp);c.strokeStyle="#2563eb";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+  c.save();c.shadowColor="rgba(37,99,235,.16)";c.shadowBlur=7;
+  pathSmooth(c,wp);c.strokeStyle="#2563eb";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();c.restore();
 
   function drawExtrema(raw,trend,color,format,{dx=0,minDy=16,maxDy=-12}={}){
     const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
@@ -1009,12 +1032,9 @@ function drawTrend(){
       const tx=Math.max(l+34,Math.min(w-r-34,px+dx));
       const ty=Math.max(12,Math.min(h-b-4,y+dy));
 
-      c.beginPath();c.arc(px,y,4,0,Math.PI*2);c.fillStyle=color;c.fill();
+      c.beginPath();c.arc(px,y,3.6,0,Math.PI*2);c.fillStyle=color;c.fill();
 
-      c.beginPath();c.moveTo(px,y);c.lineTo(tx,ty+(dy<0?4:-4));
-      c.strokeStyle=color;c.globalAlpha=.45;c.lineWidth=1;c.stroke();c.globalAlpha=1;
-
-      c.font="bold 9px system-ui";c.fillStyle=color;c.textAlign="center";
+      c.font="700 9px system-ui";c.fillStyle=color;c.textAlign="center";
       c.fillText((isMax?"max ":"min ")+format(x.v),tx,ty);
     });
     c.textAlign="left";
