@@ -1097,7 +1097,7 @@ function drawTrend(){
     c.textAlign="left";
   }
 
-  drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{position:"above"});
+  drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT"),{position:"above"});
   drawMonthlyLabels(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{position:"below"});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
