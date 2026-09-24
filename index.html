@@ -103,7 +103,7 @@ body{
 .controls>*{background:#091827;color:var(--text);border:1px solid #28445f;border-radius:11px;padding:10px 12px;font:inherit;font-size:12px}
 .controls input{flex:1;min-width:190px}.controls button{cursor:pointer}.controls button:hover{border-color:#4c7194}
 .tablewrap{overflow:auto;border:1px solid rgba(129,183,226,.15);border-radius:16px;background:rgba(8,22,38,.75);box-shadow:var(--shadow)}
-table{border-collapse:collapse;width:100%;min-width:870px}
+table{border-collapse:collapse;width:100%;min-width:760px}
 th,td{padding:11px 12px;border-bottom:1px solid rgba(51,83,112,.34);font-size:11px;text-align:left}
 th{background:#0c1d30;color:#a7bdd1;position:sticky;top:0;text-transform:uppercase;letter-spacing:.045em;font-size:10px}
 tr:hover td{background:rgba(71,118,158,.08)}
@@ -343,7 +343,7 @@ tr:hover td{background:#fafbfe}
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th><th>Note</th></tr></thead>
+      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
@@ -741,7 +741,7 @@ function renderTable(){
   els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
     <td>${dt(a.date)}</td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
     <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td>${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
-    <td>${a.metric}</td><td>${a.location||"—"}</td><td class="note">${a.note||""}</td></tr>`}).join("");
+    <td>${a.metric}</td><td>${a.location||"—"}</td></tr>`}).join("");
 }
 function renderFooter(){
   const missingD=AY.some(a=>a.dplus==null);
