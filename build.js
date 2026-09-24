@@ -9,15 +9,16 @@ let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 
 // Link alla pagina Gare in fondo alla dashboard Allenamenti.
 const raceButtonCss = `
-.bottom-nav{display:flex;justify-content:center;margin:24px 0 2px}
-.race-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#06111d;background:linear-gradient(135deg,var(--accent),#8fb7ff);border-radius:12px;padding:11px 16px;font-size:12px;font-weight:850;box-shadow:0 6px 18px rgba(103,232,249,.18);transition:.15s}
-.race-link:hover{transform:translateY(-1px);filter:brightness(1.05)}
-@media(max-width:720px){.race-link{width:100%;min-height:46px}}
+.bottom-nav{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:24px 0 2px}
+.bottom-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#06111d;background:linear-gradient(135deg,var(--accent),#8fb7ff);border:0;border-radius:12px;padding:11px 16px;font:inherit;font-size:12px;font-weight:850;box-shadow:0 6px 18px rgba(103,232,249,.18);transition:.15s;cursor:pointer}
+.bottom-link:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.bottom-link.secondary{color:#dce8f3;background:#0d2136;border:1px solid #2b4d6c;box-shadow:none}
+@media(max-width:720px){.bottom-nav{display:grid;grid-template-columns:repeat(3,1fr)}.bottom-link{width:100%;min-height:46px;padding:10px 8px}}
 `;
 html = html.replace('</style>', raceButtonCss + '\n</style>');
 html = html.replace(
   '<footer id="footerNote"></footer>\n</div>',
-  '<footer id="footerNote"></footer>\n<div class="bottom-nav"><a class="race-link" href="/gare/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\':8442/\'}">🏁 Gare</a></div>\n</div>'
+  '<footer id="footerNote"></footer>\n<div class="bottom-nav"><a class="bottom-link secondary" href="/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\'/\'}">🏠 Home</a><button class="bottom-link secondary" type="button" onclick="location.reload()">↻ Refresh</button><a class="bottom-link" href="/gare/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\':8442/\'}">🏁 Gare</a></div>\n</div>'
 );
 
 // Un unico grafico per ore, kcal e peso, sulla stessa timeline mensile.
