@@ -5,19 +5,248 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Zenchack Hub</title>
 <style>
-:root{color-scheme:dark;--bg:#07111f;--card:#102238;--line:#274660;--text:#f4f8fc;--muted:#9bb0c4;--accent:#67e8f9}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(160deg,#07111f,#0d2034);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;display:grid;place-items:center;padding:24px}.wrap{width:min(680px,100%)}.head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px}.headcopy{min-width:0}h1{margin:0 0 6px;font-size:28px}.sub{color:var(--muted)}.switch{display:inline-flex;align-items:center;justify-content:center;gap:7px;color:var(--text);background:#0b1a2b;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;font-weight:800;white-space:nowrap;transition:.15s;cursor:pointer}.switch:hover{border-color:var(--accent);transform:translateY(-1px)}.grid{display:grid;gap:12px}.card{display:block;text-decoration:none;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;transition:.15s}.card:hover{transform:translateY(-1px);border-color:var(--accent)}.card.profile-hidden{display:none}.title{font-weight:850;font-size:18px}.desc{color:var(--muted);font-size:13px;margin-top:4px}.foot{color:var(--muted);font-size:11px;margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}.foot a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line)}dialog{border:1px solid var(--line);border-radius:20px;background:#0d1d30;color:var(--text);padding:0;width:min(92vw,390px);box-shadow:0 22px 70px rgba(0,0,0,.5)}dialog::backdrop{background:rgba(0,0,0,.55)}.modal{padding:20px}.modal h2{margin:0 0 6px;font-size:21px}.modal p{margin:0 0 16px;color:var(--muted);font-size:13px}.profiles{display:grid;gap:10px}.profile{border:1px solid var(--line);background:#102238;color:var(--text);border-radius:15px;padding:14px 16px;text-align:left;font:inherit;font-weight:850;cursor:pointer}.profile small{display:block;color:var(--muted);font-weight:500;margin-top:3px}.profile.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}.close{margin-top:12px;width:100%;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:12px;padding:10px;font:inherit;cursor:pointer}@media(max-width:520px){.head{align-items:stretch;flex-direction:column}.switch{align-self:flex-start}}
+:root{
+  color-scheme:light;
+  --bg:#f5f7fb;
+  --panel:#ffffff;
+  --line:#e5eaf2;
+  --text:#202938;
+  --muted:#7d8898;
+  --accent:#6f5cf1;
+  --accent2:#4f8cff;
+  --shadow:0 10px 30px rgba(42,55,85,.08);
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(111,92,241,.08),transparent 28rem),
+    radial-gradient(circle at 95% 5%,rgba(79,140,255,.07),transparent 26rem),
+    linear-gradient(180deg,#fbfcfe 0%,#f4f7fb 100%);
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.wrap{width:min(760px,100%)}
+.hero{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:18px;
+  padding:26px;
+  margin-bottom:16px;
+  border:1px solid #edf0f6;
+  border-radius:24px;
+  background:linear-gradient(135deg,#ffffff 0%,#fbfaff 68%,#f2efff 100%);
+  box-shadow:0 12px 36px rgba(50,61,92,.08);
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  width:330px;height:330px;
+  right:-140px;top:-205px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(111,92,241,.16),transparent 66%);
+  pointer-events:none
+}
+.headcopy{position:relative;z-index:1;min-width:0}
+.brand{
+  display:flex;align-items:center;gap:9px;
+  color:#6f5cf1;
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-weight:850
+}
+.logo{
+  width:30px;height:30px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9px;
+  background:linear-gradient(135deg,#7a63f4,#5f8dff);
+  color:#fff;
+  font-size:14px;
+  box-shadow:0 7px 18px rgba(111,92,241,.22)
+}
+h1{margin:10px 0 6px;font-size:clamp(34px,7vw,52px);line-height:1;letter-spacing:-.04em}
+.sub{color:var(--muted);font-size:13px}
+.hero-actions{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:8px;
+}
+.switch,.refresh{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  color:#596678;
+  background:#fff;
+  border:1px solid #dfe5ee;
+  border-radius:12px;
+  padding:10px 12px;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+  transition:.15s;
+  cursor:pointer;
+  box-shadow:0 5px 14px rgba(43,55,85,.05)
+}
+.switch:hover,.refresh:hover{
+  border-color:#bfb4f7;
+  background:#faf9ff;
+  color:#624fe7;
+  transform:translateY(-1px)
+}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{
+  position:relative;
+  overflow:hidden;
+  display:block;
+  min-height:150px;
+  text-decoration:none;
+  color:var(--text);
+  background:#fff;
+  border:1px solid #e8ecf3;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:var(--shadow);
+  transition:.16s
+}
+.card:before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  background:var(--card-accent,#6f5cf1)
+}
+.card:hover{
+  transform:translateY(-2px);
+  border-color:#d8ddef;
+  box-shadow:0 14px 34px rgba(42,55,85,.11)
+}
+.card.profile-hidden{display:none}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.card-icon{
+  width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;
+  background:var(--icon-bg,#f2efff);
+  font-size:20px
+}
+.arrow{
+  width:30px;height:30px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:9px;
+  background:#f7f8fb;
+  color:#8a95a5;
+  font-size:16px
+}
+.title{font-weight:850;font-size:19px;margin-top:18px;letter-spacing:-.02em}
+.desc{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
+.card.training{--card-accent:#6f5cf1;--icon-bg:#eee9ff}
+.card.casa{--card-accent:#ff8b5e;--icon-bg:#ffefe8}
+.foot{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:16px;
+  padding:0 3px;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center
+}
+.foot a{
+  color:#667386;
+  text-decoration:none;
+  border-bottom:1px dotted #cfd6e0
+}
+dialog{
+  border:1px solid #e3e8f1;
+  border-radius:20px;
+  background:#fff;
+  color:var(--text);
+  padding:0;
+  width:min(92vw,390px);
+  box-shadow:0 22px 70px rgba(42,55,85,.20)
+}
+dialog::backdrop{background:rgba(55,65,81,.22);backdrop-filter:blur(3px)}
+.modal{padding:20px}
+.modal h2{margin:0 0 6px;font-size:21px}
+.modal p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.4}
+.profiles{display:grid;gap:10px}
+.profile{
+  border:1px solid #e1e6ef;
+  background:#fff;
+  color:var(--text);
+  border-radius:15px;
+  padding:14px 16px;
+  text-align:left;
+  font:inherit;
+  font-weight:850;
+  cursor:pointer;
+  transition:.15s
+}
+.profile:hover{background:#faf9ff;border-color:#cfc6fb}
+.profile small{display:block;color:var(--muted);font-weight:500;margin-top:3px}
+.profile.active{
+  border-color:#9c90f6;
+  background:#f8f6ff;
+  box-shadow:0 0 0 1px rgba(111,92,241,.18) inset
+}
+.close{
+  margin-top:12px;
+  width:100%;
+  border:1px solid #e1e6ef;
+  background:#f8f9fc;
+  color:#667386;
+  border-radius:12px;
+  padding:10px;
+  font:inherit;
+  cursor:pointer
+}
+@media(max-width:620px){
+  body{padding:12px}
+  .hero{padding:17px;border-radius:19px;align-items:flex-start}
+  h1{font-size:34px}
+  .sub{font-size:11px}
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .switch,.refresh{padding:9px 10px;font-size:10px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{min-height:118px;padding:15px;border-radius:16px}
+  .card-icon{width:36px;height:36px;border-radius:10px;font-size:17px}
+  .arrow{width:27px;height:27px}
+  .title{font-size:17px;margin-top:13px}
+  .desc{font-size:11px}
+  .foot{font-size:9px}
+}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <div class="head">
-    <div class="headcopy"><h1>🏠 Zenchack Hub</h1><div class="sub">Accesso privato ai siti del NAS</div></div>
-    <button class="switch" id="profileButton" type="button">👤 Profilo: <span id="profileName">Bogdan</span></button>
+  <div class="hero">
+    <div class="headcopy">
+      <div class="brand"><span class="logo">Z</span> Zenchack</div>
+      <h1>Hub</h1>
+      <div class="sub">Accesso privato ai siti del NAS</div>
+    </div>
+    <div class="hero-actions">
+      <button class="refresh" type="button" onclick="location.reload()">↻ Refresh</button>
+      <button class="switch" id="profileButton" type="button">👤 <span id="profileName">Bogdan</span></button>
+    </div>
   </div>
   <div class="grid">
-    <a class="card" data-visible-profile="Bogdan" href="/training/"><div class="title">📊 Allenamenti</div><div class="desc">Dashboard training e storico</div></a>
-    <a class="card" data-visible-profile="all" href="/casa/"><div class="title">🏡 Cerco Casa</div><div class="desc">Annunci, note e segnalazioni</div></a>
+    <a class="card training" data-visible-profile="Bogdan" href="/training/">
+      <div class="card-top"><div class="card-icon">↗</div><div class="arrow">→</div></div>
+      <div class="title">Allenamenti</div>
+      <div class="desc">Dashboard training, andamento e storico attività</div>
+    </a>
+    <a class="card casa" data-visible-profile="all" href="/casa/">
+      <div class="card-top"><div class="card-icon">⌂</div><div class="arrow">→</div></div>
+      <div class="title">Cerco Casa</div>
+      <div class="desc">Annunci, valutazioni, note e segnalazioni</div>
+    </a>
   </div>
   <div class="foot"><span>HTTPS tramite Tailscale Funnel · login stabile con password</span><a href="/passkey-test/">🧪 Prova Face ID</a></div>
 </main>
