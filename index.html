@@ -929,11 +929,36 @@ function pathSmooth(c,pts){
     c.bezierCurveTo(mx,p.y,mx,n.y,n.x,n.y);
   }
 }
-function drawTrendSeriesWithGaps(c,raw,trend,xAt,yAt,color,shadowColor){
+function drawWeightTrend(c,raw,trend,xAt,yAt,color,shadowColor){
   const valid=raw.map((v,i)=>Number.isFinite(v)?i:-1).filter(i=>i>=0);
   if(!valid.length)return;
 
-  // Solid line only where two consecutive displayed months both contain real data.
+  const first=valid[0];
+
+  // Prima del primo rilievo: prolungamento tratteggiato al livello
+  // del primo peso disponibile.
+  if(first>0){
+    const y=yAt(trend[first]);
+    c.save();
+    c.setLineDash([7,6]);
+    c.strokeStyle=color;
+    c.globalAlpha=.58;
+    c.lineWidth=2.2;
+    c.lineCap="round";
+    c.beginPath();
+    c.moveTo(xAt(0),y);
+    c.lineTo(xAt(first),y);
+    c.stroke();
+    c.restore();
+  }
+
+  // Dal primo rilievo in poi: linea continua, collegando i rilievi reali
+  // anche quando un mese intermedio non contiene una pesata.
+  const P=valid.map(i=>({x:xAt(i),y:yAt(trend[i])}));
+  if(P.length===1){
+    c.beginPath();c.arc(P[0].x,P[0].y,3.5,0,Math.PI*2);c.fillStyle=color;c.fill();
+    return;
+  }
   c.save();
   c.shadowColor=shadowColor;
   c.shadowBlur=7;
@@ -942,61 +967,9 @@ function drawTrendSeriesWithGaps(c,raw,trend,xAt,yAt,color,shadowColor){
   c.lineCap="round";
   c.lineJoin="round";
   c.setLineDash([]);
-
-  let run=[];
-  const flushRun=()=>{
-    if(run.length<2){run=[];return}
-    const P=run.map(i=>({x:xAt(i),y:yAt(trend[i])}));
-    pathSmooth(c,P);
-    c.stroke();
-    run=[];
-  };
-  for(let i=0;i<raw.length;i++){
-    if(Number.isFinite(raw[i])){
-      run.push(i);
-    }else{
-      flushRun();
-    }
-  }
-  flushRun();
+  pathSmooth(c,P);
+  c.stroke();
   c.restore();
-
-  // Missing months between known values: show the interpolation as dashed.
-  for(let k=0;k<valid.length-1;k++){
-    const a=valid[k],b=valid[k+1];
-    if(b-a<=1)continue;
-    const p1={x:xAt(a),y:yAt(trend[a])};
-    const p2={x:xAt(b),y:yAt(trend[b])};
-    c.save();
-    c.setLineDash([7,6]);
-    c.strokeStyle=color;
-    c.globalAlpha=.72;
-    c.lineWidth=2.4;
-    c.lineCap="round";
-    const mx=(p1.x+p2.x)/2;
-    c.beginPath();
-    c.moveTo(p1.x,p1.y);
-    c.bezierCurveTo(mx,p1.y,mx,p2.y,p2.x,p2.y);
-    c.stroke();
-    c.restore();
-  }
-
-  // If the last displayed months have no data, extend the last known value as dashed.
-  const last=valid[valid.length-1];
-  if(last<raw.length-1){
-    const y=yAt(trend[last]);
-    c.save();
-    c.setLineDash([7,6]);
-    c.strokeStyle=color;
-    c.globalAlpha=.62;
-    c.lineWidth=2.2;
-    c.lineCap="round";
-    c.beginPath();
-    c.moveTo(xAt(last),y);
-    c.lineTo(xAt(raw.length-1),y);
-    c.stroke();
-    c.restore();
-  }
 }
 function drawTrend(){
   const [c,w,h]=prep("trend");
@@ -1088,7 +1061,7 @@ function drawTrend(){
 
   // Peso: stesso blu della legenda. I mesi mancanti sono tratteggiati.
   const yAt=v=>t+plotH*(1-v/100);
-  drawTrendSeriesWithGaps(c,weightSelected,weightTrend,xAt,yAt,"#2563eb","rgba(37,99,235,.16)");
+  drawWeightTrend(c,weightSelected,weightTrend,xAt,yAt,"#2563eb","rgba(37,99,235,.16)");
 
   function overlaps(a,b,pad=3){
     return !(a.x+a.w+pad<=b.x || b.x+b.w+pad<=a.x || a.y+a.h+pad<=b.y || b.y+b.h+pad<=a.y);
@@ -1196,7 +1169,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Ore mensili in colonne; kcal sui valori reali; peso tratteggiato nei mesi senza misurazioni" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Ore mensili in colonne; kcal sui valori reali; peso tratteggiato prima del primo rilievo e continuo da lì in poi" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function drawCharts(){
