@@ -93,6 +93,9 @@ body{
 .progresssub{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.35}
 .est{font-size:16px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
 .splits{margin-top:5px;color:var(--muted);font-size:9px;line-height:1.45}
+.race-stat{margin-top:7px;font-size:9px;line-height:1.45;color:#687587}
+.race-stat b{font-weight:850}
+.race-stat .ok{color:#20885f}.race-stat .warn{color:#b26b14}.race-stat .risk{color:#c44545}.race-stat .neutral{color:#667386}
 .rating{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 9px;font-size:10px;font-weight:850;white-space:nowrap;border:1px solid}
 .rating.good{color:#95f2c2;background:rgba(57,217,138,.08);border-color:rgba(57,217,138,.28)}
 .rating.mid{color:#ffd89a;background:rgba(255,159,67,.08);border-color:rgba(255,159,67,.28)}
@@ -330,7 +333,7 @@ tr:hover td{background:#fafbfe}
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
-    <div class="legendline">Il “progresso distanze” confronta solo le tue distanze massime registrate con alcuni traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La stima gara è orientativa e viene ricalcolata dai dati disponibili; percorso, dislivello, meteo, nutrizione e transizioni possono modificarla.</div>
+    <div class="legendline">Il “progresso distanze” confronta solo le tue distanze massime registrate con alcuni traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La stima gara è orientativa e viene ricalcolata dai dati disponibili. Il confronto statistico usa benchmark amatoriali; per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN e i gate intermedi possono variare da evento a evento.</div>
   </section>
 
   <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
@@ -531,7 +534,7 @@ function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
   const bikeSpeed=representativeBikeSpeed();
   const runPace=representativePace("Corsa",3);
   if(!swimPace || !bikeSpeed || !runPace){
-    return {estimate:"Dati insufficienti",splits:"Servono dati in tutte e tre le discipline",rating:"Stima preliminare",ratingClass:"theory"};
+    return {estimate:"Dati insufficienti",splits:"Servono dati in tutte e tre le discipline",rating:"Stima preliminare",ratingClass:"theory",center:null,low:null,high:null,swimSec:null,bikeSec:null,runSec:null,transSec:null};
   }
 
   const baseByRace={
@@ -559,8 +562,64 @@ function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
   return {
     estimate:`${fmtRace(low)}–${fmtRace(high)}`,
     splits:`Nuoto ${fmtSplit(swimSec)} · Bici ${fmtSplit(bikeSec)} · Corsa ${fmtSplit(runSec)} · transizioni ~${r.transition}'`,
-    rating,ratingClass
+    rating,ratingClass,center,low,high,swimSec,bikeSec,runSec,transSec
   };
+}
+
+
+const RACE_BENCHMARKS={
+  Sprint:{seconds:1*3600+36*60+22,label:"mediana uomini ~1h36"},
+  Olimpico:{seconds:2*3600+42*60+19,label:"media uomini 35–39 ~2h42"},
+  "70.3":{seconds:5*3600+43*60+27,label:"media uomini 35–39 ~5h43"},
+  Full:{seconds:11*3600+52*60+16,label:"mediana uomini 35–39 ~11h52"}
+};
+const RACE_CUTOFFS={
+  "70.3":{overall:8.5*3600,swim:70*60,bikeCum:5.5*3600,label:"IRONMAN 70.3: 8h30"},
+  Full:{overall:17*3600,swim:140*60,bikeCum:10.8333*3600,label:"IRONMAN: 17h"}
+};
+function raceStanding(r,dyn){
+  if(!Number.isFinite(dyn.center)) return {placement:"Posizione non stimabile",placementClass:"neutral",gate:"Cutoff non valutabile",gateClass:"neutral"};
+
+  const b=RACE_BENCHMARKS[r.name];
+  const ratio=b?dyn.center/b.seconds:null;
+  let placement="circa nella media",placementClass="neutral";
+  if(ratio!=null){
+    if(ratio<=.90){placement="sopra la media",placementClass="ok"}
+    else if(ratio<=1.08){placement="circa nella media",placementClass="neutral"}
+    else if(ratio<=1.20){placement="sotto la media",placementClass="warn"}
+    else if(ratio<=1.35){placement="parte bassa del gruppo",placementClass="warn"}
+    else {placement="fondo gruppo",placementClass="risk"}
+  }
+
+  const cut=RACE_CUTOFFS[r.name];
+  if(!cut){
+    return {placement:`${placement} · ${b.label}`,placementClass,gate:"Time gate: dipende dalla gara",gateClass:"neutral"};
+  }
+
+  const bikeCum=dyn.swimSec + dyn.bikeSec + dyn.transition*30;
+  const swimRisk=dyn.swimSec>cut.swim;
+  const bikeRisk=bikeCum>cut.bikeCum;
+  const finalFail=dyn.low>cut.overall;
+  const finalRisk=dyn.high>cut.overall;
+
+  let gate="Dentro i cutoff standard",gateClass="ok";
+  if(finalFail || swimRisk || bikeRisk){
+    const problems=[];
+    if(swimRisk) problems.push("nuoto");
+    if(bikeRisk) problems.push("bike gate");
+    if(finalFail) problems.push("tempo finale");
+    gate=`Fuori cutoff: ${problems.join(", ")}`;gateClass="risk";
+  } else if(finalRisk){
+    gate=`Range stimato oltre ${fmtRace(cut.overall)}: rischio cutoff`;gateClass="warn";
+  } else if(
+    dyn.swimSec>cut.swim*.9 ||
+    bikeCum>cut.bikeCum*.9 ||
+    dyn.high>cut.overall*.9
+  ){
+    gate="Dentro, ma con margine ridotto";gateClass="warn";
+  }
+
+  return {placement:`${placement} · ${b.label}`,placementClass,gate,gateClass};
 }
 
 function renderRaceGoals(){
@@ -577,12 +636,20 @@ function renderRaceGoals(){
     const pct=Math.round(parts.reduce((a,b)=>a+b,0)/parts.length*100);
     let label=pct>=98?"Base distanze centrata":pct>=80?"Molto vicino":pct>=60?"In costruzione":"Da costruire";
     const dyn=dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun);
+    const standing=raceStanding(r,dyn);
     return `<tr>
       <td><div class="race-name"><span class="race-ico">${r.icon}</span>${r.name}</div></td>
       <td class="race-dist">🏊 ${n(r.swim,2)} km<br>🚴 ${n(r.bike,1)} km<br>🏃 ${n(r.run,1)} km</td>
       <td class="race-prep">${r.prepText}</td>
       <td><div class="progressbox"><div class="progresshead"><span>${label}</span><span>${pct}%</span></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="progresssub">Max ${selectedYear}: 🏊 ${n(maxSwim,2)} · 🚴 ${n(maxBike,2)} · 🏃 ${n(maxRun,2)} km</div></div></td>
-      <td><div class="est">${dyn.estimate}</div><div class="splits">${dyn.splits}</div></td>
+      <td>
+        <div class="est">${dyn.estimate}</div>
+        <div class="splits">${dyn.splits}</div>
+        <div class="race-stat">
+          <div class="${standing.placementClass}"><b>↕ Posizione:</b> ${standing.placement}</div>
+          <div class="${standing.gateClass}"><b>⏱ Cutoff:</b> ${standing.gate}</div>
+        </div>
+      </td>
       <td><span class="rating ${dyn.ratingClass}">${dyn.rating}</span></td>
     </tr>`
   }).join("");
