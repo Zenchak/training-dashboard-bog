@@ -1080,33 +1080,28 @@ function drawTrend(){
     c.quadraticCurveTo(x,y,x+rr,y);
     c.closePath();
   }
-  function drawExtrema(raw,trend,color,format,{side=1}={}){
-    const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
-    if(!rows.length)return;
-    const min=rows.reduce((a,b)=>b.v<a.v?b:a),max=rows.reduce((a,b)=>b.v>a.v?b:a);
-    const chosen=min.i===max.i?[min]:[min,max];
+  function drawMonthlyLabels(raw,trend,color,format,{direction=1}={}){
+    raw.forEach((value,i)=>{
+      if(!Number.isFinite(value) || !Number.isFinite(trend[i])) return;
 
-    chosen.forEach(x=>{
-      const y=Number.isFinite(trend[x.i])?t+plotH*(1-trend[x.i]/100):t+plotH/2;
-      const px=xAt(x.i);
-      const isMax=x.i===max.i;
-      const label=(isMax?"max ":"min ")+format(x.v);
+      const px=xAt(i),y=t+plotH*(1-trend[i]/100);
+      const label=format(value);
+      c.font="700 8.5px system-ui";
+      const boxW=Math.ceil(c.measureText(label).width)+10,boxH=17;
 
-      c.font="700 9px system-ui";
-      const boxW=Math.ceil(c.measureText(label).width)+12,boxH=18;
-      const nearTop=y<t+34,nearBottom=y>baseY-34;
-      const vertical=nearTop?22:nearBottom?-22:(isMax?-20:20);
-      const shift=Math.max(46,boxW*.72);
+      const nearTop=y<t+28,nearBottom=y>baseY-28;
+      let primaryDy=direction<0?-18:18;
+      if(nearTop) primaryDy=19;
+      if(nearBottom) primaryDy=-19;
 
+      const sideShift=Math.max(32,boxW*.62);
       const offsets=[
-        [0,vertical],
-        [side*shift,vertical],
-        [-side*shift,vertical],
-        [side*shift,-vertical],
-        [-side*shift,-vertical],
-        [0,-vertical],
-        [side*shift*1.55,vertical],
-        [-side*shift*1.55,vertical]
+        [0,primaryDy],
+        [0,-primaryDy],
+        [sideShift,primaryDy],
+        [-sideShift,primaryDy],
+        [sideShift,-primaryDy],
+        [-sideShift,-primaryDy]
       ];
 
       let placed=null;
@@ -1114,30 +1109,29 @@ function drawTrend(){
         const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
         const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
         const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
-        if(labelZones.some(z=>overlaps(box,z,5))) continue;
-        if(barZones.some(z=>overlaps(box,z,4))) continue;
+        if(labelZones.some(z=>overlaps(box,z,4))) continue;
+        if(barZones.some(z=>overlaps(box,z,3))) continue;
         placed={cx,cy,box};break;
       }
-
-      // If every clean position is occupied, prioritize not colliding with another label.
       if(!placed){
         for(const [ox,oy] of offsets){
           const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
           const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
           const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
-          if(!labelZones.some(z=>overlaps(box,z,5))){placed={cx,cy,box};break}
+          if(!labelZones.some(z=>overlaps(box,z,4))){placed={cx,cy,box};break}
         }
       }
       if(!placed) return;
       labelZones.push(placed.box);
 
-      // Point stays exactly on the real monthly value.
-      c.beginPath();c.arc(px,y,3.5,0,Math.PI*2);c.fillStyle=color;c.fill();
+      c.beginPath();
+      c.arc(px,y,3.2,0,Math.PI*2);
+      c.fillStyle=color;
+      c.fill();
 
-      // Opaque pill keeps the text readable without connector lines.
       c.save();
-      c.shadowColor="rgba(42,55,85,.10)";
-      c.shadowBlur=5;
+      c.shadowColor="rgba(42,55,85,.08)";
+      c.shadowBlur=4;
       c.shadowOffsetY=1;
       roundedLabelRect(placed.box.x,placed.box.y,placed.box.w,placed.box.h,5);
       c.fillStyle="rgba(255,255,255,.96)";
@@ -1145,21 +1139,21 @@ function drawTrend(){
       c.restore();
 
       roundedLabelRect(placed.box.x+.5,placed.box.y+.5,placed.box.w-1,placed.box.h-1,5);
-      c.strokeStyle="rgba(210,218,229,.72)";
+      c.strokeStyle="rgba(210,218,229,.68)";
       c.lineWidth=1;
       c.stroke();
 
       c.fillStyle=color;
       c.textAlign="center";
       c.textBaseline="middle";
-      c.fillText(label,placed.cx,placed.cy+.3);
+      c.fillText(label,placed.cx,placed.cy+.2);
       c.textBaseline="alphabetic";
     });
     c.textAlign="left";
   }
 
-  drawExtrema(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{side:1});
-  drawExtrema(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{side:-1});
+  drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{direction:1});
+  drawMonthlyLabels(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{direction:-1});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
