@@ -113,6 +113,7 @@ tr:hover td{background:rgba(71,118,158,.08)}
 .pill{display:inline-flex;gap:7px;align-items:center;background:#112a42;padding:5px 8px;border-radius:999px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
 .note{max-width:300px;color:#abc0d2}
+.date-mobile{display:none}
 .empty{padding:36px;text-align:center;color:var(--muted)}
 footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding:0 4px}
 @media(max-width:1020px){.kpis{grid-template-columns:repeat(3,1fr)}.disciplines{grid-template-columns:repeat(3,1fr)}.records{grid-template-columns:repeat(2,1fr)}}
@@ -411,8 +412,17 @@ tr:hover td{background:#fafbfe}
   .controls{gap:5px}
   .controls>*{padding:7px 8px;font-size:9px;border-radius:9px}
   .controls input{min-width:100%;flex-basis:100%}
-  th,td{padding:7px 8px;font-size:8px}
-  th{font-size:7px}
+
+  .tablewrap{border-radius:12px;overflow-x:auto}
+  table{min-width:560px}
+  th,td{padding:6px 6px;font-size:8px;white-space:nowrap}
+  th{font-size:7px;letter-spacing:.025em}
+  .col-date{width:48px;max-width:48px}
+  .date-desktop{display:none}
+  .date-mobile{display:inline;font-weight:750}
+  .mobile-hide{display:none}
+  .pill{gap:4px;padding:4px 6px}
+  .pill .dot{width:6px;height:6px}
 }
 
 </style>
@@ -478,7 +488,7 @@ tr:hover td{background:#fafbfe}
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th>D+</th><th>Ritmo / velocità</th><th>Luogo</th></tr></thead>
+      <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
@@ -506,6 +516,7 @@ function hrs(x){return sec(x)/3600}
 function n(x,d=1){return new Intl.NumberFormat("it-IT",{minimumFractionDigits:d,maximumFractionDigits:d}).format(x)}
 function dt(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(s+"T12:00:00"))}
 function shortDate(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short"}).format(new Date(s+"T12:00:00"))}
+function mobileDate(s){const d=new Date(s+"T12:00:00");return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`}
 function fh(v){const h=Math.floor(v),m=Math.round((v-h)*60);return `${h}h ${String(m).padStart(2,"0")}m`}
 function metric(a){
   if(a.type==="Bici") return `${n(a.km/hrs(a.duration),1)} km/h`;
@@ -926,9 +937,9 @@ function renderTable(){
   els.count.textContent=`${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
   els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
-    <td>${dt(a.date)}</td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
-    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td>${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
-    <td>${a.metric}</td><td>${a.location||"—"}</td></tr>`}).join("");
+    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
+    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
+    <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td></tr>`}).join("");
 }
 function renderFooter(){
   const missingD=AY.some(a=>a.dplus==null);
