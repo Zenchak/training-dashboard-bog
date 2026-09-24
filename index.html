@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07111f">
+<meta name="theme-color" content="#f5f7fb">
 <title>Training · Bogdan</title>
 <style>
 :root{
@@ -118,13 +118,173 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:290px}.chart canvas{height:220px}
   .yearbar{top:4px}.section-title{align-items:center}
 }
+
+/* 2026 light dashboard refresh */
+:root{
+  color-scheme:light;
+  --bg:#f5f7fb;
+  --panel:#ffffff;
+  --panel2:#f8faff;
+  --line:#e4e9f2;
+  --text:#202938;
+  --muted:#7b8798;
+  --accent:#6f5cf1;
+  --accent2:#4f8cff;
+  --bike:#28b985;
+  --run:#ff8b5e;
+  --swim:#4fa7ff;
+  --hike:#a278e8;
+  --walk:#e9b949;
+  --trail:#eb6b7d;
+  --shadow:0 10px 30px rgba(42,55,85,.08);
+}
+html{background:var(--bg)}
+body{
+  color:var(--text);
+  background:
+    radial-gradient(circle at 8% 0%,rgba(111,92,241,.08),transparent 26rem),
+    radial-gradient(circle at 95% 4%,rgba(79,140,255,.07),transparent 25rem),
+    linear-gradient(180deg,#fafbfe 0%,#f4f7fb 100%);
+}
+.wrap{max-width:1280px;padding:22px 18px 74px}
+.hero{
+  padding:24px 26px;
+  border:1px solid #edf0f6;
+  background:linear-gradient(135deg,#ffffff 0%,#fbfaff 68%,#f2efff 100%);
+  box-shadow:0 12px 36px rgba(50,61,92,.08);
+}
+.hero:after{
+  width:360px;height:360px;right:-145px;top:-210px;
+  background:radial-gradient(circle,rgba(111,92,241,.15),transparent 65%);
+}
+.brand{color:#6f5cf1;letter-spacing:.11em}
+.brand .logo{
+  width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:9px;background:linear-gradient(135deg,#7a63f4,#5f8dff);
+  color:white;font-size:13px;box-shadow:0 7px 18px rgba(111,92,241,.22);filter:none
+}
+.hero h1{font-size:clamp(34px,5vw,52px);line-height:1;letter-spacing:-.04em;margin:10px 0 9px}
+.hero p{color:var(--muted)}
+.hero-art{font-size:34px;opacity:.82;filter:none}
+.hero-refresh{
+  border:1px solid #e0e5ef;background:#fff;color:#536174;
+  box-shadow:0 5px 14px rgba(43,55,85,.06)
+}
+.hero-refresh:hover{border-color:#b9aff8;color:#624fe7;background:#faf9ff}
+
+.yearbar{
+  top:8px;padding:7px;margin-bottom:18px;border:1px solid #e5eaf3;
+  background:rgba(255,255,255,.90);box-shadow:0 7px 20px rgba(50,61,92,.06);
+  backdrop-filter:blur(18px)
+}
+.yearbtn{border:1px solid #e1e6ef;background:#fff;color:#667386}
+.yearbtn:hover{border-color:#c7bffc;background:#faf9ff}
+.yearbtn.active{
+  color:white;background:linear-gradient(135deg,#765ff1,#5f8dff);
+  box-shadow:0 7px 18px rgba(111,92,241,.22)
+}
+
+.card{
+  background:#fff;border:1px solid #e8ecf3;border-radius:18px;
+  box-shadow:0 8px 24px rgba(43,55,85,.065)
+}
+.kpis{gap:14px}
+.kpi{padding:17px 16px;min-height:126px}
+.kpi .ico{
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  border-radius:11px;margin-bottom:13px;font-size:17px;background:#f2efff
+}
+.kpi:nth-child(1){background:linear-gradient(145deg,#fff,#f7f3ff)}
+.kpi:nth-child(1) .ico{background:#eee8ff}
+.kpi:nth-child(2){background:linear-gradient(145deg,#fff,#f2f7ff)}
+.kpi:nth-child(2) .ico{background:#e8f1ff}
+.kpi:nth-child(3){background:linear-gradient(145deg,#fff,#f5f2ff)}
+.kpi:nth-child(3) .ico{background:#eee9ff}
+.kpi:nth-child(4){background:linear-gradient(145deg,#fff,#effbf7)}
+.kpi:nth-child(4) .ico{background:#e5f8f0}
+.kpi:nth-child(5){background:linear-gradient(145deg,#fff,#fff5f1)}
+.kpi:nth-child(5) .ico{background:#ffede6}
+.kpi:nth-child(6){background:linear-gradient(145deg,#fff,#f3fbff)}
+.kpi:nth-child(6) .ico{background:#e7f7ff}
+.kpi .label{color:#7c8796}.kpi .value{color:#1f2937}.kpi .sub{color:#8a95a4}
+
+.section-title{margin:28px 4px 11px}
+.section-title h2{font-size:18px;color:#253043}
+.section-title span{color:#8793a3}
+
+.disciplines{gap:14px}
+.disc{min-height:118px;background:#fff;border-color:#e8ecf3}
+.disc:before{width:3px;border-radius:3px}
+.disc .ico{
+  width:34px;height:34px;border-radius:10px;background:#f6f8fc;
+  display:flex;align-items:center;justify-content:center;font-size:17px
+}
+.disc .name,.disc .mini{color:#7c8796}.disc .big{color:#263244}
+
+.chart{padding:19px;min-height:345px}
+.chart h3{color:#283449;font-size:14px}
+.chart p{color:#7b8798}
+.trend-legend{color:#586678}
+.trend-legend span{
+  padding:6px 9px;border:1px solid #e7ebf2;border-radius:999px;background:#fbfcfe
+}
+.trend-dot.hours{background:#9aa5b1}.trend-dot.kcal{background:#f6a340}.trend-dot.weight{background:#39bfd3}
+
+.record{padding:17px;background:#fff}
+.record .ico{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;background:#f4f1ff;font-size:16px
+}
+.record .t,.record .d{color:#8590a0}.record .v{color:#253043}
+
+.race-panel{background:#fff}
+.race-note{
+  color:#657286;border-bottom-color:#e9edf4;
+  background:linear-gradient(90deg,#faf9ff,#f7faff)
+}
+.race-table{background:#fff}
+.race-dist{color:#344155}.race-prep{color:#667386}
+.progresshead{color:#546174}
+.progressbar{background:#eef1f6;border-color:#e0e5ed}
+.progressbar span{background:linear-gradient(90deg,#6f5cf1,#4f8cff)}
+.progresssub,.splits,.legendline{color:#8894a3}
+.rating.good{color:#20885f;background:#eefaf5;border-color:#cfeee0}
+.rating.mid{color:#a76a20;background:#fff8eb;border-color:#f5dfb7}
+.rating.build{color:#257aa7;background:#eef8fd;border-color:#cfeaf8}
+.rating.theory{color:#7353a8;background:#f7f1fd;border-color:#e3d4f3}
+
+.controls{gap:9px}
+.controls>*{
+  background:#fff;color:#344155;border:1px solid #dde4ed;border-radius:12px;
+  box-shadow:0 4px 12px rgba(43,55,85,.035)
+}
+.controls>*:focus{outline:2px solid rgba(111,92,241,.16);border-color:#a99df6}
+.controls button:hover{border-color:#bfb4f7;background:#faf9ff}
+
+.tablewrap{
+  border:1px solid #e5eaf1;background:#fff;
+  box-shadow:0 8px 24px rgba(43,55,85,.055)
+}
+th,td{border-bottom-color:#edf0f5;color:#3f4b5d}
+th{background:#f8f9fc;color:#788496}
+tr:hover td{background:#fafbfe}
+.pill{background:#f4f6fa;color:#3d495b}
+.note{color:#758193}
+.empty,footer{color:#8793a3}
+
+@media(max-width:720px){
+  .wrap{padding-left:11px;padding-right:11px}
+  .hero{padding:20px 16px}.hero h1{font-size:36px}.hero-art{font-size:28px}
+  .kpi{min-height:118px}.card{border-radius:16px}
+}
+
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="hero">
     <div>
-      <div class="brand"><span class="logo">◉</span> Bogdan · Training dashboard</div>
+      <div class="brand"><span class="logo">B</span> Bogdan · Training dashboard</div>
       <h1><span id="heroYear">2026</span> in movimento</h1>
       <p id="coverage"></p>
     </div>
@@ -138,13 +298,13 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
 
   <section class="grid kpis" id="kpis"></section>
 
-  <div class="section-title"><h2>🎯 Discipline</h2><span>Totali dell'anno selezionato</span></div>
+  <div class="section-title"><h2>◫ Discipline</h2><span>Totali dell'anno selezionato</span></div>
   <section class="grid disciplines" id="disciplines"></section>
 
-  <div class="section-title"><h2>📈 Andamento</h2><span>Solo mesi con dati</span></div>
+  <div class="section-title"><h2>↗ Andamento</h2><span>Solo mesi con dati</span></div>
   <section class="grid charts">
     <div class="card chart">
-      <h3>📊 Trend allenamento</h3>
+      <h3>Trend allenamento</h3>
       <p id="kcalInfo">Andamento smussato e normalizzato: ore come sfondo, kcal e peso come linee.</p>
       <div class="trend-legend">
         <span><i class="trend-dot hours"></i>Ore allenamento</span>
@@ -155,10 +315,10 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
     </div>
   </section>
 
-  <div class="section-title"><h2>🏆 Record</h2><span>Migliori valori dell'anno</span></div>
+  <div class="section-title"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
-  <div class="section-title"><h2>🏁 Obiettivi triathlon</h2><span>Distanze, preparazione e stima personale</span></div>
+  <div class="section-title"><h2>◎ Obiettivi triathlon</h2><span>Distanze, preparazione e stima personale</span></div>
   <section class="card race-panel">
     <div class="race-note">
       <span class="ico">🧭</span>
@@ -173,7 +333,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
     <div class="legendline">Il “progresso distanze” confronta solo le tue distanze massime registrate con alcuni traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La valutazione del tempo è un confronto molto indicativo con un amatore/finisher, non una classifica ufficiale per categoria d’età.</div>
   </section>
 
-  <div class="section-title"><h2>📓 Diario completo</h2><span id="count"></span></div>
+  <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
   <div class="controls">
     <input id="q" placeholder="🔎 Cerca disciplina, luogo o nota…">
     <select id="typeFilter"><option value="">Tutte le discipline</option></select>
@@ -433,9 +593,9 @@ function drawTrend(){
   const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
   const pts=arr=>arr.map((v,i)=>({x:xAt(i),y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
 
-  c.strokeStyle="rgba(127,150,170,.16)";c.lineWidth=1;
+  c.strokeStyle="rgba(108,121,143,.14)";c.lineWidth=1;
   for(let j=0;j<4;j++){const y=t+plotH*j/3;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke()}
-  c.fillStyle="#91a9bf";c.font="9px system-ui";c.textAlign="center";
+  c.fillStyle="#7f8a99";c.font="9px system-ui";c.textAlign="center";
   months.forEach((mi,i)=>c.fillText(ML[mi],xAt(i),h-8));
   c.textAlign="left";
 
@@ -445,9 +605,9 @@ function drawTrend(){
     pathSmooth(c,hp);
     c.lineTo(hp[hp.length-1].x,h-b);c.lineTo(hp[0].x,h-b);c.closePath();
     const g=c.createLinearGradient(0,t,0,h-b);
-    g.addColorStop(0,"rgba(127,139,152,.30)");g.addColorStop(1,"rgba(127,139,152,.05)");
+    g.addColorStop(0,"rgba(144,154,166,.22)");g.addColorStop(1,"rgba(144,154,166,.035)");
     c.fillStyle=g;c.fill();
-    pathSmooth(c,hp);c.strokeStyle="rgba(155,166,178,.62)";c.lineWidth=1.6;c.stroke();
+    pathSmooth(c,hp);c.strokeStyle="rgba(133,144,157,.55)";c.lineWidth=1.6;c.stroke();
   }
 
   // Kcal: arancione.
