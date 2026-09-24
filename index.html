@@ -84,8 +84,9 @@ body{
 .race-table td{vertical-align:top}
 .race-name{display:flex;align-items:center;gap:9px;font-weight:850;font-size:13px}
 .race-name .race-ico{font-size:22px}
-.race-dist{line-height:1.7;color:#dce8f3;white-space:nowrap}
-.race-prep{line-height:1.55;color:#b8cada;min-width:245px}
+.race-plan{min-width:280px}
+.race-dist{line-height:1.45;color:#dce8f3;white-space:normal;font-weight:800}
+.race-prep{line-height:1.45;color:#b8cada;margin-top:6px}
 .progressbox{min-width:155px}
 .progresshead{display:flex;justify-content:space-between;gap:8px;color:#cddbe8;font-weight:800;font-size:10px}
 .progressbar{height:7px;margin-top:7px;border-radius:999px;background:#0a1725;overflow:hidden;border:1px solid rgba(129,183,226,.13)}
@@ -443,8 +444,8 @@ tr:hover td{background:#fafbfe}
 
   /* Obiettivi triathlon: tabella mobile compatta senza swipe laterale */
   .race-panel{border-radius:12px;overflow:hidden}
-  .race-note{gap:6px;padding:8px 9px;font-size:7.8px;line-height:1.35}
-  .race-note .ico{font-size:13px}
+  .race-note{gap:7px;padding:9px 10px;font-size:8.5px;line-height:1.4}
+  .race-note .ico{font-size:14px}
   .race-panel .tablewrap{overflow:hidden}
   .race-table{
     display:table;
@@ -459,8 +460,8 @@ tr:hover td{background:#fafbfe}
   .race-table td{
     display:table-cell;
     min-width:0;
-    padding:7px 2px;
-    font-size:7.1px;
+    padding:8px 3px;
+    font-size:8px;
     line-height:1.28;
     white-space:normal;
     overflow:visible;
@@ -469,29 +470,29 @@ tr:hover td{background:#fafbfe}
     overflow-wrap:anywhere
   }
   .race-table th{
-    font-size:6.2px;
+    font-size:7px;
     line-height:1.15;
     letter-spacing:0;
     text-align:center
   }
-  .race-table th:nth-child(1),.race-table td:nth-child(1){width:11%}
-  .race-table th:nth-child(2),.race-table td:nth-child(2){width:15%}
-  .race-table th:nth-child(3),.race-table td:nth-child(3){width:22%}
-  .race-table th:nth-child(4),.race-table td:nth-child(4){width:19%}
-  .race-table th:nth-child(5),.race-table td:nth-child(5){width:33%}
-  .race-name{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:8.2px;line-height:1.1;text-align:center}
-  .race-name .race-ico{font-size:13px}
-  .race-dist{line-height:1.4;white-space:normal;font-size:7.4px;text-align:center}
-  .race-prep{min-width:0;font-size:7.2px;line-height:1.3}
+  .race-table th:nth-child(1),.race-table td:nth-child(1){width:14%}
+  .race-table th:nth-child(2),.race-table td:nth-child(2){width:34%}
+  .race-table th:nth-child(3),.race-table td:nth-child(3){width:20%}
+  .race-table th:nth-child(4),.race-table td:nth-child(4){width:32%}
+  .race-name{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;line-height:1.1;text-align:center}
+  .race-name .race-ico{font-size:14px}
+  .race-plan{min-width:0}
+  .race-dist{line-height:1.35;white-space:normal;font-size:8.2px;text-align:left;font-weight:800}
+  .race-prep{min-width:0;font-size:7.6px;line-height:1.3;margin-top:4px}
   .progressbox{min-width:0}
-  .progresshead{font-size:6.9px;gap:2px;line-height:1.2}
+  .progresshead{font-size:7.4px;gap:2px;line-height:1.2}
   .progressbar{height:5px;margin-top:4px}
-  .progresssub{font-size:6.5px;margin-top:4px;line-height:1.25}
-  .estline{gap:3px}
-  .est{font-size:10.5px;line-height:1.1;white-space:normal}
-  .splits{font-size:6.9px;margin-top:3px;line-height:1.28}
-  .race-stat{font-size:6.7px;margin-top:4px;line-height:1.28}
-  .rating{display:inline-flex;justify-content:center;text-align:center;padding:3px 4px;font-size:6.3px;line-height:1.1;white-space:normal}
+  .progresssub{font-size:6.9px;margin-top:4px;line-height:1.25}
+  .estline{gap:4px}
+  .est{font-size:11.2px;line-height:1.08;white-space:normal}
+  .splits{font-size:7.4px;margin-top:4px;line-height:1.3}
+  .race-stat{font-size:7.2px;margin-top:4px;line-height:1.3}
+  .rating{display:inline-flex;justify-content:center;text-align:center;padding:3px 4px;font-size:6.8px;line-height:1.1;white-space:normal}
   .legendline{padding:8px 9px;font-size:6.9px;line-height:1.35}
 
 }
@@ -542,7 +543,7 @@ tr:hover td{background:#fafbfe}
     </div>
     <div class="tablewrap" style="border:0;border-radius:0;box-shadow:none;background:transparent">
       <table class="race-table">
-        <thead><tr><th>Formato</th><th>Distanze gara</th><th>Traguardi di preparazione</th><th>Progresso distanze</th><th>Stima / confidenza</th></tr></thead>
+        <thead><tr><th>Formato</th><th>Gara / preparazione</th><th>Progresso</th><th>Stima / confidenza</th></tr></thead>
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
@@ -869,8 +870,10 @@ function renderRaceGoals(){
     const standing=raceStanding(r,dyn);
     return `<tr>
       <td><div class="race-name"><span class="race-ico">${r.icon}</span>${r.name}</div></td>
-      <td class="race-dist">🏊 ${n(r.swim,2)} km<br>🚴 ${n(r.bike,1)} km<br>🏃 ${n(r.run,1)} km</td>
-      <td class="race-prep">${r.prepText}</td>
+      <td class="race-plan">
+        <div class="race-dist">🏊 ${n(r.swim,2)} km · 🚴 ${n(r.bike,1)} km · 🏃 ${n(r.run,1)} km</div>
+        <div class="race-prep">${r.prepText}</div>
+      </td>
       <td><div class="progressbox"><div class="progresshead"><span>${label}</span><span>${pct}%</span></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="progresssub">Max ${selectedYear}: 🏊 ${n(maxSwim,2)} · 🚴 ${n(maxBike,2)} · 🏃 ${n(maxRun,2)} km</div></div></td>
       <td>
         <div class="estline"><div class="est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span></div>
