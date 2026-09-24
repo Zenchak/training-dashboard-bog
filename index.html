@@ -137,7 +137,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   <div class="section-title"><h2>🎯 Discipline</h2><span>Totali dell'anno selezionato</span></div>
   <section class="grid disciplines" id="disciplines"></section>
 
-  <div class="section-title"><h2>📈 Andamento</h2><span>Gennaio → dicembre</span></div>
+  <div class="section-title"><h2>📈 Andamento</h2><span>Solo mesi con dati</span></div>
   <section class="grid charts">
     <div class="card chart">
       <h3>📊 Trend allenamento</h3>
@@ -401,46 +401,79 @@ function pathSmooth(c,pts){
 }
 function drawTrend(){
   const [c,w,h]=prep("trend");
-  const l=34,r=14,t=16,b=30,plotW=w-l-r,plotH=h-t-b;
+  const l=44,r=24,t=28,b=34,plotW=w-l-r,plotH=h-t-b;
   c.clearRect(0,0,w,h);
 
-  const hoursRaw=ML.map((_,i)=>AY.filter(a=>a.month===i+1).reduce((sum,a)=>sum+hrs(a.duration),0));
+  const hoursRaw=ML.map((_,i)=>{
+    const z=AY.filter(a=>a.month===i+1);
+    return z.length?z.reduce((sum,a)=>sum+hrs(a.duration),0):null;
+  });
   const kcalRows=AY.map(a=>({...activityKcal(a),month:a.month}));
-  const kcalRaw=ML.map((_,i)=>kcalRows.filter(x=>x.month===i+1).reduce((sum,x)=>sum+x.value,0));
+  const kcalRaw=ML.map((_,i)=>{
+    const z=kcalRows.filter(x=>x.month===i+1);
+    return z.length?z.reduce((sum,x)=>sum+x.value,0):null;
+  });
   const weightRaw=monthlyWeight();
 
-  const activeMonths=ML.map((_,i)=>AY.some(a=>a.month===i+1)||WY.some(w=>Number(w.date.slice(5,7))===i+1));
-  const hoursTrend=normalizeSeries(smoothSeries(hoursRaw.map((v,i)=>activeMonths[i]?v:null)));
-  const kcalTrend=normalizeSeries(smoothSeries(kcalRaw.map((v,i)=>activeMonths[i]?v:null)));
-  const weightTrend=normalizeSeries(smoothSeries(weightRaw));
+  const months=ML.map((_,i)=>i).filter(i=>
+    Number.isFinite(hoursRaw[i]) || Number.isFinite(kcalRaw[i]) || Number.isFinite(weightRaw[i])
+  );
+  if(!months.length){emptyCanvas("trend");return}
 
-  // subtle grid + month labels
+  const pick=arr=>months.map(i=>arr[i]);
+  const hoursSelected=pick(hoursRaw),kcalSelected=pick(kcalRaw),weightSelected=pick(weightRaw);
+  const hoursTrend=normalizeSeries(smoothSeries(hoursSelected));
+  const kcalTrend=normalizeSeries(smoothSeries(kcalSelected));
+  const weightTrend=normalizeSeries(smoothSeries(weightSelected));
+
+  const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
+  const pts=arr=>arr.map((v,i)=>({x:xAt(i),y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
+
   c.strokeStyle="rgba(127,150,170,.16)";c.lineWidth=1;
   for(let j=0;j<4;j++){const y=t+plotH*j/3;c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke()}
   c.fillStyle="#91a9bf";c.font="9px system-ui";c.textAlign="center";
-  ML.forEach((m,i)=>{const x=l+plotW*i/11;c.fillText(m,x,h-8)});
+  months.forEach((mi,i)=>c.fillText(ML[mi],xAt(i),h-8));
   c.textAlign="left";
 
-  const pts=arr=>arr.map((v,i)=>({x:l+plotW*i/11,y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
-
-  // Hours as a subdued grey background area.
+  // Ore: area grigia di sfondo.
   const hp=pts(hoursTrend).filter(p=>Number.isFinite(p.y));
   if(hp.length){
     pathSmooth(c,hp);
     c.lineTo(hp[hp.length-1].x,h-b);c.lineTo(hp[0].x,h-b);c.closePath();
     const g=c.createLinearGradient(0,t,0,h-b);
-    g.addColorStop(0,"rgba(127,139,152,.28)");g.addColorStop(1,"rgba(127,139,152,.05)");
+    g.addColorStop(0,"rgba(127,139,152,.30)");g.addColorStop(1,"rgba(127,139,152,.05)");
     c.fillStyle=g;c.fill();
-    pathSmooth(c,hp);c.strokeStyle="rgba(155,166,178,.55)";c.lineWidth=1.5;c.stroke();
+    pathSmooth(c,hp);c.strokeStyle="rgba(155,166,178,.62)";c.lineWidth=1.6;c.stroke();
   }
 
-  // Kcal line.
+  // Kcal: arancione.
   const kp=pts(kcalTrend);
   pathSmooth(c,kp);c.strokeStyle="#ffb454";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
 
-  // Weight line.
+  // Peso: ciano.
   const wp=pts(weightTrend);
   pathSmooth(c,wp);c.strokeStyle="#67e8f9";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();
+
+  function drawExtrema(raw,trend,color,format){
+    const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
+    if(!rows.length)return;
+    const min=rows.reduce((a,b)=>b.v<a.v?b:a),max=rows.reduce((a,b)=>b.v>a.v?b:a);
+    const chosen=min.i===max.i?[min]:[min,max];
+    chosen.forEach(x=>{
+      const y=Number.isFinite(trend[x.i])?t+plotH*(1-trend[x.i]/100):t+plotH/2;
+      const px=xAt(x.i);
+      c.beginPath();c.arc(px,y,4,0,Math.PI*2);c.fillStyle=color;c.fill();
+      c.font="bold 9px system-ui";c.fillStyle=color;c.textAlign="center";
+      const isMax=x.i===max.i;
+      const ty=isMax?Math.max(11,y-9):Math.min(h-b-2,y+15);
+      c.fillText((isMax?"max ":"min ")+format(x.v),px,ty);
+    });
+    c.textAlign="left";
+  }
+
+  drawExtrema(hoursSelected,hoursTrend,"#aab4bf",v=>n(v,1)+" h");
+  drawExtrema(kcalSelected,kcalTrend,"#ffb454",v=>Math.round(v).toLocaleString("it-IT")+" kcal");
+  drawExtrema(weightSelected,weightTrend,"#67e8f9",v=>n(v,1)+" kg");
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
@@ -450,7 +483,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Curve smussate per leggere il trend, non i singoli valori" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Curve smussate per leggere il trend" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function drawCharts(){
