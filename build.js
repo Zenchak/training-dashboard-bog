@@ -10,9 +10,9 @@ let html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 // Link alla pagina Gare in fondo alla dashboard Allenamenti.
 const raceButtonCss = `
 .bottom-nav{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:24px 0 2px}
-.bottom-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#06111d;background:linear-gradient(135deg,var(--accent),#8fb7ff);border:0;border-radius:12px;padding:11px 16px;font:inherit;font-size:12px;font-weight:850;box-shadow:0 6px 18px rgba(103,232,249,.18);transition:.15s;cursor:pointer}
-.bottom-link:hover{transform:translateY(-1px);filter:brightness(1.05)}
-.bottom-link.secondary{color:#dce8f3;background:#0d2136;border:1px solid #2b4d6c;box-shadow:none}
+.bottom-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:white;background:linear-gradient(135deg,#765ff1,#5f8dff);border:0;border-radius:12px;padding:11px 16px;font:inherit;font-size:12px;font-weight:850;box-shadow:0 7px 18px rgba(111,92,241,.18);transition:.15s;cursor:pointer}
+.bottom-link:hover{transform:translateY(-1px);filter:brightness(1.03)}
+.bottom-link.secondary{color:#596678;background:#fff;border:1px solid #dfe5ee;box-shadow:0 5px 14px rgba(43,55,85,.05)}
 @media(max-width:720px){.bottom-nav{display:grid;grid-template-columns:repeat(3,1fr)}.bottom-link{width:100%;min-height:46px;padding:10px 8px}}
 `;
 html = html.replace('</style>', raceButtonCss + '\n</style>');
