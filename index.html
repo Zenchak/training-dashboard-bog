@@ -87,10 +87,12 @@ body{
 .race-plan{min-width:280px}
 .race-dist{line-height:1.45;color:#dce8f3;white-space:normal;font-weight:800}
 .race-prep{line-height:1.45;color:#b8cada;margin-top:6px}
-.progressbox{min-width:155px}
+.progressbox{min-width:155px;display:grid;gap:7px}
+.progressitem{min-width:0}
 .progresshead{display:flex;justify-content:space-between;gap:8px;color:#cddbe8;font-weight:800;font-size:10px}
-.progressbar{height:7px;margin-top:7px;border-radius:999px;background:#0a1725;overflow:hidden;border:1px solid rgba(129,183,226,.13)}
+.progressbar{height:7px;margin-top:4px;border-radius:999px;background:#0a1725;overflow:hidden;border:1px solid rgba(129,183,226,.13)}
 .progressbar span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#67e8f9,#7c9cff)}
+.progressbar.done span{background:linear-gradient(90deg,#28b985,#49cf9d)}
 .progresssub{margin-top:6px;color:var(--muted);font-size:9px;line-height:1.35}
 .est{font-size:16px;font-weight:900;letter-spacing:-.02em;white-space:nowrap}
 .estline{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
@@ -484,9 +486,9 @@ tr:hover td{background:#fafbfe}
   .race-plan{min-width:0}
   .race-dist{line-height:1.35;white-space:normal;font-size:8.2px;text-align:left;font-weight:800}
   .race-prep{min-width:0;font-size:7.6px;line-height:1.3;margin-top:4px}
-  .progressbox{min-width:0}
-  .progresshead{font-size:7.4px;gap:2px;line-height:1.2}
-  .progressbar{height:5px;margin-top:4px}
+  .progressbox{min-width:0;gap:5px}
+  .progresshead{font-size:7.4px;gap:2px;line-height:1.15}
+  .progressbar{height:5px;margin-top:2px}
   .progresssub{font-size:6.9px;margin-top:4px;line-height:1.25}
   .estline{gap:4px}
   .est{font-size:11.2px;line-height:1.08;white-space:normal}
@@ -543,11 +545,11 @@ tr:hover td{background:#fafbfe}
     </div>
     <div class="tablewrap" style="border:0;border-radius:0;box-shadow:none;background:transparent">
       <table class="race-table">
-        <thead><tr><th>Formato</th><th>Gara / preparazione</th><th>Progresso</th><th>Stima / confidenza</th></tr></thead>
+        <thead><tr><th>Formato</th><th>Gara / preparazione</th><th>Progresso singole distanze</th><th>Stima / confidenza</th></tr></thead>
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
-    <div class="legendline">Il “progresso distanze” confronta solo le tue distanze massime registrate con alcuni traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La stima gara è orientativa e viene ricalcolata dai dati disponibili. Il confronto statistico usa benchmark amatoriali; per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN e i gate intermedi possono variare da evento a evento.</div>
+    <div class="legendline">Il “progresso singole distanze” confronta le tue distanze massime registrate con i relativi traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La stima gara è orientativa e viene ricalcolata dai dati disponibili. Il confronto statistico usa benchmark amatoriali; per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN e i gate intermedi possono variare da evento a evento.</div>
   </section>
 
   <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
@@ -859,13 +861,12 @@ function renderRaceGoals(){
   const maxBike=Math.max(0,...AY.filter(a=>a.type==="Bici").map(a=>a.km));
   const maxRun=Math.max(0,...allRun.map(a=>a.km));
   els.raceGoals.innerHTML=RACES.map(r=>{
-    const parts=[
-      Math.min(1,maxSwim/r.prep.swim),
-      Math.min(1,maxBike/r.prep.bike),
-      Math.min(1,maxRun/r.prep.run)
+    const progress=[
+      {icon:"🏊",pct:Math.min(100,Math.round(maxSwim/r.prep.swim*100))},
+      {icon:"🚴",pct:Math.min(100,Math.round(maxBike/r.prep.bike*100))},
+      {icon:"🏃",pct:Math.min(100,Math.round(maxRun/r.prep.run*100))}
     ];
-    const pct=Math.round(parts.reduce((a,b)=>a+b,0)/parts.length*100);
-    let label=pct>=98?"Base distanze centrata":pct>=80?"Molto vicino":pct>=60?"In costruzione":"Da costruire";
+    const pct=Math.round(progress.reduce((sum,x)=>sum+x.pct,0)/progress.length);
     const dyn=dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun);
     const standing=raceStanding(r,dyn);
     return `<tr>
@@ -874,7 +875,7 @@ function renderRaceGoals(){
         <div class="race-dist">🏊 ${n(r.swim,2)} km · 🚴 ${n(r.bike,1)} km · 🏃 ${n(r.run,1)} km</div>
         <div class="race-prep">${r.prepText}</div>
       </td>
-      <td><div class="progressbox"><div class="progresshead"><span>${label}</span><span>${pct}%</span></div><div class="progressbar"><span style="width:${pct}%"></span></div><div class="progresssub">Max ${selectedYear}: 🏊 ${n(maxSwim,2)} · 🚴 ${n(maxBike,2)} · 🏃 ${n(maxRun,2)} km</div></div></td>
+      <td><div class="progressbox">${progress.map(x=>`<div class="progressitem"><div class="progresshead"><span>${x.icon}</span><span>${x.pct}%</span></div><div class="progressbar ${x.pct>=100?"done":""}"><span style="width:${x.pct}%"></span></div></div>`).join("")}</div></td>
       <td>
         <div class="estline"><div class="est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span></div>
         <div class="splits">${dyn.splits}</div>
