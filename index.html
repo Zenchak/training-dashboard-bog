@@ -617,11 +617,16 @@ function renderRecords(){
     const t=Math.round(seconds),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),ss=t%60;
     return h?`${h}:${String(m).padStart(2,"0")}:${String(ss).padStart(2,"0")}`:`${m}:${String(ss).padStart(2,"0")}`;
   }
+  function fmtRunPace(seconds,km){
+    if(!Number.isFinite(seconds)||!km) return "—";
+    const p=Math.round(seconds/km),m=Math.floor(p/60),ss=p%60;
+    return `${m}:${String(ss).padStart(2,"0")}/km`;
+  }
 
   const best5=bestRunAt(5),best10=bestRunAt(10);
   const rec=[
-    ["🏃","5 km più veloci",best5?fmtRecordTime(best5.targetSec):"—",best5?`${dt(best5.date)} · su ${n(best5.km,2)} km`:""],
-    ["🏃","10 km più veloci",best10?fmtRecordTime(best10.targetSec):"—",best10?`${dt(best10.date)} · su ${n(best10.km,2)} km`:""],
+    ["🏃","5 km più veloci",best5?`${fmtRecordTime(best5.targetSec)} · ${fmtRunPace(best5.targetSec,5)}`:"—",best5?`${dt(best5.date)} · su ${n(best5.km,2)} km`:""],
+    ["🏃","10 km più veloci",best10?`${fmtRecordTime(best10.targetSec)} · ${fmtRunPace(best10.targetSec,10)}`:"—",best10?`${dt(best10.date)} · su ${n(best10.km,2)} km`:""],
     ["🚴","Bici più lunga",bike?`${n(bike.km,2)} km`:"—",bike?dt(bike.date):""],
     ["🏃","Corsa / trail più lungo",run?`${n(run.km,2)} km`:"—",run?dt(run.date):""],
     ["⛰️","D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
