@@ -969,6 +969,8 @@ function drawTrend(){
   const baseY=h-b;
   const step=months.length>1?plotW/(months.length-1):plotW;
   const barW=Math.max(12,Math.min(42,step*.55));
+  const barZones=[];
+  const labelZones=[];
   function roundedBar(x,y,w,h,r=6){
     const rr=Math.max(0,Math.min(r,w/2,h/2));
     c.beginPath();
@@ -984,6 +986,7 @@ function drawTrend(){
   hoursTrend.forEach((v,i)=>{
     if(!Number.isFinite(v) || !Number.isFinite(hoursSelected[i])) return;
     const x=xAt(i),y=t+plotH*(1-v/100),bh=Math.max(2,baseY-y),bx=x-barW/2;
+    barZones.push({x:bx-3,y:y-3,w:barW+6,h:bh+6});
     const g=c.createLinearGradient(0,y,0,baseY);
     g.addColorStop(0,"rgba(111,123,138,.62)");
     g.addColorStop(.55,"rgba(137,148,161,.34)");
@@ -1019,23 +1022,67 @@ function drawTrend(){
   c.save();c.shadowColor="rgba(37,99,235,.16)";c.shadowBlur=7;
   pathSmooth(c,wp);c.strokeStyle="#2563eb";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();c.restore();
 
+  function overlaps(a,b,pad=3){
+    return !(a.x+a.w+pad<=b.x || b.x+b.w+pad<=a.x || a.y+a.h+pad<=b.y || b.y+b.h+pad<=a.y);
+  }
   function drawExtrema(raw,trend,color,format,{dx=0,minDy=16,maxDy=-12}={}){
     const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
     if(!rows.length)return;
     const min=rows.reduce((a,b)=>b.v<a.v?b:a),max=rows.reduce((a,b)=>b.v>a.v?b:a);
     const chosen=min.i===max.i?[min]:[min,max];
+
     chosen.forEach(x=>{
       const y=Number.isFinite(trend[x.i])?t+plotH*(1-trend[x.i]/100):t+plotH/2;
       const px=xAt(x.i);
       const isMax=x.i===max.i;
-      const dy=isMax?maxDy:minDy;
-      const tx=Math.max(l+34,Math.min(w-r-34,px+dx));
-      const ty=Math.max(12,Math.min(h-b-4,y+dy));
+      const preferredDy=isMax?maxDy:minDy;
+      const label=(isMax?"max ":"min ")+format(x.v);
+
+      c.font="700 9px system-ui";
+      const tw=c.measureText(label).width;
+      const boxW=tw+8,boxH=15;
+      const offsets=[
+        [dx,preferredDy],
+        [dx,preferredDy+(preferredDy<0?-14:14)],
+        [dx+Math.max(42,tw*.55),preferredDy],
+        [dx-Math.max(42,tw*.55),preferredDy],
+        [dx,-preferredDy],
+        [dx+Math.max(42,tw*.55),-preferredDy],
+        [dx-Math.max(42,tw*.55),-preferredDy]
+      ];
+
+      let placed=null;
+      for(const [ox,oy] of offsets){
+        const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
+        const ty=Math.max(t+11,Math.min(baseY-10,y+oy));
+        const box={x:tx-boxW/2,y:ty-11,w:boxW,h:boxH};
+        const hitsLabel=labelZones.some(z=>overlaps(box,z,4));
+        const hitsBar=barZones.some(z=>overlaps(box,z,2));
+        if(!hitsLabel && !hitsBar){placed={tx,ty,box};break}
+      }
+      if(!placed){
+        for(const [ox,oy] of offsets){
+          const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
+          const ty=Math.max(t+11,Math.min(baseY-10,y+oy));
+          const box={x:tx-boxW/2,y:ty-11,w:boxW,h:boxH};
+          if(!labelZones.some(z=>overlaps(box,z,4))){placed={tx,ty,box};break}
+        }
+      }
+      if(!placed){
+        const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+dx));
+        const ty=Math.max(t+11,Math.min(baseY-10,y+preferredDy));
+        placed={tx,ty,box:{x:tx-boxW/2,y:ty-11,w:boxW,h:boxH}};
+      }
+      labelZones.push(placed.box);
 
       c.beginPath();c.arc(px,y,3.6,0,Math.PI*2);c.fillStyle=color;c.fill();
 
-      c.font="700 9px system-ui";c.fillStyle=color;c.textAlign="center";
-      c.fillText((isMax?"max ":"min ")+format(x.v),tx,ty);
+      c.textAlign="center";
+      c.lineWidth=3.5;
+      c.strokeStyle="rgba(255,255,255,.92)";
+      c.strokeText(label,placed.tx,placed.ty);
+      c.fillStyle=color;
+      c.fillText(label,placed.tx,placed.ty);
     });
     c.textAlign="left";
   }
