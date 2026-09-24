@@ -953,8 +953,8 @@ function drawTrend(){
   const pick=arr=>months.map(i=>arr[i]);
   const hoursSelected=pick(hoursRaw),kcalSelected=pick(kcalRaw),weightSelected=pick(weightRaw);
   const hoursTrend=normalizeSeries(hoursSelected);
-  const kcalTrend=normalizeSeries(smoothSeries(kcalSelected));
-  const weightTrend=normalizeSeries(smoothSeries(weightSelected));
+  const kcalTrend=normalizeSeries(kcalSelected);
+  const weightTrend=normalizeSeries(weightSelected);
 
   const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
   const pts=arr=>arr.map((v,i)=>({x:xAt(i),y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
@@ -1025,7 +1025,21 @@ function drawTrend(){
   function overlaps(a,b,pad=3){
     return !(a.x+a.w+pad<=b.x || b.x+b.w+pad<=a.x || a.y+a.h+pad<=b.y || b.y+b.h+pad<=a.y);
   }
-  function drawExtrema(raw,trend,color,format,{dx=0,minDy=16,maxDy=-12}={}){
+  function roundedLabelRect(x,y,w,h,r=5){
+    const rr=Math.min(r,w/2,h/2);
+    c.beginPath();
+    c.moveTo(x+rr,y);
+    c.lineTo(x+w-rr,y);
+    c.quadraticCurveTo(x+w,y,x+w,y+rr);
+    c.lineTo(x+w,y+h-rr);
+    c.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);
+    c.lineTo(x+rr,y+h);
+    c.quadraticCurveTo(x,y+h,x,y+h-rr);
+    c.lineTo(x,y+rr);
+    c.quadraticCurveTo(x,y,x+rr,y);
+    c.closePath();
+  }
+  function drawExtrema(raw,trend,color,format,{side=1}={}){
     const rows=raw.map((v,i)=>({v,i})).filter(x=>Number.isFinite(x.v));
     if(!rows.length)return;
     const min=rows.reduce((a,b)=>b.v<a.v?b:a),max=rows.reduce((a,b)=>b.v>a.v?b:a);
@@ -1035,60 +1049,76 @@ function drawTrend(){
       const y=Number.isFinite(trend[x.i])?t+plotH*(1-trend[x.i]/100):t+plotH/2;
       const px=xAt(x.i);
       const isMax=x.i===max.i;
-      const preferredDy=isMax?maxDy:minDy;
       const label=(isMax?"max ":"min ")+format(x.v);
 
       c.font="700 9px system-ui";
-      const tw=c.measureText(label).width;
-      const boxW=tw+8,boxH=15;
+      const boxW=Math.ceil(c.measureText(label).width)+12,boxH=18;
+      const nearTop=y<t+34,nearBottom=y>baseY-34;
+      const vertical=nearTop?22:nearBottom?-22:(isMax?-20:20);
+      const shift=Math.max(46,boxW*.72);
+
       const offsets=[
-        [dx,preferredDy],
-        [dx,preferredDy+(preferredDy<0?-14:14)],
-        [dx+Math.max(42,tw*.55),preferredDy],
-        [dx-Math.max(42,tw*.55),preferredDy],
-        [dx,-preferredDy],
-        [dx+Math.max(42,tw*.55),-preferredDy],
-        [dx-Math.max(42,tw*.55),-preferredDy]
+        [0,vertical],
+        [side*shift,vertical],
+        [-side*shift,vertical],
+        [side*shift,-vertical],
+        [-side*shift,-vertical],
+        [0,-vertical],
+        [side*shift*1.55,vertical],
+        [-side*shift*1.55,vertical]
       ];
 
       let placed=null;
       for(const [ox,oy] of offsets){
-        const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
-        const ty=Math.max(t+11,Math.min(baseY-10,y+oy));
-        const box={x:tx-boxW/2,y:ty-11,w:boxW,h:boxH};
-        const hitsLabel=labelZones.some(z=>overlaps(box,z,4));
-        const hitsBar=barZones.some(z=>overlaps(box,z,2));
-        if(!hitsLabel && !hitsBar){placed={tx,ty,box};break}
+        const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
+        const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
+        const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
+        if(labelZones.some(z=>overlaps(box,z,5))) continue;
+        if(barZones.some(z=>overlaps(box,z,4))) continue;
+        placed={cx,cy,box};break;
       }
+
+      // If every clean position is occupied, prioritize not colliding with another label.
       if(!placed){
         for(const [ox,oy] of offsets){
-          const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
-          const ty=Math.max(t+11,Math.min(baseY-10,y+oy));
-          const box={x:tx-boxW/2,y:ty-11,w:boxW,h:boxH};
-          if(!labelZones.some(z=>overlaps(box,z,4))){placed={tx,ty,box};break}
+          const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
+          const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
+          const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
+          if(!labelZones.some(z=>overlaps(box,z,5))){placed={cx,cy,box};break}
         }
       }
-      if(!placed){
-        const tx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+dx));
-        const ty=Math.max(t+11,Math.min(baseY-10,y+preferredDy));
-        placed={tx,ty,box:{x:tx-boxW/2,y:ty-11,w:boxW,h:boxH}};
-      }
+      if(!placed) return;
       labelZones.push(placed.box);
 
-      c.beginPath();c.arc(px,y,3.6,0,Math.PI*2);c.fillStyle=color;c.fill();
+      // Point stays exactly on the real monthly value.
+      c.beginPath();c.arc(px,y,3.5,0,Math.PI*2);c.fillStyle=color;c.fill();
 
-      c.textAlign="center";
-      c.lineWidth=3.5;
-      c.strokeStyle="rgba(255,255,255,.92)";
-      c.strokeText(label,placed.tx,placed.ty);
+      // Opaque pill keeps the text readable without connector lines.
+      c.save();
+      c.shadowColor="rgba(42,55,85,.10)";
+      c.shadowBlur=5;
+      c.shadowOffsetY=1;
+      roundedLabelRect(placed.box.x,placed.box.y,placed.box.w,placed.box.h,5);
+      c.fillStyle="rgba(255,255,255,.96)";
+      c.fill();
+      c.restore();
+
+      roundedLabelRect(placed.box.x+.5,placed.box.y+.5,placed.box.w-1,placed.box.h-1,5);
+      c.strokeStyle="rgba(210,218,229,.72)";
+      c.lineWidth=1;
+      c.stroke();
+
       c.fillStyle=color;
-      c.fillText(label,placed.tx,placed.ty);
+      c.textAlign="center";
+      c.textBaseline="middle";
+      c.fillText(label,placed.cx,placed.cy+.3);
+      c.textBaseline="alphabetic";
     });
     c.textAlign="left";
   }
 
-  drawExtrema(kcalSelected,kcalTrend,"#ffb454",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{dx:34,minDy:-10,maxDy:18});
-  drawExtrema(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{dx:0,minDy:18,maxDy:-14});
+  drawExtrema(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{side:1});
+  drawExtrema(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{side:-1});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
@@ -1098,7 +1128,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Ore mensili in colonne; kcal e peso come trend smussati" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Ore mensili in colonne; kcal e peso collegati con curve morbide sui valori reali" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function drawCharts(){
