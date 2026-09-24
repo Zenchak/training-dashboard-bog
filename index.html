@@ -1011,8 +1011,6 @@ function drawTrend(){
   const baseY=h-b;
   const step=months.length>1?plotW/(months.length-1):plotW;
   const barW=Math.max(12,Math.min(42,step*.55));
-  const barZones=[];
-  const labelZones=[];
   function roundedBar(x,y,w,h,r=6){
     const rr=Math.max(0,Math.min(r,w/2,h/2));
     c.beginPath();
@@ -1028,7 +1026,6 @@ function drawTrend(){
   hoursTrend.forEach((v,i)=>{
     if(!Number.isFinite(v) || !Number.isFinite(hoursSelected[i])) return;
     const x=xAt(i),y=t+plotH*(1-v/100),bh=Math.max(2,baseY-y),bx=x-barW/2;
-    barZones.push({x:bx-3,y:y-3,w:barW+6,h:bh+6});
     const g=c.createLinearGradient(0,y,0,baseY);
     g.addColorStop(0,"rgba(111,123,138,.62)");
     g.addColorStop(.55,"rgba(137,148,161,.34)");
@@ -1063,97 +1060,45 @@ function drawTrend(){
   const yAt=v=>t+plotH*(1-v/100);
   drawWeightTrend(c,weightSelected,weightTrend,xAt,yAt,"#2563eb","rgba(37,99,235,.16)");
 
-  function overlaps(a,b,pad=3){
-    return !(a.x+a.w+pad<=b.x || b.x+b.w+pad<=a.x || a.y+a.h+pad<=b.y || b.y+b.h+pad<=a.y);
-  }
-  function roundedLabelRect(x,y,w,h,r=5){
-    const rr=Math.min(r,w/2,h/2);
-    c.beginPath();
-    c.moveTo(x+rr,y);
-    c.lineTo(x+w-rr,y);
-    c.quadraticCurveTo(x+w,y,x+w,y+rr);
-    c.lineTo(x+w,y+h-rr);
-    c.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);
-    c.lineTo(x+rr,y+h);
-    c.quadraticCurveTo(x,y+h,x,y+h-rr);
-    c.lineTo(x,y+rr);
-    c.quadraticCurveTo(x,y,x+rr,y);
-    c.closePath();
-  }
-  function drawMonthlyLabels(raw,trend,color,format,{direction=1}={}){
+  function drawMonthlyLabels(raw,trend,color,format,{position="above"}={}){
     raw.forEach((value,i)=>{
       if(!Number.isFinite(value) || !Number.isFinite(trend[i])) return;
 
-      const px=xAt(i),y=t+plotH*(1-trend[i]/100);
+      const px=xAt(i);
+      const y=t+plotH*(1-trend[i]/100);
       const label=format(value);
-      c.font="700 8.5px system-ui";
-      const boxW=Math.ceil(c.measureText(label).width)+10,boxH=17;
 
-      const nearTop=y<t+28,nearBottom=y>baseY-28;
-      let primaryDy=direction<0?-18:18;
-      if(nearTop) primaryDy=19;
-      if(nearBottom) primaryDy=-19;
+      // Keep every value aligned with its month/column.
+      // Kcal above the line, weight below it; flip only near chart edges.
+      let dy=position==="above"?-12:15;
+      if(y<t+18) dy=16;
+      if(y>baseY-18) dy=-12;
 
-      const sideShift=Math.max(32,boxW*.62);
-      const offsets=[
-        [0,primaryDy],
-        [0,-primaryDy],
-        [sideShift,primaryDy],
-        [-sideShift,primaryDy],
-        [sideShift,-primaryDy],
-        [-sideShift,-primaryDy]
-      ];
-
-      let placed=null;
-      for(const [ox,oy] of offsets){
-        const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
-        const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
-        const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
-        if(labelZones.some(z=>overlaps(box,z,4))) continue;
-        if(barZones.some(z=>overlaps(box,z,3))) continue;
-        placed={cx,cy,box};break;
-      }
-      if(!placed){
-        for(const [ox,oy] of offsets){
-          const cx=Math.max(l+boxW/2,Math.min(w-r-boxW/2,px+ox));
-          const cy=Math.max(t+boxH/2+2,Math.min(baseY-boxH/2-3,y+oy));
-          const box={x:cx-boxW/2,y:cy-boxH/2,w:boxW,h:boxH};
-          if(!labelZones.some(z=>overlaps(box,z,4))){placed={cx,cy,box};break}
-        }
-      }
-      if(!placed) return;
-      labelZones.push(placed.box);
+      const ty=Math.max(t+9,Math.min(baseY-6,y+dy));
 
       c.beginPath();
       c.arc(px,y,3.2,0,Math.PI*2);
       c.fillStyle=color;
       c.fill();
 
-      c.save();
-      c.shadowColor="rgba(42,55,85,.08)";
-      c.shadowBlur=4;
-      c.shadowOffsetY=1;
-      roundedLabelRect(placed.box.x,placed.box.y,placed.box.w,placed.box.h,5);
-      c.fillStyle="rgba(255,255,255,.96)";
-      c.fill();
-      c.restore();
-
-      roundedLabelRect(placed.box.x+.5,placed.box.y+.5,placed.box.w-1,placed.box.h-1,5);
-      c.strokeStyle="rgba(210,218,229,.68)";
-      c.lineWidth=1;
-      c.stroke();
-
-      c.fillStyle=color;
+      c.font="700 8.5px system-ui";
       c.textAlign="center";
       c.textBaseline="middle";
-      c.fillText(label,placed.cx,placed.cy+.2);
+
+      // No box/border: only a subtle white halo for readability.
+      c.lineWidth=3;
+      c.strokeStyle="rgba(255,255,255,.94)";
+      c.strokeText(label,px,ty);
+      c.fillStyle=color;
+      c.fillText(label,px,ty);
+
       c.textBaseline="alphabetic";
     });
     c.textAlign="left";
   }
 
-  drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{direction:1});
-  drawMonthlyLabels(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{direction:-1});
+  drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT")+" kcal",{position:"above"});
+  drawMonthlyLabels(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{position:"below"});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
