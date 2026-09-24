@@ -415,19 +415,28 @@ tr:hover td{background:#fafbfe}
 
   .tablewrap{border-radius:12px;overflow:hidden}
   table{min-width:0;width:100%;table-layout:fixed}
-  th,td{padding:8px 3px;font-size:7.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  th{font-size:6.3px;letter-spacing:.015em}
-  th:nth-child(1),td:nth-child(1){width:10%}
-  th:nth-child(2),td:nth-child(2){width:24%}
+  th,td{
+    padding:10px 2px;
+    font-size:8.4px;
+    line-height:1.15;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-variant-numeric:tabular-nums
+  }
+  th{font-size:7.2px;letter-spacing:.01em;font-weight:850}
+  th:nth-child(1),td:nth-child(1){width:11%}
+  th:nth-child(2),td:nth-child(2){width:23%}
   th:nth-child(3),td:nth-child(3){width:10%}
   th:nth-child(4),td:nth-child(4){width:18%}
   th:nth-child(5),td:nth-child(5){width:14%}
   th:nth-child(7),td:nth-child(7){width:24%}
+  td:nth-child(1),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7){font-weight:650}
   .col-date{max-width:none}
   .date-desktop{display:none}
-  .date-mobile{display:inline;font-weight:750}
+  .date-mobile{display:inline;font-weight:800}
   .mobile-hide{display:none}
-  .pill{max-width:100%;gap:3px;padding:3px 5px}
+  .pill{max-width:100%;gap:3px;padding:4px 4px;font-size:8.2px}
   .pill .dot{width:5px;height:5px;flex:0 0 auto}
   .disc-name{overflow:hidden;text-overflow:ellipsis}
 
