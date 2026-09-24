@@ -123,7 +123,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
 @media(max-width:1020px){.kpis{grid-template-columns:repeat(3,1fr)}.disciplines{grid-template-columns:repeat(3,1fr)}.records{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:720px){
   .wrap{padding-left:10px;padding-right:10px}.hero{grid-template-columns:1fr;padding:21px 17px}.hero-art{font-size:34px}
-  .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:290px}.chart canvas{height:220px}
+  .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:325px}.chart canvas{height:250px}
   .yearbar{top:4px}.section-title{align-items:center}
 }
 
@@ -973,7 +973,8 @@ function drawWeightTrend(c,raw,trend,xAt,yAt,color,shadowColor){
 }
 function drawTrend(){
   const [c,w,h]=prep("trend");
-  const l=44,r=24,t=28,b=34,plotW=w-l-r,plotH=h-t-b;
+  const mobile=w<600;
+  const l=mobile?28:44,r=mobile?12:24,t=mobile?38:28,b=mobile?38:34,plotW=w-l-r,plotH=h-t-b;
   c.clearRect(0,0,w,h);
 
   const hoursRaw=ML.map((_,i)=>{
@@ -1069,19 +1070,19 @@ function drawTrend(){
       const label=format(value);
 
       // Keep every value aligned with its month/column.
-      // Kcal above the line, weight below it; flip only near chart edges.
-      let dy=position==="above"?-12:15;
-      if(y<t+18) dy=16;
-      if(y>baseY-18) dy=-12;
+      // Kcal stays above the line and weight below it so crossings remain readable.
+      let dy=position==="above"?-18:20;
+      if(y>baseY-20 && position==="below") dy=-16;
+      if(y<16 && position==="above") dy=16;
 
-      const ty=Math.max(t+9,Math.min(baseY-6,y+dy));
+      const ty=Math.max(11,Math.min(baseY-7,y+dy));
 
       c.beginPath();
       c.arc(px,y,3.2,0,Math.PI*2);
       c.fillStyle=color;
       c.fill();
 
-      c.font="700 8.5px system-ui";
+      c.font=`700 ${mobile?8:8.5}px system-ui`;
       c.textAlign="center";
       c.textBaseline="middle";
 
