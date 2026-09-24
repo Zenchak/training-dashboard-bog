@@ -413,16 +413,23 @@ tr:hover td{background:#fafbfe}
   .controls>*{padding:7px 8px;font-size:9px;border-radius:9px}
   .controls input{min-width:100%;flex-basis:100%}
 
-  .tablewrap{border-radius:12px;overflow-x:auto}
-  table{min-width:560px}
-  th,td{padding:6px 6px;font-size:8px;white-space:nowrap}
-  th{font-size:7px;letter-spacing:.025em}
-  .col-date{width:48px;max-width:48px}
+  .tablewrap{border-radius:12px;overflow:hidden}
+  table{min-width:0;width:100%;table-layout:fixed}
+  th,td{padding:6px 4px;font-size:7.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  th{font-size:6.5px;letter-spacing:.02em}
+  th:nth-child(1),td:nth-child(1){width:12%}
+  th:nth-child(2),td:nth-child(2){width:30%}
+  th:nth-child(3),td:nth-child(3){width:12%}
+  th:nth-child(4),td:nth-child(4){width:22%}
+  th:nth-child(7),td:nth-child(7){width:24%}
+  .col-date{max-width:none}
   .date-desktop{display:none}
   .date-mobile{display:inline;font-weight:750}
-  .mobile-hide{display:none}
-  .pill{gap:4px;padding:4px 6px}
-  .pill .dot{width:6px;height:6px}
+  .mobile-hide,.mobile-hide-kcal{display:none}
+  .pill{max-width:100%;gap:3px;padding:3px 5px}
+  .pill .dot{width:5px;height:5px;flex:0 0 auto}
+  .disc-name{overflow:hidden;text-overflow:ellipsis}
+
 }
 
 </style>
@@ -488,7 +495,7 @@ tr:hover td{background:#fafbfe}
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>🔥 Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th></tr></thead>
+      <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th class="mobile-hide-kcal">Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
@@ -937,8 +944,8 @@ function renderTable(){
   els.count.textContent=`${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
   els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
-    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} ${a.type}</span></td>
-    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
+    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} <span class="disc-name">${a.type}</span></span></td>
+    <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td class="mobile-hide-kcal" title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
     <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td></tr>`}).join("");
 }
 function renderFooter(){
