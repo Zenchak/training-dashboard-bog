@@ -73,7 +73,7 @@ body{
 .trend-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:#c7d6e4}
 .trend-legend span{display:inline-flex;align-items:center;gap:6px}
 .trend-dot{width:9px;height:9px;border-radius:999px;display:inline-block}
-.trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#2563eb}
+.trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#2563eb}.trend-dot.run{background:#ff7f50}
 .records{grid-template-columns:repeat(3,1fr)}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
@@ -236,7 +236,7 @@ body{
 .trend-legend span{
   padding:6px 9px;border:1px solid #e7ebf2;border-radius:999px;background:#fbfcfe
 }
-.trend-dot.hours{background:#9aa5b1}.trend-dot.kcal{background:#f6a340}.trend-dot.weight{background:#2563eb}
+.trend-dot.hours{background:#9aa5b1}.trend-dot.kcal{background:#f6a340}.trend-dot.weight{background:#2563eb}.trend-dot.run{background:#ff7f50}
 
 .record{padding:17px;background:#fff}
 .record .ico{
@@ -531,6 +531,14 @@ tr:hover td{background:#fafbfe}
         <span><i class="trend-dot weight"></i>Peso</span>
       </div>
       <canvas id="trend"></canvas>
+    </div>
+    <div class="card chart">
+      <h3>🏃 Prestazione corsa</h3>
+      <p id="runInfo">Miglior ritmo medio mensile sulle corse di almeno 5 km. Più in alto = più veloce.</p>
+      <div class="trend-legend">
+        <span><i class="trend-dot run"></i>Miglior ritmo mensile</span>
+      </div>
+      <canvas id="runTrend"></canvas>
     </div>
   </section>
 
@@ -1112,8 +1120,119 @@ function drawTrend(){
     els.kcalInfo.textContent="Ore mensili in colonne; kcal sui valori reali; peso tratteggiato prima del primo rilievo e continuo da lì in poi" + (details.length?" · "+details.join(" · "):"");
   }
 }
+function fmtPaceShort(secondsPerKm){
+  const p=Math.round(secondsPerKm),m=Math.floor(p/60),ss=p%60;
+  return `${m}:${String(ss).padStart(2,"0")}`;
+}
+function drawRunTrend(){
+  const canvas=document.getElementById("runTrend");
+  const info=document.getElementById("runInfo");
+  if(!canvas)return;
+
+  const [c,w,h]=prep("runTrend");
+  const mobile=w<600;
+  const l=mobile?32:48,r=mobile?14:24,t=mobile?34:30,b=mobile?38:36;
+  const plotW=w-l-r,plotH=h-t-b;
+  c.clearRect(0,0,w,h);
+
+  // Per confrontare prestazioni simili uso il miglior ritmo medio mensile
+  // tra le attività Corsa di almeno 5 km. Trail escluso.
+  const monthly=ML.map((_,i)=>{
+    const z=AY.filter(a=>a.type==="Corsa" && a.month===i+1 && a.km>=5 && sec(a.duration)>0);
+    if(!z.length)return null;
+    const best=z.reduce((best,a)=>{
+      const pace=sec(a.duration)/a.km;
+      return !best || pace<best.pace?{pace,date:a.date,km:a.km}:best;
+    },null);
+    return best;
+  });
+  const months=monthly.map((x,i)=>x?i:-1).filter(i=>i>=0);
+  if(!months.length){
+    c.fillStyle="#8a96a6";c.font="12px system-ui";c.textAlign="center";
+    c.fillText("Nessuna corsa ≥ 5 km disponibile",w/2,h/2);
+    c.textAlign="left";
+    if(info)info.textContent="Servono attività Corsa di almeno 5 km per costruire il trend.";
+    return;
+  }
+
+  const vals=months.map(i=>monthly[i].pace);
+  let fastest=Math.min(...vals),slowest=Math.max(...vals);
+  if(fastest===slowest){fastest-=15;slowest+=15}
+  const pad=Math.max(10,(slowest-fastest)*.16);
+  fastest-=pad;slowest+=pad;
+
+  const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
+  const yAt=pace=>t+plotH*(pace-fastest)/(slowest-fastest); // faster = higher
+
+  // Calm horizontal grid.
+  c.strokeStyle="rgba(108,121,143,.10)";c.lineWidth=1;
+  for(let j=0;j<4;j++){
+    const y=t+plotH*j/3;
+    c.beginPath();c.moveTo(l,y);c.lineTo(w-r,y);c.stroke();
+  }
+
+  // Month labels.
+  c.fillStyle="#7f8a99";c.font=`${mobile?8:9}px system-ui`;c.textAlign="center";
+  months.forEach((mi,i)=>c.fillText(ML[mi],xAt(i),h-9));
+
+  const points=months.map((mi,i)=>({x:xAt(i),y:yAt(monthly[mi].pace),mi,pace:monthly[mi].pace}));
+
+  // Soft area under the line.
+  if(points.length>1){
+    pathSmooth(c,points);
+    c.lineTo(points.at(-1).x,h-b);
+    c.lineTo(points[0].x,h-b);
+    c.closePath();
+    const g=c.createLinearGradient(0,t,0,h-b);
+    g.addColorStop(0,"rgba(255,127,80,.16)");
+    g.addColorStop(1,"rgba(255,127,80,.015)");
+    c.fillStyle=g;c.fill();
+  }
+
+  // Main line.
+  if(points.length>1){
+    c.save();
+    c.shadowColor="rgba(255,127,80,.16)";
+    c.shadowBlur=7;
+    pathSmooth(c,points);
+    c.strokeStyle="#ff7f50";
+    c.lineWidth=3;
+    c.lineCap="round";
+    c.lineJoin="round";
+    c.stroke();
+    c.restore();
+  }
+
+  // Values at each month.
+  points.forEach((p,i)=>{
+    c.beginPath();c.arc(p.x,p.y,4,0,Math.PI*2);c.fillStyle="#ff7f50";c.fill();
+
+    let dy=-15;
+    if(p.y<t+18)dy=18;
+    const ty=Math.max(11,Math.min(h-b-7,p.y+dy));
+    const label=fmtPaceShort(p.pace);
+
+    c.font=`800 ${mobile?9:10}px system-ui`;
+    c.textAlign="center";
+    c.lineWidth=3.5;
+    c.strokeStyle="rgba(255,255,255,.95)";
+    c.strokeText(label,p.x,ty);
+    c.fillStyle="#e9683d";
+    c.fillText(label,p.x,ty);
+  });
+  c.textAlign="left";
+
+  // Dynamic summary: first available month vs latest.
+  if(info){
+    const first=monthly[months[0]],last=monthly[months.at(-1)];
+    const delta=Math.round(first.pace-last.pace);
+    const change=delta>0?`miglioramento ${fmtPaceShort(delta)}/km`:delta<0?`peggioramento ${fmtPaceShort(Math.abs(delta))}/km`:"ritmo invariato";
+    info.textContent=`Miglior ritmo medio mensile su corse ≥5 km · ${fmtPaceShort(first.pace)}/km → ${fmtPaceShort(last.pace)}/km · ${change}`;
+  }
+}
 function drawCharts(){
   drawTrend();
+  drawRunTrend();
 }
 function populateFilters(){
   const tv=els.type.value,mv=els.month.value;
