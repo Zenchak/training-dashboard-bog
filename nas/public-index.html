@@ -149,6 +149,7 @@ h1{margin:10px 0 6px;font-size:clamp(34px,7vw,52px);line-height:1;letter-spacing
 .title{font-weight:850;font-size:19px;margin-top:18px;letter-spacing:-.02em}
 .desc{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
 .card.training{--card-accent:#6f5cf1;--icon-bg:#eee9ff}
+.card.gare{--card-accent:#3b82f6;--icon-bg:#eaf2ff}
 .card.casa{--card-accent:#ff8b5e;--icon-bg:#ffefe8}
 .foot{
   color:var(--muted);
@@ -242,6 +243,11 @@ dialog::backdrop{background:rgba(55,65,81,.22);backdrop-filter:blur(3px)}
       <div class="title">Allenamenti</div>
       <div class="desc">Dashboard training, andamento e storico attività</div>
     </a>
+    <a class="card gare" data-visible-profile="Bogdan" href="/gare/">
+      <div class="card-top"><div class="card-icon">🏁</div><div class="arrow">→</div></div>
+      <div class="title">Gare</div>
+      <div class="desc">Calendario gare, obiettivi e valutazioni</div>
+    </a>
     <a class="card casa" data-visible-profile="all" href="/casa/">
       <div class="card-top"><div class="card-icon">⌂</div><div class="arrow">→</div></div>
       <div class="title">Cerco Casa</div>
@@ -255,7 +261,7 @@ dialog::backdrop{background:rgba(55,65,81,.22);backdrop-filter:blur(3px)}
     <h2>👤 Scegli profilo</h2>
     <p>Questo profilo verrà usato per note, valutazioni e schede visibili nell’Hub.</p>
     <div class="profiles">
-      <button class="profile" type="button" data-profile="Bogdan">👨 Bogdan<small>Allenamenti e Cerco Casa</small></button>
+      <button class="profile" type="button" data-profile="Bogdan">👨 Bogdan<small>Allenamenti, Gare e Cerco Casa</small></button>
       <button class="profile" type="button" data-profile="Camilla">👩 Camilla<small>Cerco Casa</small></button>
     </div>
     <button class="close" id="closeProfile" type="button">Chiudi</button>
