@@ -938,16 +938,12 @@ function pathSmooth(c,pts){
     c.bezierCurveTo(mx,p.y,mx,n.y,n.x,n.y);
   }
 }
-function drawWeightTrend(c,raw,trend,xAt,yAt,color,shadowColor){
-  const valid=raw.map((v,i)=>Number.isFinite(v)?i:-1).filter(i=>i>=0);
-  if(!valid.length)return;
+function drawWeightMeasurements(c,rows,norm,xForDate,yAt,color,shadowColor,xStart,top,bottom){
+  if(!rows.length)return;
+  const pts=rows.map((w,i)=>({x:xForDate(w.date),y:yAt(norm[i]),kg:w.kg,date:w.date}));
 
-  const first=valid[0];
-
-  // Prima del primo rilievo: prolungamento tratteggiato al livello
-  // del primo peso disponibile.
-  if(first>0){
-    const y=yAt(trend[first]);
+  // Prima del primo rilievo mantieni il prolungamento tratteggiato.
+  if(pts[0].x>xStart+2){
     c.save();
     c.setLineDash([7,6]);
     c.strokeStyle=color;
@@ -955,30 +951,61 @@ function drawWeightTrend(c,raw,trend,xAt,yAt,color,shadowColor){
     c.lineWidth=2.2;
     c.lineCap="round";
     c.beginPath();
-    c.moveTo(xAt(0),y);
-    c.lineTo(xAt(first),y);
+    c.moveTo(xStart,pts[0].y);
+    c.lineTo(pts[0].x,pts[0].y);
     c.stroke();
     c.restore();
   }
 
-  // Dal primo rilievo in poi: linea continua, collegando i rilievi reali
-  // anche quando un mese intermedio non contiene una pesata.
-  const P=valid.map(i=>({x:xAt(i),y:yAt(trend[i])}));
-  if(P.length===1){
-    c.beginPath();c.arc(P[0].x,P[0].y,3.5,0,Math.PI*2);c.fillStyle=color;c.fill();
-    return;
+  // Dal primo rilievo in poi usa ogni pesata reale, non la media mensile.
+  if(pts.length>1){
+    c.save();
+    c.shadowColor=shadowColor;
+    c.shadowBlur=7;
+    c.strokeStyle=color;
+    c.lineWidth=3;
+    c.lineCap="round";
+    c.lineJoin="round";
+    c.setLineDash([]);
+    pathSmooth(c,pts);
+    c.stroke();
+    c.restore();
   }
-  c.save();
-  c.shadowColor=shadowColor;
-  c.shadowBlur=7;
-  c.strokeStyle=color;
-  c.lineWidth=3;
-  c.lineCap="round";
-  c.lineJoin="round";
-  c.setLineDash([]);
-  pathSmooth(c,P);
-  c.stroke();
-  c.restore();
+
+  // Tutte le pesate sono sempre visibili come punti.
+  pts.forEach(p=>{
+    c.beginPath();
+    c.arc(p.x,p.y,3.4,0,Math.PI*2);
+    c.fillStyle=color;
+    c.fill();
+  });
+
+  // Etichette solo quando c'è spazio: i punti restano comunque tutti presenti.
+  const zones=[];
+  const order=[pts.length-1,0,...pts.map((_,i)=>i).slice(1,-1)].filter((v,i,a)=>a.indexOf(v)===i);
+  order.forEach((idx)=>{
+    const p=pts[idx];
+    const label=n(p.kg,1)+" kg";
+    c.font="700 8px system-ui";
+    const tw=c.measureText(label).width, bw=tw+6,bh=13;
+    const candidates=[-15,15,-27,27];
+    let chosen=null;
+    for(const dy of candidates){
+      const ty=Math.max(top+7,Math.min(bottom-7,p.y+dy));
+      const box={x:p.x-bw/2,y:ty-bh/2,w:bw,h:bh};
+      const hit=zones.some(z=>!(box.x+box.w+3<=z.x||z.x+z.w+3<=box.x||box.y+box.h+2<=z.y||z.y+z.h+2<=box.y));
+      if(!hit){chosen={ty,box};break}
+    }
+    if(!chosen)return;
+    zones.push(chosen.box);
+    c.textAlign="center";
+    c.lineWidth=3;
+    c.strokeStyle="rgba(255,255,255,.95)";
+    c.strokeText(label,p.x,chosen.ty);
+    c.fillStyle=color;
+    c.fillText(label,p.x,chosen.ty);
+  });
+  c.textAlign="left";
 }
 function drawTrend(){
   const [c,w,h]=prep("trend");
@@ -996,6 +1023,7 @@ function drawTrend(){
     return z.length?z.reduce((sum,x)=>sum+x.value,0):null;
   });
   const weightRaw=monthlyWeight();
+  const weightRows=WY.slice().sort((a,b)=>a.date.localeCompare(b.date));
 
   const months=ML.map((_,i)=>i).filter(i=>
     Number.isFinite(hoursRaw[i]) || Number.isFinite(kcalRaw[i]) || Number.isFinite(weightRaw[i])
@@ -1003,10 +1031,10 @@ function drawTrend(){
   if(!months.length){emptyCanvas("trend");return}
 
   const pick=arr=>months.map(i=>arr[i]);
-  const hoursSelected=pick(hoursRaw),kcalSelected=pick(kcalRaw),weightSelected=pick(weightRaw);
+  const hoursSelected=pick(hoursRaw),kcalSelected=pick(kcalRaw);
   const hoursTrend=normalizeSeries(hoursSelected);
   const kcalTrend=normalizeSeries(kcalSelected);
-  const weightTrend=normalizeSeries(weightSelected);
+  const weightNorm=normalizeSeries(weightRows.map(x=>x.kg));
 
   const xAt=i=>months.length===1?l+plotW/2:l+plotW*i/(months.length-1);
   const pts=arr=>arr.map((v,i)=>({x:xAt(i),y:Number.isFinite(v)?t+plotH*(1-v/100):NaN}));
@@ -1066,9 +1094,18 @@ function drawTrend(){
   c.save();c.shadowColor="rgba(255,180,84,.18)";c.shadowBlur=7;
   pathSmooth(c,kp);c.strokeStyle="#ffac3f";c.lineWidth=3;c.lineCap="round";c.lineJoin="round";c.stroke();c.restore();
 
-  // Peso: stesso blu della legenda. I mesi mancanti sono tratteggiati.
+  // Peso: ogni singolo rilievo viene posizionato nel suo giorno reale.
   const yAt=v=>t+plotH*(1-v/100);
-  drawWeightTrend(c,weightSelected,weightTrend,xAt,yAt,"#2563eb","rgba(37,99,235,.16)");
+  const monthPos=new Map(months.map((mi,i)=>[mi,i]));
+  const monthStep=months.length>1?plotW/(months.length-1):plotW*.7;
+  const xForWeightDate=date=>{
+    const d=new Date(date+"T12:00:00"),mi=d.getMonth(),idx=monthPos.get(mi);
+    if(idx==null)return l;
+    const days=new Date(selectedYear,mi+1,0).getDate();
+    const frac=days>1?(d.getDate()-1)/(days-1)-.5:0;
+    return Math.max(l,Math.min(w-r,xAt(idx)+frac*monthStep*.72));
+  };
+  drawWeightMeasurements(c,weightRows,weightNorm,xForWeightDate,yAt,"#2563eb","rgba(37,99,235,.16)",xAt(0),t,baseY);
 
   function drawMonthlyLabels(raw,trend,color,format,{position="above"}={}){
     raw.forEach((value,i)=>{
@@ -1108,7 +1145,6 @@ function drawTrend(){
   }
 
   drawMonthlyLabels(kcalSelected,kcalTrend,"#ff9f2f",v=>Math.round(v).toLocaleString("it-IT"),{position:"above"});
-  drawMonthlyLabels(weightSelected,weightTrend,"#2563eb",v=>n(v,1)+" kg",{position:"below"});
 
   const kcalTotal=kcalRows.reduce((sum,x)=>sum+x.value,0),estimatedCount=kcalRows.filter(x=>x.estimated).length;
   const latestW=WY.length?WY.slice().sort((a,b)=>a.date.localeCompare(b.date)).at(-1):null;
@@ -1118,7 +1154,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Ore mensili in colonne; kcal sui valori reali; peso tratteggiato prima del primo rilievo e continuo da lì in poi" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Ore e kcal mensili; peso con ogni singolo rilievo nella data reale" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function fmtPaceShort(secondsPerKm){
