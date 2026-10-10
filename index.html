@@ -1023,7 +1023,12 @@ function drawTrend(){
     return z.length?z.reduce((sum,x)=>sum+x.value,0):null;
   });
   const weightRaw=monthlyWeight();
-  const weightRows=WY.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const weightRowsAll=WY.slice().sort((a,b)=>a.date.localeCompare(b.date));
+  const weightRows=ML.flatMap((_,i)=>{
+    const z=weightRowsAll.filter(w=>Number(w.date.slice(5,7))===i+1);
+    if(z.length<=2)return z;
+    return [z[0],z[z.length-1]];
+  });
 
   const months=ML.map((_,i)=>i).filter(i=>
     Number.isFinite(hoursRaw[i]) || Number.isFinite(kcalRaw[i]) || Number.isFinite(weightRaw[i])
@@ -1154,7 +1159,7 @@ function drawTrend(){
     if(totalHours) details.push(`${fh(totalHours)} allenamento`);
     if(kcalTotal) details.push(`${Math.round(kcalTotal).toLocaleString("it-IT")} kcal${estimatedCount?" (parz. stimate)":""}`);
     if(latestW) details.push(`peso attuale ${n(latestW.kg,1)} kg`);
-    els.kcalInfo.textContent="Ore e kcal mensili; peso con ogni singolo rilievo nella data reale" + (details.length?" · "+details.join(" · "):"");
+    els.kcalInfo.textContent="Ore e kcal mensili; peso con massimo 2 rilievi per mese (primo e ultimo)" + (details.length?" · "+details.join(" · "):"");
   }
 }
 function fmtPaceShort(secondsPerKm){
