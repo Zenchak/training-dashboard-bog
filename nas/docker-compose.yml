@@ -26,10 +26,7 @@ services:
           if [ ! -f "$$target/index.html" ]; then
             echo "[$$(date)] Creo copia locale della vecchia mappa gare..."
             mkdir -p "$$target"
-            wget --mirror --convert-links --adjust-extension --page-requisites --no-parent \
-              --directory-prefix="$$target" \
-              --no-host-directories \
-              https://6a9fda04e5e971aba29f9a03--illustrious-cupcake-c1bcb0.netlify.app/ || true
+            wget --mirror --convert-links --adjust-extension --page-requisites --no-parent               --directory-prefix="$$target"               --no-host-directories               https://6a9fda04e5e971aba29f9a03--illustrious-cupcake-c1bcb0.netlify.app/ || true
             if [ ! -f "$$target/index.html" ]; then
               found=$$(find "$$target" -name 'index.html' | head -n 1)
               if [ -n "$$found" ]; then cp "$$found" "$$target/index.html"; fi
@@ -82,7 +79,7 @@ services:
       - "8081:8081"
       - "8082:8082"
       - "8083:8083"
-      - "127.0.0.1:8090:8090"
+      - "8090:8090"
     volumes:
       - sites_data:/sites:ro
       - ./htpasswd_bogdan:/etc/nginx/.htpasswd_bogdan:ro
