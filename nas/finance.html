@@ -42,7 +42,7 @@ h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-he
 <section class="panel" style="margin-top:14px"><h2>2026 mese per mese</h2><p>Netto effettivo e netto ordinario.</p><div class="tablewrap"><table><thead><tr><th>Mese</th><th>Lordo fisso</th><th>Lordo totale</th><th>Netto</th><th>Netto ordinario</th><th>Extra</th><th>Nota</th></tr></thead><tbody id="months"></tbody></table></div></section>
 <section class="grid">
   <div class="panel"><h2>Eventi salariali</h2><p>Le variazioni strutturali che spiegano la crescita.</p><div id="events"></div></div>
-  <div class="panel"><h2>730 2026</h2><p>Rimborso ricevuto nel cedolino di settembre.</p><div id="refund" class="metrics"></div></div>
+  <div class="panel"><h2>Rimborsi 730</h2><div id="refund" class="metrics"></div></div>
 </section>
 </main>
 <script>
@@ -57,7 +57,7 @@ function render(d){
  months.innerHTML=(d.monthly2026||[]).map(x=>'<tr><td>'+x.month+'</td><td>'+eur(x.fixedGross)+'</td><td>'+eur(x.totalGross)+'</td><td><b>'+eur(x.net)+'</b></td><td>'+eur(x.ordinaryNet)+'</td><td>'+eur(x.extra)+'</td><td class="note">'+(x.note||'')+'</td></tr>').join('');
  events.innerHTML=tl.slice(1).map(x=>'<div class="event"><div class="date">'+x.from+'</div><div class="eventbox"><b>'+eur(x.monthlyGross)+' / mese</b><span>'+x.event+' · '+x.company+' · RAL '+eur(x.ral)+'</span></div></div>').join('');
 
- refund.innerHTML='<div class="metric"><b>'+eur(r.total)+'</b><span>Rimborso totale</span></div><div class="metric"><b>'+eur(r.payslipNet)+'</b><span>Netto cedolino '+(r.month||'')+'</span></div>';
+ refund.innerHTML='<div class="metric"><b>'+eur(0)+'</b><span>2025</span></div><div class="metric"><b>'+eur(r.total)+'</b><span>2026</span></div>';
  statusEl.textContent='Dati reali caricati dal NAS · aggiornamento '+(d.updatedAt||'—');
 }
 const statusEl=document.getElementById('status');
