@@ -31,8 +31,8 @@ h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-he
 <section class="kpis">
   <div class="kpi"><div class="lab">RAL fissa</div><div id="ral" class="val">—</div><div class="muted">13 mensilità</div></div>
   <div class="kpi"><div class="lab">Netto ordinario</div><div id="net" class="val">—</div><div class="muted">senza extra</div></div>
-  <div class="kpi"><div class="lab">Ferie</div><div id="ferie" class="val">—</div><div class="muted">ultimo cedolino</div></div>
-  <div class="kpi"><div class="lab">ROL</div><div id="rol" class="val">—</div><div class="muted">ultimo cedolino</div></div>
+  <div class="kpi"><div class="lab">Ferie</div><div id="ferie" class="val">—</div><div class="muted">giorni lavorativi · ultimo mese</div></div>
+  <div class="kpi"><div class="lab">ROL</div><div id="rol" class="val">—</div><div class="muted">giorni lavorativi · ultimo mese</div></div>
   <div class="kpi"><div class="lab">Cometa</div><div id="cometa" class="val">—</div><div id="cometaDate" class="muted">posizione fondo</div></div>
 </section>
 <section class="grid">
@@ -42,7 +42,7 @@ h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-he
 <section class="panel" style="margin-top:14px"><h2>2026 mese per mese</h2><p>Netto effettivo e netto ordinario.</p><div class="tablewrap"><table><thead><tr><th>Mese</th><th>Lordo fisso</th><th>Lordo totale</th><th>Netto</th><th>Netto ordinario</th><th>Extra</th><th>Nota</th></tr></thead><tbody id="months"></tbody></table></div></section>
 <section class="grid">
   <div class="panel"><h2>Eventi salariali</h2><p>Le variazioni strutturali che spiegano la crescita.</p><div id="events"></div></div>
-  <div class="panel"><h2>Ferie e ROL</h2><div class="tablewrap"><table><thead><tr><th>Mese</th><th>Ferie</th><th>ROL</th><th>Totale</th></tr></thead><tbody id="leave"></tbody></table></div><h2 style="margin-top:18px">730 2026</h2><div id="refund" class="metrics"></div></div>
+  <div class="panel"><h2>Ferie e ROL · ultimo mese</h2><p id="leaveMonth">Conversione: 8 ore = 1 giorno lavorativo.</p><div class="metrics"><div class="metric"><b id="leaveFerie">—</b><span>Ferie</span></div><div class="metric"><b id="leaveRol">—</b><span>ROL</span></div><div class="metric"><b id="leaveTotal">—</b><span>Saldo complessivo</span></div><div class="metric"><b>8 h</b><span>1 giorno lavorativo</span></div></div><h2 style="margin-top:18px">730 2026</h2><div id="refund" class="metrics"></div></div>
 </section>
 </main>
 <script>
@@ -51,12 +51,12 @@ const num=n=>n==null?'—':new Intl.NumberFormat('it-IT',{maximumFractionDigits:
 function render(d){
  const c=d.current||{},co=d.cometa||{},f=d.fiscal2025||{},r=d.refund730_2026||{};
  role.textContent=[c.employer,c.role,c.level?'livello '+c.level:''].filter(Boolean).join(' · ');
- ral.textContent=eur(c.ralFixed);net.textContent=eur(c.ordinaryNet);ferie.textContent=num(c.ferieHours)+' h';ferie.className='val '+(c.ferieHours<0?'neg':'pos');rol.textContent=num(c.rolHours)+' h';rol.className='val pos';cometa.textContent=eur(co.total);cometaDate.textContent='al '+(co.asOf||'—');
+ ral.textContent=eur(c.ralFixed);net.textContent=eur(c.ordinaryNet);ferie.textContent=num((c.ferieHours||0)/8)+' gg';ferie.className='val '+(c.ferieHours<0?'neg':'pos');rol.textContent=num((c.rolHours||0)/8)+' gg';rol.className='val pos';cometa.textContent=eur(co.total);cometaDate.textContent='al '+(co.asOf||'—');
  cEmp.textContent=eur(co.employee);cCompany.textContent=eur(co.employer);cTfr.textContent=eur(co.tfr);cReturns.textContent=eur(co.returns);fIncome.textContent=eur(f.employmentIncome);fIrpef.textContent=eur(f.irpefWithheld);fInps.textContent=eur(f.inpsTaxBase);fPension.textContent=eur(f.complementaryPensionDeducted);
  const tl=d.salaryTimeline||[],mx=Math.max(...tl.map(x=>Number(x.monthlyGross)||0),1);salaryChart.innerHTML=tl.map(x=>'<div class="bw"><div class="bar" style="height:'+Math.max(8,(x.monthlyGross/mx*100))+'%"><b>'+eur(x.monthlyGross)+'</b></div><div class="x">'+x.from+'<br>'+x.company+'</div></div>').join('');
  months.innerHTML=(d.monthly2026||[]).map(x=>'<tr><td>'+x.month+'</td><td>'+eur(x.fixedGross)+'</td><td>'+eur(x.totalGross)+'</td><td><b>'+eur(x.net)+'</b></td><td>'+eur(x.ordinaryNet)+'</td><td>'+eur(x.extra)+'</td><td class="note">'+(x.note||'')+'</td></tr>').join('');
  events.innerHTML=tl.slice(1).map(x=>'<div class="event"><div class="date">'+x.from+'</div><div class="eventbox"><b>'+eur(x.monthlyGross)+' / mese</b><span>'+x.event+' · '+x.company+' · RAL '+eur(x.ral)+'</span></div></div>').join('');
- leave.innerHTML=(d.leave2026||[]).map(x=>'<tr><td>'+x.month+'</td><td class="'+(x.ferie<0?'neg':'pos')+'">'+num(x.ferie)+'</td><td class="pos">'+num(x.rol)+'</td><td><b>'+num((x.ferie||0)+(x.rol||0))+'</b></td></tr>').join('');
+ const leaveRows=d.leave2026||[];const lastLeave=leaveRows.length?leaveRows[leaveRows.length-1]:null;if(lastLeave){const ferieDays=(lastLeave.ferie||0)/8,rolDays=(lastLeave.rol||0)/8,totalDays=ferieDays+rolDays;leaveMonth.textContent='Ultimo dato: '+lastLeave.month+' 2026 · conversione 8 ore = 1 giorno lavorativo.';leaveFerie.textContent=num(ferieDays)+' gg';leaveFerie.className=ferieDays<0?'neg':'pos';leaveRol.textContent=num(rolDays)+' gg';leaveRol.className='pos';leaveTotal.textContent=num(totalDays)+' gg';leaveTotal.className=totalDays<0?'neg':'pos';}
  refund.innerHTML='<div class="metric"><b>'+eur(r.total)+'</b><span>Rimborso totale</span></div><div class="metric"><b>'+eur(r.payslipNet)+'</b><span>Netto cedolino '+(r.month||'')+'</span></div>';
  statusEl.textContent='Dati reali caricati dal NAS · aggiornamento '+(d.updatedAt||'—');
 }
