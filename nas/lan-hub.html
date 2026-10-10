@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zenchack Hub LAN</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7fb;--text:#202938;--muted:#7d8898;--line:#e5eaf2;--shadow:0 10px 30px rgba(42,55,85,.08)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#fbfcfe,#f4f7fb);display:grid;place-items:center;padding:24px}
+.wrap{width:min(760px,100%)}
+.hero{padding:26px;margin-bottom:16px;border:1px solid #edf0f6;border-radius:24px;background:linear-gradient(135deg,#fff,#fbfaff 68%,#f2efff);box-shadow:0 12px 36px rgba(50,61,92,.08)}
+.brand{color:#6f5cf1;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:850}
+h1{margin:10px 0 6px;font-size:clamp(34px,7vw,52px);line-height:1;letter-spacing:-.04em}
+.sub{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{display:block;min-height:150px;text-decoration:none;color:var(--text);background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);transition:.16s}
+.card:hover{transform:translateY(-2px)}
+.ico{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;font-size:20px;background:#f2efff}
+.title{font-weight:850;font-size:19px;margin-top:18px}
+.desc{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
+.training .ico{background:#eee9ff}.gare .ico{background:#eaf2ff}.casa .ico{background:#ffefe8}.finanze .ico{background:#eaf8f2}
+.note{margin-top:16px;color:var(--muted);font-size:11px}
+@media(max-width:620px){body{padding:12px}.grid{grid-template-columns:1fr;gap:10px}.hero{padding:17px}.card{min-height:118px;padding:15px}.title{font-size:17px;margin-top:13px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="brand">Zenchack · accesso LAN</div>
+    <h1>Hub</h1>
+    <div class="sub">Accesso locale ai moduli del NAS</div>
+  </section>
+  <section class="grid">
+    <a class="card training" id="training"><div class="ico">↗</div><div class="title">Allenamenti</div><div class="desc">Dashboard training e storico attività</div></a>
+    <a class="card gare" id="gare"><div class="ico">🏁</div><div class="title">Gare</div><div class="desc">Calendario gare e obiettivi</div></a>
+    <a class="card casa" id="casa"><div class="ico">⌂</div><div class="title">Cerco Casa</div><div class="desc">Annunci, note e valutazioni</div></a>
+    <a class="card finanze" id="finanze"><div class="ico">€</div><div class="title">Finanze</div><div class="desc">Stipendio, ferie/ROL, Cometa e fisco</div></a>
+  </section>
+  <div class="note">Hub locale di emergenza finché ripristiniamo Tailscale/porta 8090.</div>
+</main>
+<script>
+const h=location.hostname;
+document.getElementById('training').href='http://'+h+':8081/';
+document.getElementById('gare').href='http://'+h+':8082/app.html';
+document.getElementById('casa').href='http://'+h+':8083/';
+document.getElementById('finanze').href='http://'+h+':8081/finanze/';
+</script>
+</body>
+</html>
