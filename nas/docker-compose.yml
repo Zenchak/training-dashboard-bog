@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     volumes:
       - sites_data:/sites
+      - ./finance-data:/private-finance
+      - ./finance-keys:/private-finance-keys:ro
     command:
       - sh
       - -c
@@ -41,6 +43,9 @@ services:
           mirror_racemap
           if [ -f /sites/training-dashboard-bog/build.js ]; then
             node /sites/training-dashboard-bog/build.js || true
+          fi
+          if [ -f /sites/training-dashboard-bog/nas/decrypt-finance.js ] && [ -f /sites/training-dashboard-bog/nas/finance.enc ] && [ -f /private-finance-keys/finance-private.pem ]; then
+            node /sites/training-dashboard-bog/nas/decrypt-finance.js /sites/training-dashboard-bog/nas/finance.enc /private-finance-keys/finance-private.pem /private-finance/finance.json || true
           fi
           echo "[$$(date)] Aggiornamento completato. Nuovo controllo tra 60 secondi."
           sleep 60
