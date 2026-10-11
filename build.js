@@ -55,4 +55,13 @@ if (html.includes(scriptEnd)) {
 
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
+
+// LAN fallbacks: materialize Hub and Finanze inside dist so Nginx can serve them
+// with its normal static-file path and without special alias locations.
+const hubDir = path.join(out, 'hub');
+const financeDir = path.join(out, 'finanze');
+fs.mkdirSync(hubDir, { recursive: true });
+fs.mkdirSync(financeDir, { recursive: true });
+fs.copyFileSync(path.join(__dirname, 'nas', 'lan-hub.html'), path.join(hubDir, 'index.html'));
+fs.copyFileSync(path.join(__dirname, 'nas', 'finance.html'), path.join(financeDir, 'index.html'));
 fs.writeFileSync(path.join(out, 'nas-sync-test.txt'), 'OK NAS SYNC - 2026-09-14 21:55\n');
