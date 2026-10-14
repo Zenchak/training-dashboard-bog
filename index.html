@@ -546,7 +546,7 @@ tr:hover td{background:#fafbfe}
   <div class="section-title"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
-  <div class="section-title"><h2>◎ Obiettivi triathlon</h2><span>Distanze, preparazione e stima personale</span></div>
+  <div class="section-title"><h2>◎ Obbiettivi</h2><span>Triathlon e corsa</span></div>
   <section class="card race-panel">
     <div class="race-note">
       <span class="ico">🧭</span>
@@ -558,7 +558,7 @@ tr:hover td{background:#fafbfe}
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
-    <div class="legendline">Il “progresso singole distanze” confronta le tue distanze massime registrate con i relativi traguardi di allenamento: non misura da solo la reale prontezza a gareggiare. La stima gara è orientativa e viene ricalcolata dai dati disponibili. Il confronto statistico usa benchmark amatoriali; per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN e i gate intermedi possono variare da evento a evento.</div>
+    <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN; per mezza e maratona i cutoff dipendono dalla singola gara.</div>
   </section>
 
   <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
@@ -725,6 +725,18 @@ const RACES=[
     prep:{swim:4,bike:160,run:30},
     prepText:"🏊 4–4,5 km · 🚴 160–180 km · 🏃 lungo 28–32 km · brick 120/140+15/20",
     transition:15,uncertainty:.10
+  },
+  {
+    name:"Mezza maratona",icon:"🏃",kind:"run",run:21.0975,
+    prep:{run:18},
+    prepText:"🏃 lungo 18–21 km · continuità e lavori a ritmo",
+    uncertainty:.055
+  },
+  {
+    name:"Maratona",icon:"🏁",kind:"run",run:42.195,
+    prep:{run:30},
+    prepText:"🏃 lungo 28–32 km · volume, continuità e gestione del ritmo",
+    uncertainty:.085
   }
 ];
 
@@ -764,7 +776,41 @@ function fmtRace(seconds){
   const total=Math.round(seconds/60)*60,h=Math.floor(total/3600),m=Math.round((total%3600)/60);
   return h?`${h}h${String(m).padStart(2,"0")}`:`${m}'`;
 }
+function fmtRunPace(seconds,km){
+  if(!Number.isFinite(seconds)||!km)return "—";
+  const p=Math.round(seconds/km),m=Math.floor(p/60),ss=p%60;
+  return `${m}:${String(ss).padStart(2,"0")}/km`;
+}
 function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
+  if(r.kind==="run"){
+    const runPace=representativePace("Corsa",3);
+    if(!runPace){
+      return {estimate:"Dati insufficienti",splits:"Servono allenamenti di corsa",confidence:"Bassa",ratingClass:"theory",center:null,low:null,high:null,runSec:null};
+    }
+
+    const base=r.name==="Maratona"?1.14:1.07;
+    const runSec=runPace*r.run*enduranceFactor(r.run,maxRun,base);
+    const spread=r.uncertainty + Math.max(0,(85-pct)/1000);
+    const low=runSec*(1-spread),high=runSec*(1+spread);
+
+    let confidence="Bassa",ratingClass="theory";
+    if(pct>=90){confidence="Alta";ratingClass="good"}
+    else if(pct>=75){confidence="Medio-alta";ratingClass="good"}
+    else if(pct>=55){confidence="Media";ratingClass="build"}
+    else if(pct>=35){confidence="Medio-bassa";ratingClass="mid"}
+
+    if(r.name==="Maratona"){
+      if(confidence==="Alta")confidence="Medio-alta";
+      else if(confidence==="Medio-alta")confidence="Media";
+    }
+
+    return {
+      estimate:`${fmtRace(low)}–${fmtRace(high)}`,
+      splits:`Ritmo stimato gara ~${fmtRunPace(runSec,r.run)}`,
+      confidence,ratingClass,center:runSec,low,high,runSec
+    };
+  }
+
   const swimPace=representativePace("Nuoto",.4);
   const bikeSpeed=representativeBikeSpeed();
   const runPace=representativePace("Corsa",3);
@@ -822,6 +868,15 @@ const RACE_CUTOFFS={
 function raceStanding(r,dyn){
   if(!Number.isFinite(dyn.center)) return {placement:"Posizione non stimabile",placementClass:"neutral",gate:"Cutoff non valutabile",gateClass:"neutral"};
 
+  if(r.kind==="run"){
+    return {
+      placement:"Stima personale basata sui tuoi allenamenti",
+      placementClass:"neutral",
+      gate:"Cutoff: dipende dalla gara",
+      gateClass:"neutral"
+    };
+  }
+
   const b=RACE_BENCHMARKS[r.name];
   const ratio=b?dyn.center/b.seconds:null;
   let placement="circa nella media",placementClass="neutral";
@@ -869,19 +924,27 @@ function renderRaceGoals(){
   const maxSwim=Math.max(0,...AY.filter(a=>a.type==="Nuoto").map(a=>a.km));
   const maxBike=Math.max(0,...AY.filter(a=>a.type==="Bici").map(a=>a.km));
   const maxRun=Math.max(0,...allRun.map(a=>a.km));
+
   els.raceGoals.innerHTML=RACES.map(r=>{
-    const progress=[
-      {icon:"🏊",pct:Math.min(100,Math.round(maxSwim/r.prep.swim*100))},
-      {icon:"🚴",pct:Math.min(100,Math.round(maxBike/r.prep.bike*100))},
-      {icon:"🏃",pct:Math.min(100,Math.round(maxRun/r.prep.run*100))}
-    ];
+    const progress=r.kind==="run"
+      ? [{icon:"🏃",pct:Math.min(100,Math.round(maxRun/r.prep.run*100))}]
+      : [
+          {icon:"🏊",pct:Math.min(100,Math.round(maxSwim/r.prep.swim*100))},
+          {icon:"🚴",pct:Math.min(100,Math.round(maxBike/r.prep.bike*100))},
+          {icon:"🏃",pct:Math.min(100,Math.round(maxRun/r.prep.run*100))}
+        ];
+
     const pct=Math.round(progress.reduce((sum,x)=>sum+x.pct,0)/progress.length);
     const dyn=dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun);
     const standing=raceStanding(r,dyn);
+    const raceDist=r.kind==="run"
+      ? `🏃 ${n(r.run,1)} km`
+      : `🏊 ${n(r.swim,2)} km · 🚴 ${n(r.bike,1)} km · 🏃 ${n(r.run,1)} km`;
+
     return `<tr>
       <td><div class="race-name"><span class="race-ico">${r.icon}</span>${r.name}</div></td>
       <td class="race-plan">
-        <div class="race-dist">🏊 ${n(r.swim,2)} km · 🚴 ${n(r.bike,1)} km · 🏃 ${n(r.run,1)} km</div>
+        <div class="race-dist">${raceDist}</div>
         <div class="race-prep">${r.prepText}</div>
       </td>
       <td><div class="progressbox">${progress.map(x=>`<div class="progressitem"><div class="progresshead"><span>${x.icon}</span><span>${x.pct}%</span></div><div class="progressbar ${x.pct>=100?"done":""}"><span style="width:${x.pct}%"></span></div></div>`).join("")}</div></td>
@@ -889,11 +952,11 @@ function renderRaceGoals(){
         <div class="estline"><div class="est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span></div>
         <div class="splits">${dyn.splits}</div>
         <div class="race-stat">
-          <div class="${standing.placementClass}"><b>↕ Posizione:</b> ${standing.placement}</div>
+          <div class="${standing.placementClass}"><b>↕ Valutazione:</b> ${standing.placement}</div>
           <div class="${standing.gateClass}"><b>⏱ Cutoff:</b> ${standing.gate}</div>
         </div>
       </td>
-    </tr>`
+    </tr>`;
   }).join("");
 }
 
