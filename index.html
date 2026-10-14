@@ -589,9 +589,9 @@ tr:hover td{background:#fafbfe}
 
 <script src="data.js"></script>
 <script>
-const COLORS={Bici:"#39d98a",Corsa:"#ff9f43",Nuoto:"#35b8ff",Trekking:"#c99cff",Camminata:"#ffd166",Trail:"#f76c6c"};
-const ICONS={Bici:"🚴",Corsa:"🏃",Nuoto:"🏊",Trekking:"🥾",Camminata:"🚶",Trail:"⛰️"};
-const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto"];
+const COLORS={Bici:"#39d98a",Corsa:"#ff9f43",Nuoto:"#35b8ff",Trekking:"#c99cff",Camminata:"#ffd166",Trail:"#f76c6c",Triathlon:"#6f5cf1"};
+const ICONS={Bici:"🚴",Corsa:"🏃",Nuoto:"🏊",Trekking:"🥾",Camminata:"🚶",Trail:"⛰️",Triathlon:"🏊🚴🏃"};
+const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto","Triathlon"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
   heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
@@ -607,8 +607,10 @@ function n(x,d=1){return new Intl.NumberFormat("it-IT",{minimumFractionDigits:d,
 function dt(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(s+"T12:00:00"))}
 function shortDate(s){return new Intl.DateTimeFormat("it-IT",{day:"2-digit",month:"short"}).format(new Date(s+"T12:00:00"))}
 function mobileDate(s){const d=new Date(s+"T12:00:00");return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`}
+function displayType(a){return a.type==="Triathlon"&&a.format?`Triathlon ${a.format}`:a.type}
 function fh(v){const h=Math.floor(v),m=Math.round((v-h)*60);return `${h}h ${String(m).padStart(2,"0")}m`}
 function metric(a){
+  if(a.type==="Triathlon") return "—";
   if(a.type==="Bici") return `${n(a.km/hrs(a.duration),1)} km/h`;
   if(a.type==="Nuoto"){const p=sec(a.duration)/(a.km*10),m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/100m`}
   const p=sec(a.duration)/a.km,m=Math.floor(p/60),s=Math.round(p%60);return `${m}:${String(s).padStart(2,"0")}/km`
@@ -1388,7 +1390,7 @@ function renderTable(){
   els.count.textContent=`${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
   els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
-    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]} <span class="disc-name">${a.type}</span></span></td>
+    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]||"🏅"} <span class="disc-name">${displayType(a)}</span></span></td>
     <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
     <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td></tr>`}).join("");
 }
