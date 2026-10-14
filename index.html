@@ -84,9 +84,15 @@ body{
 .race-table td{vertical-align:top}
 .race-name{display:flex;align-items:center;gap:9px;font-weight:850;font-size:13px}
 .race-name .race-ico{font-size:22px}
-.race-plan{min-width:280px}
-.race-dist{line-height:1.45;color:#dce8f3;white-space:normal;font-weight:800}
-.race-prep{line-height:1.45;color:#b8cada;margin-top:6px}
+.race-plan{min-width:215px}
+.race-distances{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.race-distance{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 7px;border-radius:9px;
+  background:#f5f7fb;border:1px solid #e3e8f1;
+  color:#526174;font-weight:800;font-size:9px;white-space:nowrap
+}
+.race-distance strong{color:#202938;font-size:10px}
 .progressbox{min-width:155px;display:grid;gap:7px}
 .progressitem{min-width:0}
 .progresshead{display:flex;justify-content:space-between;gap:8px;color:#cddbe8;font-weight:800;font-size:10px}
@@ -125,6 +131,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   .wrap{padding-left:10px;padding-right:10px}.hero{grid-template-columns:1fr;padding:21px 17px}.hero-art{font-size:34px}
   .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:325px}.chart canvas{height:250px}
   .yearbar{top:4px}.section-title{align-items:center}
+  .race-plan{min-width:155px}.race-distances{gap:4px}.race-distance{padding:4px 5px;font-size:8px}.race-distance strong{font-size:9px}
 }
 
 /* 2026 light dashboard refresh */
@@ -554,11 +561,11 @@ tr:hover td{background:#fafbfe}
     </div>
     <div class="tablewrap" style="border:0;border-radius:0;box-shadow:none;background:transparent">
       <table class="race-table">
-        <thead><tr><th>Formato</th><th>Gara / preparazione</th><th>Progresso singole distanze</th><th>Stima / confidenza</th></tr></thead>
+        <thead><tr><th>Formato</th><th>Distanze</th><th>Progresso singole distanze</th><th>Stima / confidenza</th></tr></thead>
         <tbody id="raceGoals"></tbody>
       </table>
     </div>
-    <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN; per mezza e maratona i cutoff dipendono dalla singola gara.</div>
+    <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN; per 10 km, mezza e maratona i cutoff dipendono dalla singola gara.</div>
   </section>
 
   <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
@@ -727,15 +734,18 @@ const RACES=[
     transition:15,uncertainty:.10
   },
   {
+    name:"10 km",icon:"🏃",kind:"run",run:10,
+    prep:{run:10},
+    uncertainty:.04
+  },
+  {
     name:"Mezza maratona",icon:"🏃",kind:"run",run:21.0975,
     prep:{run:18},
-    prepText:"🏃 lungo 18–21 km · continuità e lavori a ritmo",
     uncertainty:.055
   },
   {
     name:"Maratona",icon:"🏁",kind:"run",run:42.195,
     prep:{run:30},
-    prepText:"🏃 lungo 28–32 km · volume, continuità e gestione del ritmo",
     uncertainty:.085
   }
 ];
@@ -788,7 +798,7 @@ function dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun){
       return {estimate:"Dati insufficienti",splits:"Servono allenamenti di corsa",confidence:"Bassa",ratingClass:"theory",center:null,low:null,high:null,runSec:null};
     }
 
-    const base=r.name==="Maratona"?1.14:1.07;
+    const base=r.name==="Maratona"?1.14:r.name==="Mezza maratona"?1.07:1.03;
     const runSec=runPace*r.run*enduranceFactor(r.run,maxRun,base);
     const spread=r.uncertainty + Math.max(0,(85-pct)/1000);
     const low=runSec*(1-spread),high=runSec*(1+spread);
@@ -938,14 +948,17 @@ function renderRaceGoals(){
     const dyn=dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun);
     const standing=raceStanding(r,dyn);
     const raceDist=r.kind==="run"
-      ? `🏃 ${n(r.run,1)} km`
-      : `🏊 ${n(r.swim,2)} km · 🚴 ${n(r.bike,1)} km · 🏃 ${n(r.run,1)} km`;
+      ? `<span class="race-distance">🏃 <strong>${n(r.run,r.run===10?0:1)} km</strong></span>`
+      : [
+          `<span class="race-distance">🏊 <strong>${n(r.swim,2)} km</strong></span>`,
+          `<span class="race-distance">🚴 <strong>${n(r.bike,1)} km</strong></span>`,
+          `<span class="race-distance">🏃 <strong>${n(r.run,1)} km</strong></span>`
+        ].join("");
 
     return `<tr>
       <td><div class="race-name"><span class="race-ico">${r.icon}</span>${r.name}</div></td>
       <td class="race-plan">
-        <div class="race-dist">${raceDist}</div>
-        <div class="race-prep">${r.prepText}</div>
+        <div class="race-distances">${raceDist}</div>
       </td>
       <td><div class="progressbox">${progress.map(x=>`<div class="progressitem"><div class="progresshead"><span>${x.icon}</span><span>${x.pct}%</span></div><div class="progressbar ${x.pct>=100?"done":""}"><span style="width:${x.pct}%"></span></div></div>`).join("")}</div></td>
       <td>
