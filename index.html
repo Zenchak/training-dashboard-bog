@@ -955,7 +955,7 @@ function renderBikeMaintenance(){
   els.bikeMaintenance.innerHTML=`
     <div class="card maintenance-card">
       <div class="maintenance-title">Ultimo intervento · ${dt(last.date)}</div>
-      <div class="maintenance-meta">${last.place||"Officina"}</div>
+      <div class="maintenance-meta">${last.place||"Officina"}${last.bike?" · "+last.bike:""}${Number.isFinite(Number(last.cost))?" · "+n(Number(last.cost),2)+" €":""}</div>
       <div class="maintenance-items">${items}</div>
     </div>
     <div class="card maintenance-card">
