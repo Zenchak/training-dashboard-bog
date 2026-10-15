@@ -61,8 +61,12 @@ fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
 // with its normal static-file path and without special alias locations.
 const hubDir = path.join(out, 'hub');
 const financeDir = path.join(out, 'finanze');
+const autoDir = path.join(out, 'auto');
 fs.mkdirSync(hubDir, { recursive: true });
 fs.mkdirSync(financeDir, { recursive: true });
+fs.mkdirSync(autoDir, { recursive: true });
 fs.copyFileSync(path.join(__dirname, 'nas', 'lan-hub.html'), path.join(hubDir, 'index.html'));
 fs.copyFileSync(path.join(__dirname, 'nas', 'finance.html'), path.join(financeDir, 'index.html'));
+fs.copyFileSync(path.join(__dirname, 'nas', 'auto', 'index.html'), path.join(autoDir, 'index.html'));
+fs.copyFileSync(path.join(__dirname, 'nas', 'auto', 'data.js'), path.join(autoDir, 'data.js'));
 fs.writeFileSync(path.join(out, 'nas-sync-test.txt'), 'OK NAS SYNC - 2026-09-14 21:55\n');
