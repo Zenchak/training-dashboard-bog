@@ -33,6 +33,7 @@ async function loadLiveTrainingData(){
     const live=(new Function(source+'\\nreturn {A,W};'))();
     if(live && Array.isArray(live.A)) A.splice(0,A.length,...live.A);
     if(live && Array.isArray(live.W)) W.splice(0,W.length,...live.W);
+    if(live && Array.isArray(live.BM) && typeof BM!=="undefined") BM.splice(0,BM.length,...live.BM);
   }catch(err){
     console.warn('Dati live GitHub non disponibili: uso la copia locale del deploy.',err);
   }
