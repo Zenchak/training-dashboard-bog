@@ -20,8 +20,9 @@
 .todo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.todo{padding:13px 14px;border:1px solid var(--line);border-radius:15px;background:#fff}.todo strong{display:block;font-size:12px}.todo p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.4}.todo.attention{border-color:#f0d6ad;background:#fffaf2}.todo.attention strong{color:#9a6312}
 .tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:720px}th,td{padding:11px 12px;border-bottom:1px solid #edf0f5;text-align:left;vertical-align:top;font-size:11px}th{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:#fafbfe}.date{white-space:nowrap;font-weight:800}.money{font-weight:850;white-space:nowrap}.shop{font-weight:800}.chips{display:flex;flex-wrap:wrap;gap:5px}.chip{display:inline-flex;padding:4px 7px;border-radius:999px;background:#f3f5f9;color:#596678;font-size:9px;font-weight:750}.note{color:var(--muted);font-size:9px;margin-top:5px}
 .estimate{padding:14px 16px}.estimate-top{display:flex;justify-content:space-between;gap:12px}.estimate-title{font-size:13px;font-weight:850}.estimate-meta{font-size:10px;color:var(--muted);margin-top:4px}.badge{display:inline-flex;height:max-content;padding:5px 8px;border-radius:999px;background:#fff4df;color:#a76a13;font-size:9px;font-weight:850}.empty{padding:18px;color:var(--muted);font-size:11px}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.admin-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 15px;box-shadow:var(--shadow);min-width:0}.admin-head{display:flex;align-items:center;gap:8px;margin-bottom:9px}.admin-ico{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:#f4f2ff;font-size:16px}.admin-card h4{margin:0;font-size:13px}.admin-lead{font-size:11px;color:#4f5d70;line-height:1.45;margin:5px 0 9px}.info-list{display:grid;gap:6px}.info-row{display:grid;grid-template-columns:118px 1fr;gap:8px;font-size:10px;line-height:1.35}.info-row span:first-child{color:var(--muted);font-weight:750}.info-row span:last-child{color:#4f5d70;font-weight:700}.history{display:grid;gap:7px;margin-top:10px}.history-item{padding-top:7px;border-top:1px solid #edf0f5}.history-title{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:850}.history-sub{font-size:9px;color:var(--muted);line-height:1.4;margin-top:3px}.admin-card details{margin-top:10px}.admin-card summary{cursor:pointer;color:#596678;font-size:9px;font-weight:850}.admin-card .chips{margin-top:8px}.admin-note{font-size:9px;color:var(--muted);line-height:1.4;margin-top:8px}.oktag{display:inline-flex;padding:4px 7px;border-radius:999px;background:#eef7f4;color:var(--green);font-size:9px;font-weight:850}.warn{background:#fff4df;color:#a76a13}
 .footer{margin:16px 3px 0;color:var(--muted);font-size:9px;line-height:1.45}
-@media(max-width:720px){.wrap{padding:10px 10px 56px}.hero{padding:17px;border-radius:19px;align-items:flex-start}.hero h1{font-size:34px}.actions{flex-direction:column}.btn{padding:8px 9px;font-size:10px}.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.todo-grid{grid-template-columns:1fr}.section{margin-top:13px}.car-summary{padding:14px}.km{font-size:25px}
+@media(max-width:720px){.wrap{padding:10px 10px 56px}.hero{padding:17px;border-radius:19px;align-items:flex-start}.hero h1{font-size:34px}.actions{flex-direction:column}.btn{padding:8px 9px;font-size:10px}.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.todo-grid,.admin-grid{grid-template-columns:1fr}.section{margin-top:13px}.car-summary{padding:14px}.km{font-size:25px}
 .tablewrap{overflow:visible}table{min-width:0}thead{display:none}tbody,tr,td{display:block;width:100%}tr{padding:12px 13px;border-bottom:1px solid #edf0f5}td{border:0;padding:2px 0;font-size:10px}td:before{content:attr(data-label);display:inline-block;min-width:86px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.chips{display:inline-flex;vertical-align:top;max-width:calc(100% - 90px)}.note{margin-left:90px}}
 </style>
 </head>
@@ -33,7 +34,7 @@
   </header>
   <section class="grid" id="summaries"></section>
   <div id="details"></div>
-  <div class="footer">Le targhe sono mascherate perché il codice sorgente dell’Hub è sincronizzato tramite un repository pubblico. I costi indicano solo le cifre effettivamente registrate; gli interventi senza importo non entrano nei totali.</div>
+  <div class="footer">Dati ricostruiti da libretto, storico manutenzione e documenti collegati. Le targhe e gli identificativi amministrativi sono mascherati perché il codice sorgente dell’Hub è sincronizzato tramite un repository pubblico. L’assenza di una ricevuta nello storico non equivale a mancato pagamento o mancata revisione.</div>
 </main>
 <script src="data.js"></script>
 <script>
@@ -43,6 +44,45 @@ const km=n=>n==null?'—':new Intl.NumberFormat('it-IT').format(n)+' km';
 const date=s=>{if(!s)return '—';const d=new Date(s+'T12:00:00');return d.toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})};
 const knownTotal=c=>c.maintenance.reduce((a,x)=>a+(Number.isFinite(x.amount)?x.amount:0),0);
 const knownCosts=c=>c.maintenance.filter(x=>Number.isFinite(x.amount)).length;
+const arr=v=>Array.isArray(v)?v:[];
+function infoRows(items){return arr(items).map(x=>'<div class="info-row"><span>'+x.label+'</span><span>'+x.value+'</span></div>').join('')}
+function historyRows(items, mapper){return arr(items).map(mapper).join('')}
+function adminCards(c){
+ const cards=[];
+ if(arr(c.registry).length){
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">🚗</div><h4>Dati veicolo</h4></div><div class="info-list">'+infoRows(c.registry)+'</div></article>');
+ }
+ if(c.insurance){
+   const i=c.insurance;
+   const coverage=arr(i.coverages).map(x=>'<span class="chip">'+x+'</span>').join('');
+   const hist=historyRows(i.history,x=>'<div class="history-item"><div class="history-title"><span>'+x.period+'</span><span>'+x.company+'</span></div><div class="history-sub">'+(x.note||'')+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">🛡️</div><h4>Assicurazione</h4></div><div class="admin-lead"><strong>'+i.company+'</strong> · '+date(i.validFrom)+' → '+date(i.validTo)+'</div><div class="info-list"><div class="info-row"><span>Premio annuo</span><span>'+euro(i.premium)+'</span></div><div class="info-row"><span>Classe</span><span>'+i.classInfo+'</span></div></div><div class="chips">'+coverage+'</div><div class="admin-note">'+i.note+'</div>'+(hist?'<details><summary>Storico assicurativo trovato</summary><div class="history">'+hist+'</div></details>':'')+'</article>');
+ }
+ if(c.tax){
+   const hist=historyRows(c.tax.history,x=>'<div class="history-item"><div class="history-title"><span>'+date(x.date)+'</span><span>'+(x.amount==null?'':euro(x.amount))+'</span></div><div class="history-sub">'+x.detail+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">🧾</div><h4>Bollo auto</h4></div><div class="admin-lead">'+c.tax.status+'</div><div class="history">'+hist+'</div><div class="admin-note">'+(c.tax.note||'')+'</div></article>');
+ }
+ if(arr(c.inspections).length){
+   const hist=historyRows(c.inspections,x=>'<div class="history-item"><div class="history-title"><span>'+date(x.date)+(x.km!=null?' · '+km(x.km):'')+'</span><span class="oktag">'+x.result+'</span></div><div class="history-sub">'+(x.note||'')+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">🔎</div><h4>Revisioni</h4></div><div class="history">'+hist+'</div><div class="admin-note">Sono mostrati solo i dati trovati nel libretto/documenti collegati.</div></article>');
+ }
+ if(arr(c.permits).length){
+   const current=c.permits[0];
+   const rest=c.permits.slice(1);
+   const currentHtml='<div class="admin-lead"><strong>'+current.type+'</strong><br>'+current.period+' · '+(current.amount==null?'':euro(current.amount)+' · ')+'<span class="oktag">'+current.status+'</span></div><div class="admin-note">'+current.note+'</div>';
+   const hist=historyRows(rest,x=>'<div class="history-item"><div class="history-title"><span>'+x.period+'</span><span>'+x.status+'</span></div><div class="history-sub">'+x.type+(x.amount!=null?' · '+euro(x.amount):'')+' · '+(x.note||'')+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">🅿️</div><h4>Permessi · ZTL · sosta</h4></div>'+currentHtml+(hist?'<details><summary>Storico permessi e Area C</summary><div class="history">'+hist+'</div></details>':'')+'</article>');
+ }
+ if(arr(c.fines).length){
+   const hist=historyRows(c.fines,x=>'<div class="history-item"><div class="history-title"><span>'+date(x.date)+' · '+x.authority+'</span><span>'+euro(x.amount)+'</span></div><div class="history-sub">'+x.detail+' · '+x.status+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">⚠️</div><h4>Multe / verbali</h4></div><div class="history">'+hist+'</div></article>');
+ }
+ if(arr(c.documents).length){
+   const hist=historyRows(c.documents,x=>'<div class="history-item"><div class="history-title"><span>'+x.title+'</span></div><div class="history-sub">'+x.detail+'</div></div>');
+   cards.push('<article class="admin-card"><div class="admin-head"><div class="admin-ico">📄</div><h4>Documenti trovati</h4></div><div class="history">'+hist+'</div></article>');
+ }
+ return cards.length?'<div class="section-title"><h3>Documenti e amministrazione</h3><span>assicurazione · bollo · revisioni · permessi · multe</span></div><div class="admin-grid">'+cards.join('')+'</div>':'';
+}
 function summary(c){
  const card=document.createElement('article');card.className='car-summary';
  card.innerHTML='<div class="eyebrow">'+c.owner+' · '+c.plateMasked+'</div><h2>'+c.name+'</h2><div class="meta">'+c.subtitle+'</div><div class="km">'+km(c.currentKm)+' <small>'+c.kmLabel+'</small></div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+c.status+'</span><div class="kpis"><div class="kpi"><b>'+c.maintenance.length+'</b><span>interventi</span></div><div class="kpi"><b>'+euro(knownTotal(c))+'</b><span>spesa nota</span></div><div class="kpi"><b>'+c.estimates.length+'</b><span>preventivi</span></div></div>';
@@ -55,7 +95,7 @@ function details(c){
  const wrap=document.createElement('section');wrap.className='section';
  const todos=c.next.map(x=>'<div class="todo '+(x.tone==='attention'?'attention':'')+'"><strong>'+x.title+'</strong><p>'+x.detail+'</p></div>').join('');
  const estimates=c.estimates.length?c.estimates.map(x=>'<div class="estimate"><div class="estimate-top"><div><div class="estimate-title">'+x.title+'</div><div class="estimate-meta">'+date(x.date)+' · '+x.shop+(x.amount!=null?' · '+euro(x.amount):'')+'</div></div><span class="badge">'+x.status+'</span></div><div class="note" style="margin-top:8px">'+x.note+'</div></div>').join(''):'<div class="empty">Nessun preventivo registrato.</div>';
- wrap.innerHTML='<div class="section-title"><h3>'+c.name+' · situazione</h3><span>'+c.owner+'</span></div><div class="panel situation"><ul>'+c.situation.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="section-title"><h3>Prossimi punti</h3><span>priorità operative</span></div><div class="todo-grid">'+todos+'</div><div class="section-title"><h3>Storico manutenzione</h3><span>'+c.maintenance.length+' interventi · '+knownCosts(c)+' con costo</span></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Intervento</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div><div class="section-title"><h3>Preventivi</h3><span>da confrontare prima dei lavori</span></div><div class="panel">'+estimates+'</div>';
+ wrap.innerHTML='<div class="section-title"><h3>'+c.name+' · situazione</h3><span>'+c.owner+'</span></div><div class="panel situation"><ul>'+c.situation.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="section-title"><h3>Prossimi punti</h3><span>priorità operative</span></div><div class="todo-grid">'+todos+'</div>'+adminCards(c)+'<div class="section-title"><h3>Storico manutenzione</h3><span>'+c.maintenance.length+' interventi · '+knownCosts(c)+' con costo</span></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Intervento</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div><div class="section-title"><h3>Preventivi</h3><span>da confrontare prima dei lavori</span></div><div class="panel">'+estimates+'</div>';
  return wrap;
 }
 document.getElementById('summaries').replaceChildren(...DATA.cars.map(summary));
