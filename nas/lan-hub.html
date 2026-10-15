@@ -19,7 +19,7 @@ h1{margin:10px 0 6px;font-size:clamp(34px,7vw,52px);line-height:1;letter-spacing
 .ico{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;font-size:20px;background:#f2efff}
 .title{font-weight:850;font-size:19px;margin-top:18px}
 .desc{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.4}
-.training .ico{background:#eee9ff}.gare .ico{background:#eaf2ff}.casa .ico{background:#ffefe8}.finanze .ico{background:#eaf8f2}
+.training .ico{background:#eee9ff}.gare .ico{background:#eaf2ff}.casa .ico{background:#ffefe8}.finanze .ico{background:#eaf8f2}.auto .ico{background:#fff3df}
 .note{margin-top:16px;color:var(--muted);font-size:11px}
 @media(max-width:620px){body{padding:12px}.grid{grid-template-columns:1fr;gap:10px}.hero{padding:17px}.card{min-height:118px;padding:15px}.title{font-size:17px;margin-top:13px}}
 </style>
@@ -36,6 +36,7 @@ h1{margin:10px 0 6px;font-size:clamp(34px,7vw,52px);line-height:1;letter-spacing
     <a class="card gare" id="gare"><div class="ico">🏁</div><div class="title">Gare</div><div class="desc">Calendario gare e obiettivi</div></a>
     <a class="card casa" id="casa"><div class="ico">⌂</div><div class="title">Cerco Casa</div><div class="desc">Annunci, note e valutazioni</div></a>
     <a class="card finanze" id="finanze"><div class="ico">€</div><div class="title">Finanze</div><div class="desc">Stipendio, ferie/ROL, Cometa e fisco</div></a>
+    <a class="card auto" id="auto"><div class="ico">🚗</div><div class="title">Auto di famiglia</div><div class="desc">Tagliandi, preventivi e situazione delle auto</div></a>
   </section>
   <div class="note">Hub locale di emergenza finché ripristiniamo Tailscale/porta 8090.</div>
 </main>
@@ -45,6 +46,7 @@ document.getElementById('training').href='http://'+h+':8081/';
 document.getElementById('gare').href='http://'+h+':8082/app.html';
 document.getElementById('casa').href='http://'+h+':8083/';
 document.getElementById('finanze').href='http://'+h+':8081/finanze/';
+document.getElementById('auto').href='http://'+h+':8081/auto/';
 </script>
 </body>
 </html>
