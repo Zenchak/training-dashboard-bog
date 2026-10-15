@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f7fb">
+<title>Auto di famiglia · Zenchack</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7fb;--panel:#fff;--line:#e5eaf2;--text:#202938;--muted:#7d8898;--accent:#6f5cf1;--blue:#4f8cff;--green:#159f72;--amber:#c88217;--shadow:0 10px 30px rgba(42,55,85,.08)}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(111,92,241,.08),transparent 28rem),linear-gradient(180deg,#fbfcfe,#f4f7fb);min-height:100vh}
+.wrap{width:min(1040px,100%);margin:auto;padding:18px 14px 64px}
+.hero{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:22px 22px;margin-bottom:14px;border:1px solid #edf0f6;border-radius:22px;background:linear-gradient(135deg,#fff,#fbfaff 68%,#f2efff);box-shadow:0 12px 36px rgba(50,61,92,.08)}
+.hero:after{content:"";position:absolute;width:320px;height:320px;right:-145px;top:-205px;border-radius:50%;background:radial-gradient(circle,rgba(111,92,241,.16),transparent 66%);pointer-events:none}
+.brand{position:relative;z-index:1;color:#6f5cf1;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:850}.hero h1{position:relative;z-index:1;margin:8px 0 5px;font-size:clamp(32px,6vw,48px);letter-spacing:-.04em;line-height:1}.hero p{position:relative;z-index:1;margin:0;color:var(--muted);font-size:12px}
+.actions{position:relative;z-index:2;display:flex;gap:8px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;color:#596678;background:#fff;border:1px solid #dfe5ee;border-radius:12px;padding:10px 12px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.car-summary{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.car-summary h2{margin:8px 0 2px;font-size:22px}.eyebrow{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.07em}.meta{font-size:11px;color:var(--muted);line-height:1.5}.km{font-size:28px;font-weight:900;letter-spacing:-.035em;margin-top:14px}.km small{font-size:11px;color:var(--muted);font-weight:700}.status{display:inline-flex;margin-top:9px;padding:6px 9px;border-radius:999px;font-size:10px;font-weight:850;background:#eef7f4;color:var(--green)}.status.neutral{background:#f3f5f8;color:#667386}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.kpi{background:#f8f9fc;border:1px solid #edf0f5;border-radius:12px;padding:10px}.kpi b{display:block;font-size:16px}.kpi span{font-size:9px;color:var(--muted)}
+.section{margin-top:16px}.section-title{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:0 3px 8px}.section-title h3{margin:0;font-size:17px}.section-title span{font-size:10px;color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}.situation{padding:14px 16px}.situation ul{margin:0;padding-left:18px}.situation li{margin:6px 0;color:#586577;font-size:12px;line-height:1.45}
+.todo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.todo{padding:13px 14px;border:1px solid var(--line);border-radius:15px;background:#fff}.todo strong{display:block;font-size:12px}.todo p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.4}.todo.attention{border-color:#f0d6ad;background:#fffaf2}.todo.attention strong{color:#9a6312}
+.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:720px}th,td{padding:11px 12px;border-bottom:1px solid #edf0f5;text-align:left;vertical-align:top;font-size:11px}th{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:#fafbfe}.date{white-space:nowrap;font-weight:800}.money{font-weight:850;white-space:nowrap}.shop{font-weight:800}.chips{display:flex;flex-wrap:wrap;gap:5px}.chip{display:inline-flex;padding:4px 7px;border-radius:999px;background:#f3f5f9;color:#596678;font-size:9px;font-weight:750}.note{color:var(--muted);font-size:9px;margin-top:5px}
+.estimate{padding:14px 16px}.estimate-top{display:flex;justify-content:space-between;gap:12px}.estimate-title{font-size:13px;font-weight:850}.estimate-meta{font-size:10px;color:var(--muted);margin-top:4px}.badge{display:inline-flex;height:max-content;padding:5px 8px;border-radius:999px;background:#fff4df;color:#a76a13;font-size:9px;font-weight:850}.empty{padding:18px;color:var(--muted);font-size:11px}
+.footer{margin:16px 3px 0;color:var(--muted);font-size:9px;line-height:1.45}
+@media(max-width:720px){.wrap{padding:10px 10px 56px}.hero{padding:17px;border-radius:19px;align-items:flex-start}.hero h1{font-size:34px}.actions{flex-direction:column}.btn{padding:8px 9px;font-size:10px}.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.todo-grid{grid-template-columns:1fr}.section{margin-top:13px}.car-summary{padding:14px}.km{font-size:25px}
+.tablewrap{overflow:visible}table{min-width:0}thead{display:none}tbody,tr,td{display:block;width:100%}tr{padding:12px 13px;border-bottom:1px solid #edf0f5}td{border:0;padding:2px 0;font-size:10px}td:before{content:attr(data-label);display:inline-block;min-width:86px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.chips{display:inline-flex;vertical-align:top;max-width:calc(100% - 90px)}.note{margin-left:90px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div><div class="brand">Zenchack · famiglia</div><h1>Auto di famiglia</h1><p>Stato, tagliandi, preventivi e prossimi interventi.</p></div>
+    <div class="actions"><button class="btn" type="button" onclick="location.reload()">↻ Refresh</button><a class="btn" href="/">🏠 Home</a></div>
+  </header>
+  <section class="grid" id="summaries"></section>
+  <div id="details"></div>
+  <div class="footer">Le targhe sono mascherate perché il codice sorgente dell’Hub è sincronizzato tramite un repository pubblico. I costi indicano solo le cifre effettivamente registrate; gli interventi senza importo non entrano nei totali.</div>
+</main>
+<script src="data.js"></script>
+<script>
+const DATA=window.AUTO_FAMILY_DATA||{cars:[]};
+const euro=n=>n==null?'—':new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
+const km=n=>n==null?'—':new Intl.NumberFormat('it-IT').format(n)+' km';
+const date=s=>{if(!s)return '—';const d=new Date(s+'T12:00:00');return d.toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})};
+const knownTotal=c=>c.maintenance.reduce((a,x)=>a+(Number.isFinite(x.amount)?x.amount:0),0);
+const knownCosts=c=>c.maintenance.filter(x=>Number.isFinite(x.amount)).length;
+function summary(c){
+ const card=document.createElement('article');card.className='car-summary';
+ card.innerHTML='<div class="eyebrow">'+c.owner+' · '+c.plateMasked+'</div><h2>'+c.name+'</h2><div class="meta">'+c.subtitle+'</div><div class="km">'+km(c.currentKm)+' <small>'+c.kmLabel+'</small></div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+c.status+'</span><div class="kpis"><div class="kpi"><b>'+c.maintenance.length+'</b><span>interventi</span></div><div class="kpi"><b>'+euro(knownTotal(c))+'</b><span>spesa nota</span></div><div class="kpi"><b>'+c.estimates.length+'</b><span>preventivi</span></div></div>';
+ return card;
+}
+function tableRows(c){
+ return c.maintenance.map(x=>'<tr><td class="date" data-label="Data">'+date(x.date)+'</td><td data-label="Km">'+km(x.km)+'</td><td class="shop" data-label="Officina">'+(x.shop||'—')+'</td><td data-label="Lavori"><div class="chips">'+x.work.map(w=>'<span class="chip">'+w+'</span>').join('')+'</div>'+(x.note?'<div class="note">'+x.note+'</div>':'')+'</td><td class="money" data-label="Costo">'+euro(x.amount)+'</td></tr>').join('');
+}
+function details(c){
+ const wrap=document.createElement('section');wrap.className='section';
+ const todos=c.next.map(x=>'<div class="todo '+(x.tone==='attention'?'attention':'')+'"><strong>'+x.title+'</strong><p>'+x.detail+'</p></div>').join('');
+ const estimates=c.estimates.length?c.estimates.map(x=>'<div class="estimate"><div class="estimate-top"><div><div class="estimate-title">'+x.title+'</div><div class="estimate-meta">'+date(x.date)+' · '+x.shop+(x.amount!=null?' · '+euro(x.amount):'')+'</div></div><span class="badge">'+x.status+'</span></div><div class="note" style="margin-top:8px">'+x.note+'</div></div>').join(''):'<div class="empty">Nessun preventivo registrato.</div>';
+ wrap.innerHTML='<div class="section-title"><h3>'+c.name+' · situazione</h3><span>'+c.owner+'</span></div><div class="panel situation"><ul>'+c.situation.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="section-title"><h3>Prossimi punti</h3><span>priorità operative</span></div><div class="todo-grid">'+todos+'</div><div class="section-title"><h3>Storico manutenzione</h3><span>'+c.maintenance.length+' interventi · '+knownCosts(c)+' con costo</span></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Intervento</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div><div class="section-title"><h3>Preventivi</h3><span>da confrontare prima dei lavori</span></div><div class="panel">'+estimates+'</div>';
+ return wrap;
+}
+document.getElementById('summaries').replaceChildren(...DATA.cars.map(summary));
+document.getElementById('details').replaceChildren(...DATA.cars.map(details));
+</script>
+</body>
+</html>
