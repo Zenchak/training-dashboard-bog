@@ -75,6 +75,14 @@ body{
 .trend-dot{width:9px;height:9px;border-radius:999px;display:inline-block}
 .trend-dot.hours{background:#7f8b98}.trend-dot.kcal{background:#ffb454}.trend-dot.weight{background:#2563eb}.trend-dot.run{background:#ffb08f}.trend-dot.runtrend{background:#e85f2f}
 .records{grid-template-columns:repeat(3,1fr)}
+.maintenance-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:14px}
+.maintenance-card{padding:16px}
+.maintenance-title{font-size:12px;font-weight:850;color:#202938}
+.maintenance-meta{font-size:10px;color:var(--muted);margin-top:4px}
+.maintenance-items{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.maintenance-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:#f5f7fb;border:1px solid #e4e9f2;color:#536174;font-size:9px;font-weight:800}
+.maintenance-km{font-size:24px;font-weight:900;letter-spacing:-.03em;margin-top:8px}
+.maintenance-note{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.4}
 .record{padding:16px}.record .ico{font-size:21px}.record .t{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:800;margin-top:9px}
 .record .v{font-size:18px;font-weight:850;margin-top:5px}.record .d{font-size:10px;color:var(--muted);margin-top:4px}
 .race-panel{padding:0;overflow:hidden}
@@ -131,6 +139,7 @@ footer{margin-top:18px;color:var(--muted);font-size:10px;line-height:1.5;padding
   .wrap{padding-left:10px;padding-right:10px}.hero{grid-template-columns:1fr;padding:21px 17px}.hero-art{font-size:34px}
   .charts{grid-template-columns:1fr}.kpis,.disciplines{grid-template-columns:repeat(2,1fr)}.chart{min-height:325px}.chart canvas{height:250px}
   .yearbar{top:4px}.section-title{align-items:center}
+  .maintenance-grid{grid-template-columns:1fr}
   .race-plan{min-width:155px}.race-distances{gap:4px}.race-distance{padding:4px 5px;font-size:8px}.race-distance strong{font-size:9px}
 }
 
@@ -553,6 +562,9 @@ tr:hover td{background:#fafbfe}
   <div class="section-title"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
+  <div class="section-title"><h2>🔧 Manutenzione bici</h2><span>Storico e prossima catena</span></div>
+  <section class="maintenance-grid" id="bikeMaintenance"></section>
+
   <div class="section-title"><h2>◎ Obbiettivi</h2><span>Triathlon e corsa</span></div>
   <section class="card race-panel">
     <div class="race-note">
@@ -595,7 +607,7 @@ const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto","Triathlon"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
   heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
-  disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
+  disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),bikeMaintenance:document.getElementById("bikeMaintenance"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
   reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote"),
@@ -929,6 +941,28 @@ function raceStanding(r,dyn){
   }
 
   return {placement:`${placement} · ${b.label}`,placementClass,gate,gateClass};
+}
+
+function renderBikeMaintenance(){
+  if(!els.bikeMaintenance)return;
+  const rows=Array.isArray(BM)?BM.slice().sort((a,b)=>b.date.localeCompare(a.date)):[];
+  if(!rows.length){els.bikeMaintenance.innerHTML="";return}
+  const last=rows[0];
+  const ridden=AY.filter(a=>a.type==="Bici"&&a.date>last.date).reduce((sum,a)=>sum+(Number(a.km)||0),0);
+  const target=Number(last.nextChainKm)||1000;
+  const remaining=Math.max(0,target-ridden);
+  const items=(last.items||[]).map(x=>`<span class="maintenance-chip">${x}</span>`).join("");
+  els.bikeMaintenance.innerHTML=`
+    <div class="card maintenance-card">
+      <div class="maintenance-title">Ultimo intervento · ${dt(last.date)}</div>
+      <div class="maintenance-meta">${last.place||"Officina"}</div>
+      <div class="maintenance-items">${items}</div>
+    </div>
+    <div class="card maintenance-card">
+      <div class="maintenance-title">Prossima catena</div>
+      <div class="maintenance-km">${n(remaining,0)} km</div>
+      <div class="maintenance-note">${n(ridden,0)} km percorsi dal cambio · obiettivo sostituzione a ~${n(target,0)} km per preservare la cassetta.</div>
+    </div>`;
 }
 
 function renderRaceGoals(){
@@ -1400,7 +1434,7 @@ function renderFooter(){
   els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""}${kcalEstimated?" Le kcal sono stimate da peso, durata e intensità quando il dato Garmin non è presente nell’attività.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
 }
 function renderAll(){
-  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderRecords();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
 TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
