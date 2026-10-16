@@ -88,7 +88,7 @@ function estimatePensionNet(grossMonthly){
   return Math.round(((annual-tax-local)/13)/10)*10;
 }
 function render(d){
- const c=d.current||{},co=d.cometa||{},f=d.fiscal2025||{},r=d.refund730_2026||{};
+ const c=d.current||{},co=d.cometa||{},f=d.fiscal2025||{},r=d.refund730_2026||{},p=d.inpsPension||{};
  role.textContent=[c.employer,c.role,c.level?'livello '+c.level:''].filter(Boolean).join(' · ');
  ral.textContent=eur(c.ralFixed);net.textContent=eur(c.ordinaryNet);ferie.textContent=num(c.ferieHours)+' h';ferie.className='val '+(c.ferieHours<0?'neg':'pos');ferieDays.textContent=num((c.ferieHours||0)/8)+' giorni lavorativi';rol.textContent=num(c.rolHours)+' h';rol.className='val pos';rolDays.textContent=num((c.rolHours||0)/8)+' giorni lavorativi';cometa.textContent=eur(co.total);cometaDate.textContent='al '+(co.asOf||'—');
  cEmp.textContent=eur(co.employee);cCompany.textContent=eur(co.employer);cTfr.textContent=eur(co.tfr);cReturns.textContent=eur(co.returns);fIncome.textContent=eur(f.employmentIncome);fIrpef.textContent=eur(f.irpefWithheld);fInps.textContent=eur(f.inpsTaxBase);fPension.textContent=eur(f.complementaryPensionDeducted);
@@ -117,6 +117,19 @@ function render(d){
    }).join('');
    salaryChart.innerHTML='<svg class="salary-svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Evoluzione stipendio fisso in migliaia di euro">'+grid+labels+'<polyline class="salary-line" points="'+pts+'"></polyline>'+pointEls+'</svg>';
  }
+ const pensionScenarios=[p.early,p.oldAge].filter(Boolean);
+ pensionGrid.innerHTML=pensionScenarios.map((x,i)=>
+   '<div class="pension-card '+(i===0?'early':'')+'">'+
+     '<div class="pension-type">'+(x.label||'Scenario')+'</div>'+
+     '<div class="pension-date">'+(x.retirementDate||'—')+'</div>'+
+     '<div class="pension-amount">'+eur0(x.monthlyGrossPension)+' <small>/ mese lordo</small></div>'+
+     '<div class="pension-net">≈ '+eur0(estimatePensionNet(x.monthlyGrossPension))+' <small>/ mese netto stimato</small></div>'+
+     '<div class="pension-meta">'+
+       '<div>Ultima retribuzione lorda stimata<b>'+eur0(x.estimatedLastGrossIncome)+'</b></div>'+
+       '<div>Tasso di sostituzione lordo<b>'+pct(x.grossReplacementRate)+'</b></div>'+
+     '</div>'+
+   '</div>'
+ ).join('');
  months.innerHTML=(d.monthly2026||[]).map(x=>'<tr><td>'+x.month+'</td><td>'+eur(x.fixedGross)+'</td><td>'+eur(x.totalGross)+'</td><td><b>'+eur(x.net)+'</b></td><td>'+eur(x.ordinaryNet)+'</td><td>'+eur(x.extra)+'</td><td class="note">'+(x.note||'')+'</td></tr>').join('');
 
 
