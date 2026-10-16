@@ -59,6 +59,12 @@ h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-he
   <div class="panel"><h2>Evoluzione stipendio fisso</h2><p>Lordo mensile strutturale, senza premi o rimborsi.</p><div id="salaryChart" class="chart"></div></div>
   <div class="panel"><h2>Cometa</h2><div class="metrics"><div class="metric"><b id="cEmp">—</b><span>Tuoi contributi</span></div><div class="metric"><b id="cCompany">—</b><span>Azienda</span></div><div class="metric"><b id="cTfr">—</b><span>TFR</span></div><div class="metric"><b id="cReturns">—</b><span>Rendimento</span></div></div><h2 style="margin-top:18px">Fisco 2025</h2><div class="metrics"><div class="metric"><b id="fIncome">—</b><span>Reddito dipendente</span></div><div class="metric"><b id="fIrpef">—</b><span>IRPEF trattenuta</span></div><div class="metric"><b id="fInps">—</b><span>Imponibile INPS</span></div><div class="metric"><b id="fPension">—</b><span>Prev. complementare</span></div></div></div>
 </section>
+<section class="panel" style="margin-top:14px">
+  <h2>Pensione INPS</h2>
+  <p>Simulazione INPS · importi lordi e netto mensile stimato con fiscalità attuale.</p>
+  <div id="pensionGrid" class="pension-grid"></div>
+  <div class="pension-note">Il netto è una stima orientativa con fiscalità 2026; al pensionamento effettivo le regole fiscali potranno essere diverse.</div>
+</section>
 <section class="panel" style="margin-top:14px"><h2>2026 mese per mese</h2><p>Netto effettivo e netto ordinario.</p><div class="tablewrap"><table><thead><tr><th>Mese</th><th>Lordo fisso</th><th>Lordo totale</th><th>Netto</th><th>Netto ordinario</th><th>Extra</th><th>Nota</th></tr></thead><tbody id="months"></tbody></table></div></section>
 <section class="panel" style="margin-top:14px"><h2>Rimborsi 730</h2><div id="refund" class="metrics"></div></section>
 </main>
