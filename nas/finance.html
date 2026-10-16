@@ -87,6 +87,22 @@ function estimatePensionNet(grossMonthly){
   const local=annual*.019;
   return Math.round(((annual-tax-local)/13)/10)*10;
 }
+function estimateSalaryNet(grossMonthly){
+  const grossAnnual=Math.max(0,Number(grossMonthly)||0)*13;
+  const employeeSocial=grossAnnual*.0919;
+  const taxable=Math.max(0,grossAnnual-employeeSocial);
+  let tax=0;
+  if(taxable<=28000) tax=taxable*.23;
+  else if(taxable<=50000) tax=28000*.23+(taxable-28000)*.33;
+  else tax=28000*.23+22000*.33+(taxable-50000)*.43;
+  let deduction=0;
+  if(taxable<=15000) deduction=1955;
+  else if(taxable<=28000) deduction=1910+1190*((28000-taxable)/13000);
+  else if(taxable<=50000) deduction=1910*((50000-taxable)/22000);
+  tax=Math.max(0,tax-deduction);
+  const local=taxable*.019;
+  return Math.round(((grossAnnual-employeeSocial-tax-local)/13)/10)*10;
+}
 function render(d){
  const c=d.current||{},co=d.cometa||{},f=d.fiscal2025||{},r=d.refund730_2026||{},p=d.inpsPension||{};
  role.textContent=[c.employer,c.role,c.level?'livello '+c.level:''].filter(Boolean).join(' · ');
@@ -126,6 +142,7 @@ function render(d){
      '<div class="pension-net">≈ '+eur0(estimatePensionNet(x.monthlyGrossPension))+' <small>/ mese netto stimato</small></div>'+
      '<div class="pension-meta">'+
        '<div>Ultima retribuzione lorda stimata<b>'+eur0(x.estimatedLastGrossIncome)+'</b></div>'+
+       '<div>Ultima retribuzione netta stimata<b>≈ '+eur0(estimateSalaryNet(x.estimatedLastGrossIncome))+'</b></div>'+
        '<div>Tasso di sostituzione lordo<b>'+pct(x.grossReplacementRate)+'</b></div>'+
      '</div>'+
    '</div>'
