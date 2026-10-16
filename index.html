@@ -515,6 +515,15 @@ tr:hover td{background:#fafbfe}
 
 }
 
+
+.equipment-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.equipment-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.equipment-card .equip-kind{font-size:12px;color:var(--muted);margin-bottom:7px}
+.equipment-card h3{font-size:16px;margin:0 0 12px;line-height:1.35}
+.equipment-card .equip-km{font-size:27px;font-weight:750;letter-spacing:-.7px}
+.equipment-card .equip-km small{font-size:13px;font-weight:500;color:var(--muted)}
+.equipment-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}
+@media(max-width:680px){.equipment-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -535,6 +544,9 @@ tr:hover td{background:#fafbfe}
 
   <div class="section-title"><h2>◫ Riepilogo</h2><span>Tempo e discipline principali</span></div>
   <section class="grid disciplines" id="disciplines"></section>
+
+  <div class="section-title"><h2>⚙ Attrezzatura</h2><span>Chilometri e usura</span></div>
+  <section class="grid equipment-grid" id="equipmentCards" aria-label="Attrezzatura sportiva"></section>
 
   <div class="section-title"><h2>↗ Andamento</h2><span>Solo mesi con dati</span></div>
   <section class="grid charts">
@@ -1433,8 +1445,24 @@ function renderFooter(){
   const kcalEstimated=AY.some(a=>activityKcal(a).estimated);
   els.footer.textContent=`Anno ${selectedYear}. I campi non disponibili restano vuoti e non vengono inventati.${missingD?" Il D+ totale considera solo i valori completi disponibili.":""}${kcalEstimated?" Le kcal sono stimate da peso, durata e intensità quando il dato Garmin non è presente nell’attività.":""} Quando verranno aggiunti allenamenti di un nuovo anno, comparirà automaticamente una nuova sezione anno in alto.`;
 }
+
+function renderEquipment(){
+  const target=document.getElementById("equipmentCards");
+  if(!target)return;
+  const equipment=typeof EQUIPMENT!=="undefined"?EQUIPMENT:[];
+  const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const icons={run:"👟",trail:"🥾",bike:"🚴"};
+  target.innerHTML=equipment.map(item=>{
+    const activities=A.filter(a=>(item.autoTypes&&item.autoTypes.includes(a.type))||(a.equipmentId===item.id)||(Array.isArray(a.equipmentIds)&&a.equipmentIds.includes(item.id))||(item.activityDates||[]).includes(a.date));
+    const loggedKm=activities.reduce((sum,a)=>sum+(Number(a.km)||0),0);
+    const known=Number.isFinite(item.baselineKm)||activities.length>0;
+    const km=known?(loggedKm+(Number(item.baselineKm)||0)).toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
+    const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?"km attribuiti a questa attrezzatura":"km da ricostruire dagli screenshot";
+    return '<article class="equipment-card"><div class="equip-kind">'+(icons[item.category]||"⚙")+' '+escapeHtml(item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta")+'</div><h3>'+escapeHtml(item.name)+'</h3><div class="equip-km">'+km+' <small>km</small></div><p>'+escapeHtml(descriptor)+'</p><p>'+escapeHtml(item.since?"Dal "+item.since.split("-").reverse().join("/")+" · "+item.status:item.status)+'</p></article>';
+  }).join("");
+}
 function renderAll(){
-  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
 TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
