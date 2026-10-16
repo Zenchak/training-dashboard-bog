@@ -1,5 +1,5 @@
 window.AUTO_FAMILY_DATA = {
-  updated: "2026-10-15",
+  updated: "2026-10-16",
   cars: [
     {
       id: "kia-rio",
@@ -15,12 +15,12 @@ window.AUTO_FAMILY_DATA = {
         "Tagliando completo eseguito il 15/10/2026 a 256.846 km (documento Signorelli datato 14/10/2026).",
         "Catena di distribuzione originale: preventivo Signorelli ricevuto il 14/10/2026 e intervento ancora da decidere.",
         "Bollo: domiciliazione bancaria Regione Lombardia attiva dal 03/03/2026.",
-        "Assicurazione Allianz Direct valida fino al 27/11/2026.",
+        "Assicurazione Allianz Direct: scadenza contrattuale 27/11/2026; iPatente indica scadenza RCA 11/12/2026 comprensiva del periodo di comporto.",
         "Permesso residenti ATB zona I1 solo sosta valido fino al 06/07/2027; non abilita al transito ZTL."
       ],
       next: [
         {title:"Catena di distribuzione", detail:"Preventivo completo ricevuto. Valutare la sostituzione in base a diagnosi, rumorosità, tenditore e stato generale del motore.", tone:"attention"},
-        {title:"Revisione", detail:"Nei documenti collegati l'ultimo adesivo leggibile è del 25/11/2021. Recuperare e aggiungere gli eventuali verbali/adesivi 2023 e 2025: l'assenza qui non significa che non siano state eseguite.", tone:"attention"},
+        {title:"Revisione", detail:"iPatente indica la prossima scadenza revisione al 30/11/2027. Dato aggiornato il 16/10/2026.", tone:"normal"},
         {title:"Controllo livelli", detail:"Continuare a monitorare livello/consumo olio e liquido refrigerante, soprattutto con l'alto chilometraggio.", tone:"normal"}
       ],
       registry: [
@@ -29,12 +29,20 @@ window.AUTO_FAMILY_DATA = {
         {label:"Motore", value:"G4LA · benzina · 1.248 cc"},
         {label:"Potenza", value:"62,5 kW · circa 85 CV"},
         {label:"Cambio", value:"Manuale"},
-        {label:"Emissioni", value:"Euro 5b"}
+        {label:"Emissioni", value:"Euro 5B"},
+        {label:"Tipologia", value:"Autoveicolo"},
+        {label:"Uso", value:"Proprio"},
+        {label:"Destinazione", value:"Autovettura per trasporto di persone"},
+        {label:"Posti", value:"5"},
+        {label:"Carta di circolazione", value:"Duplicabile"},
+        {label:"Guida neopatentati", value:"Consentita"},
+        {label:"Prossima revisione", value:"30/11/2027"}
       ],
       insurance: {
         company:"Allianz Direct",
         validFrom:"2025-11-27",
         validTo:"2026-11-27",
+        graceUntil:"2026-12-11",
         premium:569.53,
         classInfo:"Bonus Malus CU 1 · classe interna S2",
         coverages:[
@@ -45,7 +53,7 @@ window.AUTO_FAMILY_DATA = {
           "Assistenza stradale",
           "Infortuni conducente 50.000 € · franchigia 1.500 €"
         ],
-        note:"Premio annuo pagato il 25/11/2025. Nel documento risultano 375,14 € RC, 86,86 € altri rischi, 68,14 € imposte e 39,39 € contributo SSN.",
+        note:"Premio annuo pagato il 25/11/2025. La polizza contrattuale termina il 27/11/2026; iPatente mostra 11/12/2026 come scadenza RCA comprensiva del periodo di comporto. Nel documento risultano 375,14 € RC, 86,86 € altri rischi, 68,14 € imposte e 39,39 € contributo SSN.",
         history:[
           {period:"27/11/2024 → 26/11/2025", company:"Allianz Direct", note:"Polizza annuale documentata."},
           {period:"27/11/2023 → 26/11/2024", company:"Allianz Direct", note:"Polizza annuale documentata."},
@@ -64,6 +72,7 @@ window.AUTO_FAMILY_DATA = {
         note:"Non sono emerse nelle fonti collegate ricevute specifiche 2024/2025: questo non implica mancato pagamento."
       },
       inspections: [
+        {date:"2027-11-30", km:null, result:"Scadenza", note:"Prossima scadenza revisione mostrata da iPatente il 16/10/2026."},
         {date:"2017-11-15", km:null, result:"Regolare", note:"Adesivo revisione presente sul libretto."},
         {date:"2019-11-19", km:109367, result:"Regolare", note:"Scadenza indicata 11/2021."},
         {date:"2021-11-25", km:150265, result:"Regolare", note:"Scadenza indicata 11/2023."}
@@ -84,7 +93,8 @@ window.AUTO_FAMILY_DATA = {
         {date:"2022-11-21", authority:"Comune di Bergamo", amount:29.85, detail:"Pagamento pagoPA di verbale 2022 in misura scontata: 29,40 € + 0,45 € commissione.", status:"Pagata"}
       ],
       documents: [
-        {title:"Carta di circolazione", detail:"PDF presente nel Google Drive collegato; dati tecnici verificati dal libretto."},
+        {title:"Carta di circolazione", detail:"PDF presente nel Google Drive collegato; iPatente conferma tipologia AUTOVEICOLO, uso PROPRIO, 5 posti, Euro 5B e carta duplicabile."},
+        {title:"Patente Bogdan", detail:"iPatente mostra 30/30 punti e scadenza 01/11/2030. Numero patente non memorizzato nel repository pubblico."},
         {title:"Polizza Allianz Direct 2025/2026", detail:"Polizza, certificato assicurativo e ricevuta di pagamento presenti nelle e-mail collegate."},
         {title:"Tagliando Signorelli", detail:"Documento datato 14/10/2026; intervento indicato come eseguito il 15/10/2026 a 256.846 km."},
         {title:"Preventivo distribuzione Signorelli", detail:"Documento del 14/10/2026 a 256.846 km; non ancora eseguito."}
