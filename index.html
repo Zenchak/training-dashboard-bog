@@ -535,6 +535,26 @@ tr:hover td{background:#fafbfe}
   .equip-micro{display:block;margin:3px 0 0 1px;font-size:7.4px;line-height:1.2;color:#50617b;white-space:normal;overflow-wrap:anywhere}
   .equip-micro.pending{color:#a56f29}
 }
+
+/* Diario: filtri sport e lista degli ultimi 10 allenamenti */
+.sport-filters{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin:0 0 11px}
+.sport-chip{appearance:none;display:inline-flex;align-items:center;gap:6px;background:#fff;color:#475569;border:1px solid #dce3ee;border-radius:999px;padding:9px 13px;font:inherit;font-size:12px;font-weight:750;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.sport-chip:hover{border-color:#9d91fa;background:#f7f5ff}
+.sport-chip[aria-pressed="true"]{background:#6f5cf1;color:#fff;border-color:#6f5cf1;box-shadow:0 3px 11px rgba(111,92,241,.19)}
+.sport-chip .chip-count{font-size:10px;opacity:.75;font-variant-numeric:tabular-nums}
+#typeFilter{display:none}
+.diary-pagination{display:flex;justify-content:center;padding:13px 6px 5px}
+.diary-toggle{background:#fff;border:1px solid #d8dff0;color:#6152db;border-radius:12px;padding:11px 17px;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.diary-toggle:hover{background:#f6f4ff;border-color:#aa9dff}
+.diary-toggle:focus-visible,.sport-chip:focus-visible{outline:3px solid #b8afff;outline-offset:2px}
+@media(max-width:720px){
+  .sport-filters{flex-wrap:nowrap;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -7px 9px;padding:2px 7px 6px}
+  .sport-filters::-webkit-scrollbar{display:none}
+  .sport-chip{font-size:10px;padding:8px 11px;flex:0 0 auto}
+  .sport-chip .chip-count{font-size:9px}
+  .diary-pagination{padding:10px 5px 5px}
+  .diary-toggle{width:100%;min-height:42px;font-size:11px}
+}
 </style>
 </head>
 <body>
@@ -603,7 +623,8 @@ tr:hover td{background:#fafbfe}
     <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN; per 10 km, mezza e maratona i cutoff dipendono dalla singola gara.</div>
   </section>
 
-  <div class="section-title"><h2>☷ Diario completo</h2><span id="count"></span></div>
+  <div class="section-title"><h2>☷ Diario allenamenti</h2><span id="count"></span></div>
+  <nav class="sport-filters" id="sportFilters" aria-label="Filtra allenamenti per sport"></nav>
   <div class="controls">
     <input id="q" placeholder="🔎 Cerca disciplina, luogo o nota…">
     <select id="typeFilter"><option value="">Tutte le discipline</option></select>
@@ -616,7 +637,10 @@ tr:hover td{background:#fafbfe}
       <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th><th class="equipment-col">Attrezzatura</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
-    <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
+    <div id="emptyState" class="empty" hidden>Nessun allenamento per i filtri selezionati.</div>
+  </div>
+  <div class="diary-pagination" id="diaryPagination" hidden>
+    <button class="diary-toggle" id="diaryToggle" type="button" aria-expanded="false"></button>
   </div>
 
   <footer id="footerNote"></footer>
@@ -633,6 +657,7 @@ const els={
   disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),bikeMaintenance:document.getElementById("bikeMaintenance"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
+  sportFilters:document.getElementById("sportFilters"),diaryPagination:document.getElementById("diaryPagination"),diaryToggle:document.getElementById("diaryToggle"),
   reset:document.getElementById("resetBtn"),csv:document.getElementById("csvBtn"),footer:document.getElementById("footerNote"),
   kcalInfo:document.getElementById("kcalInfo")
 };
@@ -682,6 +707,8 @@ W.forEach(w=>w.year=Number(w.date.slice(0,4)));
 const years=[...new Set([...A.map(a=>a.year),...W.map(w=>w.year)])].sort((a,b)=>b-a);
 let selectedYear=years[0] || new Date().getFullYear();
 let AY=[],WY=[],filtered=[];
+const DIARY_INITIAL_LIMIT=10;
+let diaryExpanded=false;
 
 function renderYearButtons(){
   els.yearButtons.innerHTML=years.map(y=>`<button class="yearbtn ${y===selectedYear?"active":""}" data-year="${y}">${y}</button>`).join("");
@@ -1438,8 +1465,21 @@ function populateFilters(){
   const tv=els.type.value,mv=els.month.value;
   els.type.innerHTML='<option value="">Tutte le discipline</option>'+TYPES.map(t=>`<option value="${t}">${ICONS[t]} ${t}</option>`).join("");
   els.month.innerHTML='<option value="">Tutti i mesi</option>'+ML.map((m,i)=>`<option value="${i+1}">${m} ${selectedYear}</option>`).join("");
-  if([...els.type.options].some(o=>o.value===tv)) els.type.value=tv;
+  if([...els.type.options].some(o=>o.value===tv)&&(!tv||AY.some(a=>a.type===tv))) els.type.value=tv; else els.type.value="";
   if([...els.month.options].some(o=>o.value===mv)) els.month.value=mv; else els.month.value="";
+}
+function renderSportFilters(){
+  const counts=AY.reduce((res,a)=>(res[a.type]=(res[a.type]||0)+1,res),{});
+  const options=[{type:"",icon:"◉",label:"Tutti",count:AY.length},...TYPES.filter(type=>counts[type]>0).map(type=>({type,icon:ICONS[type]||"🏅",label:type,count:counts[type]}))];
+  els.sportFilters.innerHTML=options.map(opt=>`<button type="button" class="sport-chip" data-sport="${opt.type}" aria-pressed="${els.type.value===opt.type}">${opt.icon} ${opt.label} <span class="chip-count">${opt.count}</span></button>`).join("");
+  els.sportFilters.querySelectorAll(".sport-chip").forEach(btn=>{
+    btn.onclick=()=>{
+      els.type.value=btn.dataset.sport;
+      diaryExpanded=false;
+      renderSportFilters();
+      renderTable();
+    };
+  });
 }
 function activityEquipment(a){
   const equipment=typeof EQUIPMENT!=="undefined"?EQUIPMENT:[];
@@ -1478,10 +1518,15 @@ function activityEquipment(a){
 function escapeEquip(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function renderTable(){
   const query=els.q.value.toLowerCase().trim(),type=els.type.value,month=Number(els.month.value||0);
-  filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||(JSON.stringify(a)+" "+activityEquipment(a).full).toLowerCase().includes(query))).sort((a,b)=>b.date.localeCompare(a.date));
-  els.count.textContent=`${filtered.length} attività`;
+  filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||(JSON.stringify(a)+" "+activityEquipment(a).full).toLowerCase().includes(query)))
+    .sort((a,b)=>b.date.localeCompare(a.date)||(b.startTime||"").localeCompare(a.startTime||""));
+  const visible=diaryExpanded?filtered:filtered.slice(0,DIARY_INITIAL_LIMIT);
+  els.count.textContent=visible.length===filtered.length?`${filtered.length} attività`:`${visible.length} di ${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
-  els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a),gear=activityEquipment(a),label=escapeEquip(gear.full),short=escapeEquip(gear.short);return `<tr>
+  els.diaryPagination.hidden=filtered.length<=DIARY_INITIAL_LIMIT;
+  els.diaryToggle.setAttribute("aria-expanded",String(diaryExpanded));
+  els.diaryToggle.textContent=diaryExpanded?"↑ Mostra soltanto gli ultimi 10":`↓ Mostra altri ${filtered.length-DIARY_INITIAL_LIMIT} allenamenti`;
+  els.rows.innerHTML=visible.map(a=>{const k=activityKcal(a),gear=activityEquipment(a),label=escapeEquip(gear.full),short=escapeEquip(gear.short);return `<tr>
     <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]||"🏅"} <span class="disc-name">${displayType(a)}</span></span><span class="equip-micro ${gear.pending?"pending":""}" title="${label}">${short}</span></td>
     <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
     <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td><td class="equipment-col"><span class="equip-text ${gear.pending?"pending":""}">${label}</span></td></tr>`}).join("");
@@ -1517,11 +1562,14 @@ function renderEquipment(){
   }).join("");
 }
 function renderAll(){
-  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  diaryExpanded=false;
+  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderSportFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
-TYPES.forEach(()=>{});
-els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
-els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";renderTable()};
+els.diaryToggle.onclick=()=>{diaryExpanded=!diaryExpanded;renderTable()};
+els.q.oninput=()=>{diaryExpanded=false;renderTable()};
+els.type.oninput=()=>{diaryExpanded=false;renderSportFilters();renderTable()};
+els.month.oninput=()=>{diaryExpanded=false;renderTable()};
+els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";diaryExpanded=false;renderSportFilters();renderTable()};
 els.csv.onclick=()=>{
   const header="data;tipo;km;durata;kcal;kcal_stimate;dplus;ritmo_velocita;luogo;attrezzatura;attrezzatura_da_confermare;note\n";
   const body=filtered.map(a=>{const k=activityKcal(a);return [a.date,a.type,a.km,a.duration,Math.round(k.value),k.estimated?"si":"no",a.dplus??"",a.metric,a.location??"",activityEquipment(a).full,activityEquipment(a).pending?"si":"no",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")}).join("\n");
