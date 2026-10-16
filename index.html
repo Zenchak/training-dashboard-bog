@@ -1453,11 +1453,20 @@ function renderEquipment(){
   const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const icons={run:"👟",trail:"🥾",bike:"🚴"};
   target.innerHTML=equipment.map(item=>{
-    const activities=A.filter(a=>(item.autoTypes&&item.autoTypes.includes(a.type))||(a.equipmentId===item.id)||(Array.isArray(a.equipmentIds)&&a.equipmentIds.includes(item.id))||(item.activityDates||[]).includes(a.date));
-    const loggedKm=activities.reduce((sum,a)=>sum+(Number(a.km)||0),0);
-    const known=Number.isFinite(item.baselineKm)||activities.length>0;
-    const km=known?(loggedKm+(Number(item.baselineKm)||0)).toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
-    const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?"km attribuiti a questa attrezzatura":"km da ricostruire dagli screenshot";
+    const kmEntries=A.map(a=>{
+      const segments=Array.isArray(a.equipmentSegments)?a.equipmentSegments:[];
+      const matchedSegments=segments.filter(x=>x.equipmentId===item.id&&Number.isFinite(x.km)&&x.km>0);
+      if(matchedSegments.length)return {km:matchedSegments.reduce((n,x)=>n+x.km,0),estimated:matchedSegments.some(x=>x.estimated)};
+      const hasUnmeasuredSegment=segments.some(x=>x.equipmentId===item.id);
+      if(hasUnmeasuredSegment)return null;
+      const assigned=(item.autoTypes&&item.autoTypes.includes(a.type))||(a.equipmentId===item.id)||(Array.isArray(a.equipmentIds)&&a.equipmentIds.includes(item.id))||(item.activityDates||[]).includes(a.date);
+      return assigned?{km:Number(a.km)||0,estimated:false}:null;
+    }).filter(Boolean);
+    const loggedKm=kmEntries.reduce((sum,e)=>sum+e.km,0);
+    const estimated=kmEntries.some(e=>e.estimated);
+    const known=Number.isFinite(item.baselineKm)||kmEntries.length>0;
+    const km=known?(estimated?"≈ ":"")+(loggedKm+(Number(item.baselineKm)||0)).toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
+    const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?(estimated?"km attribuiti, compresa una stima":"km attribuiti a questa attrezzatura"):"km da ricostruire dagli screenshot";
     return '<article class="equipment-card"><div class="equip-kind">'+(icons[item.category]||"⚙")+' '+escapeHtml(item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta")+'</div><h3>'+escapeHtml(item.name)+'</h3><div class="equip-km">'+km+' <small>km</small></div><p>'+escapeHtml(descriptor)+'</p><p>'+escapeHtml(item.since?"Dal "+item.since.split("-").reverse().join("/")+" · "+item.status:item.status)+'</p></article>';
   }).join("");
 }
