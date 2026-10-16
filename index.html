@@ -524,6 +524,17 @@ tr:hover td{background:#fafbfe}
 .equipment-card .equip-km small{font-size:13px;font-weight:500;color:var(--muted)}
 .equipment-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}
 @media(max-width:680px){.equipment-grid{grid-template-columns:1fr}}
+
+.equipment-col{min-width:190px;max-width:360px;white-space:normal;line-height:1.35}
+.equip-text{font-size:10px;font-weight:600;line-height:1.4;white-space:normal}
+.equip-text.pending{color:#986124;font-weight:500}
+.equip-micro{display:none}
+@media(max-width:720px){
+  th.equipment-col,td.equipment-col{display:none}
+  td:nth-child(2){white-space:normal;overflow:visible;text-overflow:clip;vertical-align:middle}
+  .equip-micro{display:block;margin:3px 0 0 1px;font-size:7.4px;line-height:1.2;color:#50617b;white-space:normal;overflow-wrap:anywhere}
+  .equip-micro.pending{color:#a56f29}
+}
 </style>
 </head>
 <body>
@@ -602,7 +613,7 @@ tr:hover td{background:#fafbfe}
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th></tr></thead>
+      <thead><tr><th class="col-date">Data</th><th>Disciplina</th><th>Km</th><th>Durata</th><th>Kcal</th><th class="mobile-hide">D+</th><th>Ritmo</th><th class="mobile-hide">Luogo</th><th class="equipment-col">Attrezzatura</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
     <div id="emptyState" class="empty" hidden>Qui compariranno gli allenamenti di questo anno.</div>
@@ -1430,15 +1441,50 @@ function populateFilters(){
   if([...els.type.options].some(o=>o.value===tv)) els.type.value=tv;
   if([...els.month.options].some(o=>o.value===mv)) els.month.value=mv; else els.month.value="";
 }
+function activityEquipment(a){
+  const equipment=typeof EQUIPMENT!=="undefined"?EQUIPMENT:[];
+  const lookup=id=>equipment.find(e=>e.id===id);
+  const names=[],mini=[];
+  let pending=false;
+  const seen=new Set();
+  const add=(id,seg)=>{
+    if(seen.has(id))return;
+    seen.add(id);
+    const item=lookup(id);
+    const generic=id==="trail-shoes"||!item;
+    const name=item?.name||"Attrezzatura da specificare";
+    const distance=seg&&Number.isFinite(seg.km)?` (${seg.estimated?"≈":""}${n(seg.km,2)} km)`:"";
+    const missingKm=seg&&seg.km==null?" (km da verificare)":"";
+    const status=generic?" · modello da confermare":"";
+    names.push(name+distance+missingKm+status);
+    mini.push((id==="run-noosa13"?"ASICS Noosa":id==="trail-shoes"?"Scarpe trail":name)+(seg&&Number.isFinite(seg.km)?` ${seg.estimated?"≈":""}${n(seg.km,1)} km`:"")+(generic?" ?":""));
+    if(generic||seg?.confirmed===false)pending=true;
+  };
+  (Array.isArray(a.equipmentSegments)?a.equipmentSegments:[]).forEach(seg=>add(seg.equipmentId,seg));
+  if(a.equipmentId)add(a.equipmentId,null);
+  (Array.isArray(a.equipmentIds)?a.equipmentIds:[]).forEach(id=>add(id,null));
+  if(a.type==="Bici"&&!names.length){names.push("Bicicletta da confermare");mini.push("Bici da confermare");pending=true;}
+  if(a.type==="Trail"&&!names.length){names.push("Scarpe trail da confermare");mini.push("Scarpe trail ?");pending=true;}
+  if(a.type==="Corsa"&&!names.length){names.push("Scarpe da confermare");mini.push("Scarpe ?");pending=true;}
+  if(a.type==="Triathlon"){
+    if(!names.some(x=>x.includes("Bici")||x.includes("Van Rysel")||x.includes("bicicletta"))){
+      names.push("Bici: da confermare");mini.push("Bici ?");pending=true;
+    }
+    names.push("Nuoto: attrezzatura non censita");mini.push("Nuoto ?");
+  }
+  if(!names.length){names.push("Non registrata");mini.push("—");}
+  return {full:names.join(" · "),short:mini.join(" · "),pending};
+}
+function escapeEquip(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function renderTable(){
   const query=els.q.value.toLowerCase().trim(),type=els.type.value,month=Number(els.month.value||0);
-  filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||JSON.stringify(a).toLowerCase().includes(query))).sort((a,b)=>b.date.localeCompare(a.date));
+  filtered=AY.filter(a=>(!type||a.type===type)&&(!month||a.month===month)&&(!query||(JSON.stringify(a)+" "+activityEquipment(a).full).toLowerCase().includes(query))).sort((a,b)=>b.date.localeCompare(a.date));
   els.count.textContent=`${filtered.length} attività`;
   els.empty.hidden=filtered.length>0;els.rows.hidden=filtered.length===0;
-  els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a);return `<tr>
-    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]||"🏅"} <span class="disc-name">${displayType(a)}</span></span></td>
+  els.rows.innerHTML=filtered.map(a=>{const k=activityKcal(a),gear=activityEquipment(a),label=escapeEquip(gear.full),short=escapeEquip(gear.short);return `<tr>
+    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]||"🏅"} <span class="disc-name">${displayType(a)}</span></span><span class="equip-micro ${gear.pending?"pending":""}" title="${label}">${short}</span></td>
     <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
-    <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td></tr>`}).join("");
+    <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td><td class="equipment-col"><span class="equip-text ${gear.pending?"pending":""}">${label}</span></td></tr>`}).join("");
 }
 function renderFooter(){
   const missingD=AY.some(a=>a.dplus==null);
@@ -1477,8 +1523,8 @@ TYPES.forEach(()=>{});
 els.q.oninput=renderTable;els.type.oninput=renderTable;els.month.oninput=renderTable;
 els.reset.onclick=()=>{els.q.value="";els.type.value="";els.month.value="";renderTable()};
 els.csv.onclick=()=>{
-  const header="data;tipo;km;durata;kcal;kcal_stimate;dplus;ritmo_velocita;luogo;note\n";
-  const body=filtered.map(a=>{const k=activityKcal(a);return [a.date,a.type,a.km,a.duration,Math.round(k.value),k.estimated?"si":"no",a.dplus??"",a.metric,a.location??"",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")}).join("\n");
+  const header="data;tipo;km;durata;kcal;kcal_stimate;dplus;ritmo_velocita;luogo;attrezzatura;attrezzatura_da_confermare;note\n";
+  const body=filtered.map(a=>{const k=activityKcal(a);return [a.date,a.type,a.km,a.duration,Math.round(k.value),k.estimated?"si":"no",a.dplus??"",a.metric,a.location??"",activityEquipment(a).full,activityEquipment(a).pending?"si":"no",a.note??""].map(x=>`"${String(x).replaceAll('"','""')}"`).join(";")}).join("\n");
   const u=URL.createObjectURL(new Blob([header+body],{type:"text/csv;charset=utf-8"})),x=document.createElement("a");
   x.href=u;x.download=`allenamenti_${selectedYear}.csv`;x.click();URL.revokeObjectURL(u)
 };
