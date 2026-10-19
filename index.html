@@ -1019,7 +1019,7 @@ button.equipment-trigger:focus-visible{
 
 <script src="data.js"></script>
 <script>
-const COLORS={Bici:"#E67E22",Corsa:"#168FFF",Nuoto:"#00A9D6",Trekking:"#91643E",Camminata:"#91643E",Trail:"#18A65C",Triathlon:"#7255D8"};
+const COLORS={Bici:"#FF6B17",Corsa:"#8137F6",Nuoto:"#079AF0",Trekking:"#93623F",Camminata:"#93623F",Trail:"#00AB68",Triathlon:"#7255D8"};
 const ICONS={Bici:"Bici",Corsa:"Corsa",Nuoto:"Nuoto",Trekking:"Trekking",Camminata:"Camminata",Trail:"Trail",Triathlon:"Triathlon"};
 /* Icone SVG leggere, senza dipendenze esterne: colori e tratto come il rendering chiaro */
 const SPORT_SVG={
@@ -1107,17 +1107,33 @@ W.forEach(w=>w.year=Number(w.date.slice(0,4)));
 
 const years=[...new Set([...A.map(a=>a.year),...W.map(w=>w.year)])].sort((a,b)=>b-a);
 let selectedYear=years[0] || new Date().getFullYear();
+let selectedRange="all";
 let AY=[],WY=[],filtered=[];
+function syncRangeButtons(){
+ document.querySelectorAll(".range-btn").forEach(b=>{
+ const active=b.dataset.range===selectedRange;
+ b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active));
+ });
+}
+document.querySelectorAll(".range-btn").forEach(b=>b.addEventListener("click",()=>{selectedRange=b.dataset.range;renderAll()}));
+document.querySelectorAll(".side-link").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll(".side-link").forEach(x=>x.classList.toggle("active",x===link))}));
 const DIARY_INITIAL_LIMIT=10;
 let diaryExpanded=false;
 
 function renderYearButtons(){
   els.yearButtons.innerHTML=years.map(y=>`<button class="yearbtn ${y===selectedYear?"active":""}" data-year="${y}">${y}</button>`).join("");
-  els.yearButtons.querySelectorAll("button").forEach(b=>b.onclick=()=>{selectedYear=Number(b.dataset.year);renderAll()});
+  els.yearButtons.querySelectorAll("button").forEach(b=>b.onclick=()=>{selectedYear=Number(b.dataset.year);selectedRange="all";renderAll()});
 }
 function yearlyData(){
-  AY=A.filter(a=>a.year===selectedYear);
-  WY=W.filter(w=>w.year===selectedYear);
+ const base=A.filter(a=>a.year===selectedYear);
+ if(selectedRange==="all"){AY=base;WY=W.filter(w=>w.year===selectedYear);return}
+ const last=base.map(a=>a.date).sort().at(-1);
+ if(!last){AY=[];WY=[];return}
+ const limit=new Date(last+"T12:00:00");
+ limit.setDate(limit.getDate()-(Number(selectedRange)-1));
+ const lower=limit.getFullYear()+"-"+String(limit.getMonth()+1).padStart(2,"0")+"-"+String(limit.getDate()).padStart(2,"0");
+ AY=A.filter(a=>a.date>=lower&&a.date<=last);
+ WY=W.filter(w=>w.date>=lower&&w.date<=last);
 }
 function renderHero(){
   els.heroYear.textContent=selectedYear;
@@ -1126,17 +1142,18 @@ function renderHero(){
   const totalH=AY.reduce((s,a)=>s+hrs(a.duration),0);
   els.coverage.textContent=`${AY.length} attività · ${fh(totalH)} · ${dt(dates[0])} → ${dt(dates.at(-1))}`;
 }
+function estimatedLoad(a){return Math.max(0,Math.round(hrs(a.duration)*activityMet(a)*10))}
 function renderDisciplines(){
  const cards=[
   {name:"Corsa",icon:sportIcon("Corsa"),types:["Corsa"],color:COLORS.Corsa},
   {name:"Bici",icon:sportIcon("Bici"),types:["Bici"],color:COLORS.Bici},
   {name:"Nuoto",icon:sportIcon("Nuoto"),types:["Nuoto"],color:COLORS.Nuoto},
-  {name:"Tempo totale",icon:sportIcon("Totale"),types:null,color:"#536B93"}
+  {name:"Carico stimato",icon:sportIcon("Totale"),types:null,color:"#00AD72",load:true}
  ];
  els.disciplines.innerHTML=cards.map(c=>{
   const z=c.types?AY.filter(a=>c.types.includes(a.type)):AY;
-  const big=c.types?n(z.reduce((sum,a)=>sum+(Number(a.km)||0),0),1)+" km":fh(z.reduce((sum,a)=>sum+hrs(a.duration),0));
-  return '<div class="card disc" style="--c:'+c.color+'"><div class="top"><span class="name">'+c.name+'</span><span class="ico">'+c.icon+'</span></div><div class="big">'+big+'</div><div class="mini">'+z.length+' attività'+(c.types?'':' · tutte le discipline')+'</div></div>';
+  const big=c.load?z.reduce((sum,a)=>sum+estimatedLoad(a),0).toLocaleString("it-IT"):n(z.reduce((sum,a)=>sum+(Number(a.km)||0),0),1)+" km";
+  return '<div class="card disc" style="--c:'+c.color+'"><div class="top"><span class="name">'+c.name+'</span><span class="ico">'+c.icon+'</span></div><div class="big">'+big+'</div><div class="mini">'+(c.load?'Unità di carico (stima)':z.length+' allenamenti')+'</div></div>';
  }).join("");
 }
 function renderRecent(){
@@ -1155,13 +1172,20 @@ function renderMonthly(){
  const groups=[["Corsa","Trail"],["Bici"],["Nuoto"]];
  const data=Array.from({length:12},(_,i)=>groups.map(types=>{
   const rows=AY.filter(a=>a.month===i+1&&types.includes(a.type));
-  return monthlyMode==="km"?rows.reduce((s,a)=>s+(Number(a.km)||0),0):monthlyMode==="hours"?rows.reduce((s,a)=>s+hrs(a.duration),0):rows.length;
+  return monthlyMode==="km"?rows.reduce((s,a)=>s+(Number(a.km)||0),0):monthlyMode==="hours"?rows.reduce((s,a)=>s+hrs(a.duration),0):rows.reduce((s,a)=>s+estimatedLoad(a),0);
  }));
  const max=Math.max(1,...data.map(v=>v.reduce((a,b)=>a+b,0)));
  const colors=[COLORS.Corsa,COLORS.Bici,COLORS.Nuoto];
+ const axes=document.getElementById("monthlyAxis"),axisTitle=document.getElementById("monthlyAxisTitle");
+ if(axisTitle)axisTitle.textContent=monthlyMode==="km"?"Chilometri":monthlyMode==="hours"?"Ore":"Carico stimato";
+ if(axes){
+   const step=max>600?Math.ceil(max/400)*100:max>120?Math.ceil(max/40)*10:max>20?Math.ceil(max/20)*5:Math.ceil(max/4);
+   const ceiling=Math.max(4,step*4);
+   axes.innerHTML=[4,3,2,1,0].map(k=>'<span>'+n(ceiling*k/4,ceiling>20?0:1)+'</span>').join("");
+ }
  target.innerHTML=data.map((values,i)=>{
   const sum=values.reduce((a,b)=>a+b,0),height=sum/max*160;
-  const tip=ML[i]+": "+values.map((v,j)=>groups[j][0]+" "+n(v,1)).join(" · ")+(monthlyMode==="km"?" km":monthlyMode==="hours"?" ore":" attività");
+  const tip=ML[i]+": "+values.map((v,j)=>groups[j][0]+" "+n(v,1)).join(" · ")+(monthlyMode==="km"?" km":monthlyMode==="hours"?" ore":" punti di carico stimati");
   return '<div class="monthly-column" title="'+tip+'"><div class="monthly-bar" style="height:'+height+'px">'+[2,1,0].map(j=>'<span style="height:'+(sum?values[j]/sum*100:0)+'%;background:'+colors[j]+'"></span>').join("")+'</div><div class="monthly-month">'+ML[i]+'</div></div>';
  }).join("");
  document.querySelectorAll(".monthly-switch button").forEach(b=>b.classList.toggle("active",b.dataset.mode===monthlyMode));
@@ -2099,7 +2123,7 @@ function renderEquipment(){
 }
 function renderAll(){
   diaryExpanded=false;
-  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecent();renderMonthly();renderRecords();renderRaceGoals();populateFilters();renderSportFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();syncRangeButtons();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecent();renderMonthly();renderRecords();renderRaceGoals();populateFilters();renderSportFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
 els.diaryToggle.onclick=()=>{diaryExpanded=!diaryExpanded;renderTable()};
 els.q.oninput=()=>{diaryExpanded=false;renderTable()};
