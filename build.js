@@ -111,13 +111,13 @@ html = html.replace('</body>',floatingRefreshButton+'\n</body>');
 
 // INLINE_ACTIVITY_MERGE_20261019
 // index.html contains its OWN inline const A=[...]; it never loads data.js.
-// Inject records immediately BEFORE renderAll(), otherwise the user sees a stale
-// dashboard even when dist/data.js has been updated correctly.
+// Inject records BEFORE A.forEach() derives year/month/pace. Records appended
+// later are otherwise excluded by yearlyData() and never appear in the Hub.
 const activitiesExtraPath = path.join(__dirname, 'data-additions.json');
 if (fs.existsSync(activitiesExtraPath)) {
   const activitiesExtra = JSON.parse(fs.readFileSync(activitiesExtraPath, 'utf8'));
   if (!Array.isArray(activitiesExtra)) throw new Error('Expected activity list');
-  const beforeRender = 'renderAll();\n</script>';
+  const beforeRender = 'A.forEach(a=>{a.year=Number(a.date.slice(0,4));a.month=Number(a.date.slice(5,7));a.metric=metric(a)});';
   if (!html.includes(beforeRender)) throw new Error('Cannot find dashboard render entrypoint');
   const addToEmbeddedHistory = '\nfor (const activity of ' + JSON.stringify(activitiesExtra) + ') {\n'
     + '  if (!A.some(old => old.date===activity.date && old.type===activity.type && old.duration===activity.duration && Math.abs(Number(old.km)-Number(activity.km))<0.01)) A.push(activity);\n'
