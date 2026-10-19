@@ -125,6 +125,29 @@ if (fs.existsSync(activitiesExtraPath)) {
   html = html.replace(beforeRender, addToEmbeddedHistory + beforeRender);
 }
 
+
+// APPLY_EQUIPMENT_CORRECTIONS_V1
+// Store small corrections independently of the historical inline A/data.js data.
+// Apply before A.forEach derives year/month/pace for correct dashboard counters.
+let equipmentCorrectionsJS = '';
+const correctionPath = path.join(__dirname, 'activity-corrections.json');
+if (fs.existsSync(correctionPath)) {
+  const corrections = JSON.parse(fs.readFileSync(correctionPath, 'utf8'));
+  if (!Array.isArray(corrections)) throw new Error('activity-corrections.json must be an array');
+  equipmentCorrectionsJS = '\n;for (const fix of ' + JSON.stringify(corrections) + ') {\n'
+    + ' const act=A.find(a=>a.date===fix.date&&a.type===fix.type&&Math.abs(Number(a.km)-Number(fix.km))<0.01);\n'
+    + ' if(!act)continue;\n'
+    + ' if(Array.isArray(fix.equipmentSegments)){\n'
+    + '  if(!Array.isArray(act.equipmentSegments))act.equipmentSegments=[];\n'
+    + '  for(const seg of fix.equipmentSegments){const i=act.equipmentSegments.findIndex(old=>old.equipmentId===seg.equipmentId);if(i>=0)act.equipmentSegments[i]=seg;else act.equipmentSegments.push(seg);}\n'
+    + ' }\n'
+    + ' if(fix.noteAppend&&!String(act.note||"").includes(fix.noteAppend))act.note=(act.note?act.note+" ":"")+fix.noteAppend;\n'
+    + '}\n';
+  const normMarker = 'A.forEach(a=>{a.year=Number(a.date.slice(0,4));a.month=Number(a.date.slice(5,7));a.metric=metric(a)});';
+  if(!html.includes(normMarker))throw new Error('Cannot find activity normalization in index.html');
+  html=html.replace(normMarker,equipmentCorrectionsJS+'\n'+normMarker);
+}
+
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
 
@@ -140,6 +163,8 @@ if (fs.existsSync(additionsPath)) {
   fs.appendFileSync(path.join(out, 'data.js'), mergeScript);
 }
 
+
+if (equipmentCorrectionsJS) fs.appendFileSync(path.join(out, 'data.js'), equipmentCorrectionsJS);
 
 // LAN fallbacks: materialize Hub and Finanze inside dist so Nginx can serve them
 // with its normal static-file path and without special alias locations.
