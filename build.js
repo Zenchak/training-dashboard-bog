@@ -82,6 +82,23 @@ html = html.replace('</style>',targetedUiCSS+'\n</style>');
 // NAS is the authoritative deployment: serve the locally built data.js,
 // avoiding an external GitHub fetch that could overwrite fresh training data.
 
+
+// INLINE_ACTIVITY_MERGE_20261019
+// index.html contains its OWN inline const A=[...]; it never loads data.js.
+// Inject records immediately BEFORE renderAll(), otherwise the user sees a stale
+// dashboard even when dist/data.js has been updated correctly.
+const activitiesExtraPath = path.join(__dirname, 'data-additions.json');
+if (fs.existsSync(activitiesExtraPath)) {
+  const activitiesExtra = JSON.parse(fs.readFileSync(activitiesExtraPath, 'utf8'));
+  if (!Array.isArray(activitiesExtra)) throw new Error('Expected activity list');
+  const beforeRender = 'renderAll();\n</script>';
+  if (!html.includes(beforeRender)) throw new Error('Cannot find dashboard render entrypoint');
+  const addToEmbeddedHistory = '\nfor (const activity of ' + JSON.stringify(activitiesExtra) + ') {\n'
+    + '  if (!A.some(old => old.date===activity.date && old.type===activity.type && old.duration===activity.duration && Math.abs(Number(old.km)-Number(activity.km))<0.01)) A.push(activity);\n'
+    + '}\n';
+  html = html.replace(beforeRender, addToEmbeddedHistory + beforeRender);
+}
+
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
 
