@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 150" role="img" aria-label="Illustrazione gravel Van Rysel AF Discover">
+<defs><linearGradient id="frame" x2=".8" y2="1"><stop stop-color="#89c7ad"/><stop offset=".52" stop-color="#c1e3cf"/><stop offset="1" stop-color="#74b9a0"/></linearGradient><filter id="sh"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<ellipse cx="127" cy="132" rx="114" ry="8" fill="#718197" opacity=".13" filter="url(#sh)"/>
+<g fill="none" stroke="#1c252c" stroke-width="6"><circle cx="57" cy="98" r="39"/><circle cx="194" cy="98" r="39"/></g>
+<g fill="none" stroke="#73838e" stroke-width=".9" opacity=".58">
+<path d="M57 60v76M18 98h78M29 71l56 54M29 125l56-54M194 60v76M155 98h78M167 71l54 54M167 125l54-54"/>
+<path d="M37 64l38 68M17 84l80 29M36 133l42-69M154 84l80 29M172 63l43 70M174 134l41-70"/>
+</g>
+<g fill="none" stroke="url(#frame)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round">
+<path d="M57 98L99 55L124 98L57 98M99 55L164 53L124 98M164 53L194 98"/>
+</g>
+<path d="M98 55L92 37" stroke="#1e272c" stroke-width="4" stroke-linecap="round"/>
+<path d="M78 36h32q3 0 3 3-1 4-11 5H80q-6-2-6-5Z" fill="#20272d"/>
+<path d="M163 53l-5-22" stroke="#1d292f" stroke-width="4" stroke-linecap="round"/>
+<path d="M153 29h31q8 3 10 12l10 9-6 4-12-8-6-11h-27" stroke="#202b32" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M190 40q17 4 13 18" stroke="#242a31" stroke-width="4" fill="none"/>
+<path d="M124 98l16 2m-16-2l-8-12" stroke="#344249" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+<circle cx="124" cy="98" r="8" stroke="#30383c" stroke-width="3" fill="#c9ddd2"/>
+<circle cx="124" cy="98" r="3" fill="#242f35"/>
+<path d="M126 97l11 9m-13-8l-11-11" stroke="#242d30" stroke-width="3" stroke-linecap="round"/>
+<path d="M53 97l45-44m27 45l40-43" stroke="#e2f4e9" stroke-width="1" opacity=".8"/>
+<circle cx="57" cy="98" r="4" fill="#20272e"/><circle cx="194" cy="98" r="4" fill="#20272e"/>
+</svg>
