@@ -747,6 +747,95 @@ button.equipment-trigger:focus-visible{
   button.equipment-trigger{min-height:126px!important}
 }
 
+
+/* Stile illustrato del rendering approvato: icone e immagini, non emoji */
+.sport-svg{display:block;width:100%;height:100%;flex:none;stroke-width:3.2}
+.disciplines .disc .ico{width:46px;height:46px;padding:5px;background:transparent;color:var(--c);font-size:initial;border:0}
+.disciplines .disc .ico .sport-svg{filter:drop-shadow(0 2px 2px rgba(30,96,164,.07))}
+.disciplines .disc .name{font-size:13px;color:#536a8a}
+.disciplines .disc .big{font-size:clamp(19px,2.5vw,27px)}
+.disciplines .disc{min-height:118px;padding:16px 17px}
+.disciplines .disc:before{display:none}
+.recent-icon{background:#e9f9f2!important;padding:8px}
+.recent-icon .sport-svg{width:100%;height:100%}
+.sport-chip .sport-svg{width:17px;height:17px}
+.pill .sport-svg{width:16px;height:16px;color:var(--c)}
+.record .ico .sport-svg{width:29px;height:29px;color:#168fff}
+.hub-equipment-shell #equipmentCards .equipment-trigger{
+ display:grid;grid-template-columns:minmax(92px,43%) minmax(0,1fr);gap:8px;
+ align-items:center;min-height:149px;padding:12px 10px;overflow:hidden
+}
+.hub-equipment-shell .equipment-trigger{color:#182642}
+.gear-card-art{display:flex;align-items:center;justify-content:center;min-width:0;min-height:105px}
+.gear-card-art img{display:block;width:100%;max-width:205px;max-height:118px;height:auto;object-fit:contain;mix-blend-mode:multiply}
+.gear-card-art .sport-svg{width:60px;height:60px;color:#6385a5}
+.gear-card-copy{display:flex;min-width:0;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px}
+.gear-card-heading{display:flex;width:100%;min-width:0;align-items:start;justify-content:space-between;gap:7px}
+.gear-card-name{display:block;min-width:0;font-size:clamp(12px,1.2vw,16px);font-weight:800;line-height:1.3;overflow-wrap:anywhere}
+.gear-card-sport-icon{display:grid;place-items:center;flex:none;width:30px;height:30px;color:#168fff}
+.gear-card-sport-icon .sport-svg{width:25px;height:25px}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(2) .gear-card-sport-icon{color:#06b875}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(3) .gear-card-sport-icon{color:#fc751e}
+.gear-open-indicator{font-size:11px;color:#607999}
+.hub-equipment-shell .equipment-card h3{margin:0}
+.hub-equipment-shell .equipment-card .equip-km{display:block;max-width:100%;white-space:nowrap;font-size:clamp(18px,2.15vw,28px);font-weight:850;letter-spacing:-.03em}
+.hub-equipment-shell .equipment-card .equip-km small{font-size:12px;font-weight:500}
+.other-equipment-grid .equipment-trigger{min-height:95px!important;display:grid;grid-template-columns:65px 1fr;align-items:center;gap:8px;text-align:left}
+.other-equipment-grid .gear-card-art{min-height:60px}
+.other-equipment-grid .gear-card-art .sport-svg{width:40px;height:40px}
+.other-equipment-grid .gear-card-heading .gear-card-sport-icon{display:none}
+.other-equipment-grid .gear-card-name{font-size:14px}
+/* Separate chart area and legend: no negative margins, no transforms */
+.monthly-chart{height:218px;padding:14px 2px 6px;align-items:stretch;gap:5px;border-bottom:0;min-width:0;overflow:hidden}
+.monthly-column{height:100%;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;align-items:stretch}
+.monthly-bar{flex:0 0 auto;max-height:165px;min-height:0;border-radius:4px 4px 0 0;overflow:hidden}
+.monthly-month{position:static;display:block;flex:0 0 auto;height:18px;line-height:18px;margin:0;transform:none;white-space:nowrap;text-align:center;font-size:10px;color:#536b8d}
+.monthly-legend{
+ display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+ gap:8px 20px;margin:8px 0 0;padding:12px 0 0;min-height:35px;
+ border-top:1px solid #e7edf6;line-height:1.4;color:#5b7190;font-size:12px
+}
+.monthly-legend span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex:none}
+.monthly-legend i{flex:none;width:11px;height:11px}
+.hub-overview-panel .hub-panel-head{flex-wrap:wrap}
+@media(max-width:850px){
+ .disciplines .disc{padding:14px}
+ .disciplines .disc .ico{width:40px;height:40px}
+}
+@media(max-width:680px){
+ .hub-equipment-shell #equipmentCards .equipment-trigger{grid-template-columns:1fr;gap:2px;min-height:145px;padding:8px 5px}
+ .hub-equipment-shell #equipmentCards .gear-card-art{min-height:57px;height:57px;max-height:57px}
+ .hub-equipment-shell #equipmentCards .gear-card-art img{width:100%;height:64px;max-width:none;max-height:64px;object-fit:contain}
+ .hub-equipment-shell #equipmentCards .gear-card-copy{width:100%;min-width:0;gap:2px;align-items:center;text-align:center}
+ .hub-equipment-shell #equipmentCards .gear-card-heading{justify-content:center}
+ .hub-equipment-shell #equipmentCards .gear-card-name{font-size:10px}
+ .hub-equipment-shell #equipmentCards .gear-card-sport-icon{display:none}
+ .hub-equipment-shell #equipmentCards .equip-kind{font-size:9px}
+ .hub-equipment-shell #equipmentCards .equip-km{font-size:clamp(14px,4vw,18px)}
+ .hub-equipment-shell #equipmentCards .equip-km small{font-size:9px}
+ .hub-equipment-shell #equipmentCards .gear-open-indicator{font-size:8px;margin-top:4px}
+ .other-equipment-grid .equipment-trigger{grid-template-columns:50px 1fr!important;min-height:82px!important}
+ .other-equipment-grid .gear-card-copy{align-items:flex-start!important;text-align:left!important}
+ .other-equipment-grid .gear-card-name{font-size:13px!important}
+ .disciplines .disc{min-height:100px;height:auto;padding:12px}
+ .disciplines .disc .ico{width:33px;height:33px;padding:3px}
+ .disciplines .disc .name{font-size:11px}
+ .disciplines .disc .big{font-size:clamp(15px,4.3vw,21px);white-space:normal}
+ .disciplines .disc .mini{font-size:10px}
+ .recent-icon{width:35px;height:35px}
+ .monthly-chart{height:204px;gap:3px;padding:12px 1px 4px}
+ .monthly-bar{max-height:151px}
+ .monthly-month{font-size:9px;height:17px;line-height:17px}
+ .monthly-legend{gap:7px 14px;margin-top:7px;padding-top:10px;font-size:11px}
+ .monthly-switch{margin-left:0;max-width:100%}
+ .monthly-switch button{padding:7px 9px}
+}
+@media(max-width:385px){
+ .monthly-month{font-size:8px}
+ .hub-equipment-shell #equipmentCards .gear-card-name{font-size:9px}
+ .hub-equipment-shell #equipmentCards .equip-km{font-size:14px}
+}
+
 </style>
 </head>
 <body>
@@ -845,8 +934,31 @@ button.equipment-trigger:focus-visible{
 
 <script src="data.js"></script>
 <script>
-const COLORS={Bici:"#39d98a",Corsa:"#ff9f43",Nuoto:"#35b8ff",Trekking:"#c99cff",Camminata:"#ffd166",Trail:"#f76c6c",Triathlon:"#6f5cf1"};
-const ICONS={Bici:"🚴",Corsa:"🏃",Nuoto:"🏊",Trekking:"🥾",Camminata:"🚶",Trail:"⛰️",Triathlon:"🏊🚴🏃"};
+const COLORS={Bici:"#ff873d",Corsa:"#168fff",Nuoto:"#8643ec",Trekking:"#08b36c",Camminata:"#28b985",Trail:"#08b36c",Triathlon:"#6f5cf1"};
+const ICONS={Bici:"Bici",Corsa:"Corsa",Nuoto:"Nuoto",Trekking:"Trekking",Camminata:"Camminata",Trail:"Trail",Triathlon:"Triathlon"};
+/* Icone SVG leggere, senza dipendenze esterne: colori e tratto come il rendering chiaro */
+const SPORT_SVG={
+  Corsa:'<circle cx="29" cy="7" r="4" fill="currentColor" stroke="none"/><path d="M21 17l8-4 7 6 7-2M20 18l-6 11-9 5M24 21l8 9-9 12M29 14l-9 7 9 7 8 1" />',
+  Bici:'<circle cx="11" cy="34" r="8.5"/><circle cx="38" cy="34" r="8.5"/><path d="M11 34l8-18h7l12 18H23l-6-11-6 11M23 16l6-7h8M29 9h8M19 16l-2-5h-5"/>',
+  Nuoto:'<path d="M3 15q5-7 10 0t10 0t10 0t10 0M3 24q5-7 10 0t10 0t10 0t10 0M3 33q5-7 10 0t10 0t10 0t10 0"/>',
+  Trail:'<path d="M4 39l15-24 10 14 7-11 9 21M13 28l6-10 5 7M28 28l7-9 4 6"/><circle cx="34" cy="9" r="3.5" fill="currentColor" stroke="none"/>',
+  Trekking:'<path d="M4 39l15-24 10 14 7-11 9 21M13 28l6-10 5 7M28 28l7-9 4 6"/><circle cx="34" cy="9" r="3.5" fill="currentColor" stroke="none"/>',
+  Camminata:'<circle cx="27" cy="8" r="4" fill="currentColor" stroke="none"/><path d="M24 16l-6 9-9 3m15-12 7 10 9 1M24 16l-2 15-12 11m12-11 13 11"/>',
+  Totale:'<rect x="7" y="23" width="7" height="17" rx="2" fill="currentColor" stroke="none"/><rect x="20" y="12" width="7" height="28" rx="2" fill="currentColor" stroke="none"/><rect x="33" y="18" width="7" height="22" rx="2" fill="currentColor" stroke="none"/>',
+  Tempo:'<circle cx="24" cy="27" r="16"/><path d="M24 27V16m0 11 8 5M19 4h10"/>',
+  Triathlon:'<path d="M5 28l7-9 7 9 7-9 7 9 9-9M5 38l7-9 7 9 7-9 7 9 9-9"/>',
+  Scarpe:'<path d="M7 30q11 3 15-8 3-5 8 3 4 7 12 8v5H6q-5-5 1-8Z"/><path d="m16 28 9 5m-6-10 8 6"/>'
+};
+function sportIcon(type){
+  const key=SPORT_SVG[type]?type:"Totale";
+  return '<svg class="sport-svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">'+SPORT_SVG[key]+'</svg>';
+}
+const EQUIPMENT_ART={"run-noosa13":"assets/noosa-tri-13.svg","trail-hoka":"assets/hoka-mafate-x.svg","bike-vr":"assets/van-rysel-gravel.svg"};
+function gearArtwork(item){
+  const src=EQUIPMENT_ART[item.id];
+  if(src)return '<img src="'+src+'" alt="" decoding="async" loading="lazy" width="220" height="125">';
+  return sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Scarpe");
+}
 const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto","Triathlon"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
@@ -924,10 +1036,10 @@ function renderHero(){
 }
 function renderDisciplines(){
  const cards=[
-  {name:"Corsa",icon:"🏃",types:["Corsa","Trail"],color:"#27b9ff"},
-  {name:"Bici",icon:"🚴",types:["Bici"],color:"#ff873d"},
-  {name:"Nuoto",icon:"🏊",types:["Nuoto"],color:"#9457ed"},
-  {name:"Tempo totale",icon:"⏱",types:null,color:"#38da8b"}
+  {name:"Corsa",icon:sportIcon("Corsa"),types:["Corsa","Trail"],color:"#27b9ff"},
+  {name:"Bici",icon:sportIcon("Bici"),types:["Bici"],color:"#ff873d"},
+  {name:"Nuoto",icon:sportIcon("Nuoto"),types:["Nuoto"],color:"#9457ed"},
+  {name:"Tempo totale",icon:sportIcon("Totale"),types:null,color:"#38da8b"}
  ];
  els.disciplines.innerHTML=cards.map(c=>{
   const z=c.types?AY.filter(a=>c.types.includes(a.type)):AY;
@@ -939,10 +1051,10 @@ function renderRecent(){
  const target=document.getElementById("recentActivities");if(!target)return;
  const recent=[...AY].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
  target.innerHTML=recent.map(a=>{
-  const icon=ICONS[a.type]||"●",date=dt(a.date);
+  const icon=sportIcon(a.type),date=dt(a.date);
   const duration=a.duration||"—";
   const pace=a.metric||"";
-  return '<div class="recent-row"><div class="recent-icon">'+icon+'</div><div><div class="recent-name">'+(a.location||a.type)+' · '+a.type+'</div><div class="recent-meta">'+date+' · '+n(a.km,2)+' km</div></div><div class="recent-right">'+duration+'<small>'+pace+'</small></div></div>';
+  return '<div class="recent-row"><div class="recent-icon" style="color:'+(COLORS[a.type]||"#168fff")+'">'+icon+'</div><div><div class="recent-name">'+(a.location||a.type)+' · '+a.type+'</div><div class="recent-meta">'+date+' · '+n(a.km,2)+' km</div></div><div class="recent-right">'+duration+'<small>'+pace+'</small></div></div>';
  }).join("")||'<p>Nessuna attività per l’anno selezionato.</p>';
 }
 let monthlyMode="km";
@@ -958,7 +1070,7 @@ function renderMonthly(){
  target.innerHTML=data.map((values,i)=>{
   const sum=values.reduce((a,b)=>a+b,0),height=sum/max*160;
   const tip=ML[i]+": "+values.map((v,j)=>groups[j][0]+" "+n(v,1)).join(" · ")+(monthlyMode==="km"?" km":monthlyMode==="hours"?" ore":" attività");
-  return '<div class="monthly-column" title="'+tip+'"><div class="monthly-bar" style="height:'+height+'px">'+values.map((v,j)=>'<span style="height:'+(sum?v/sum*100:0)+'%;background:'+colors[j]+'"></span>').join("")+'</div><div class="monthly-month">'+ML[i]+'</div></div>';
+  return '<div class="monthly-column" title="'+tip+'"><div class="monthly-bar" style="height:'+height+'px">'+[2,1,0].map(j=>'<span style="height:'+(sum?values[j]/sum*100:0)+'%;background:'+colors[j]+'"></span>').join("")+'</div><div class="monthly-month">'+ML[i]+'</div></div>';
  }).join("");
  document.querySelectorAll(".monthly-switch button").forEach(b=>b.classList.toggle("active",b.dataset.mode===monthlyMode));
 }
@@ -989,12 +1101,12 @@ function renderRecords(){
 
   const best5=bestRunAt(5),best10=bestRunAt(10);
   const rec=[
-    ["🏃","5 km più veloci",best5?`${fmtRecordTime(best5.targetSec)} · ${fmtRunPace(best5.targetSec,5)}`:"—",best5?`${dt(best5.date)} · su ${n(best5.km,2)} km`:""],
-    ["🏃","10 km più veloci",best10?`${fmtRecordTime(best10.targetSec)} · ${fmtRunPace(best10.targetSec,10)}`:"—",best10?`${dt(best10.date)} · su ${n(best10.km,2)} km`:""],
-    ["🚴","Bici più lunga",bike?`${n(bike.km,2)} km`:"—",bike?dt(bike.date):""],
-    ["🏃","Corsa / trail più lungo",run?`${n(run.km,2)} km`:"—",run?dt(run.date):""],
-    ["⛰️","D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
-    ["⌛","Sessione più lunga",long?long.duration:"—",long?`${dt(long.date)} · ${long.type}`:""]
+    [sportIcon("Corsa"),"5 km più veloci",best5?`${fmtRecordTime(best5.targetSec)} · ${fmtRunPace(best5.targetSec,5)}`:"—",best5?`${dt(best5.date)} · su ${n(best5.km,2)} km`:""],
+    [sportIcon("Corsa"),"10 km più veloci",best10?`${fmtRecordTime(best10.targetSec)} · ${fmtRunPace(best10.targetSec,10)}`:"—",best10?`${dt(best10.date)} · su ${n(best10.km,2)} km`:""],
+    [sportIcon("Bici"),"Bici più lunga",bike?`${n(bike.km,2)} km`:"—",bike?dt(bike.date):""],
+    [sportIcon("Corsa"),"Corsa / trail più lungo",run?`${n(run.km,2)} km`:"—",run?dt(run.date):""],
+    [sportIcon("Trail"),"D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
+    [sportIcon("Tempo"),"Sessione più lunga",long?long.duration:"—",long?`${dt(long.date)} · ${long.type}`:""]
   ];
   els.records.innerHTML=rec.map(x=>`<div class="card record"><div class="ico">${x[0]}</div><div class="t">${x[1]}</div><div class="v">${x[2]}</div><div class="d">${x[3]}</div></div>`).join("");
 }
@@ -1794,14 +1906,14 @@ function drawCharts(){
 }
 function populateFilters(){
   const tv=els.type.value,mv=els.month.value;
-  els.type.innerHTML='<option value="">Tutte le discipline</option>'+TYPES.map(t=>`<option value="${t}">${ICONS[t]} ${t}</option>`).join("");
+  els.type.innerHTML='<option value="">Tutte le discipline</option>'+TYPES.map(t=>`<option value="${t}">${t}</option>`).join("");
   els.month.innerHTML='<option value="">Tutti i mesi</option>'+ML.map((m,i)=>`<option value="${i+1}">${m} ${selectedYear}</option>`).join("");
   if([...els.type.options].some(o=>o.value===tv)&&(!tv||AY.some(a=>a.type===tv))) els.type.value=tv; else els.type.value="";
   if([...els.month.options].some(o=>o.value===mv)) els.month.value=mv; else els.month.value="";
 }
 function renderSportFilters(){
   const counts=AY.reduce((res,a)=>(res[a.type]=(res[a.type]||0)+1,res),{});
-  const options=[{type:"",icon:"◉",label:"Tutti",count:AY.length},...TYPES.filter(type=>counts[type]>0).map(type=>({type,icon:ICONS[type]||"🏅",label:type,count:counts[type]}))];
+  const options=[{type:"",icon:"◉",label:"Tutti",count:AY.length},...TYPES.filter(type=>counts[type]>0).map(type=>({type,icon:sportIcon(type),label:type,count:counts[type]}))];
   els.sportFilters.innerHTML=options.map(opt=>`<button type="button" class="sport-chip" data-sport="${opt.type}" aria-pressed="${els.type.value===opt.type}">${opt.icon} ${opt.label} <span class="chip-count">${opt.count}</span></button>`).join("");
   els.sportFilters.querySelectorAll(".sport-chip").forEach(btn=>{
     btn.onclick=()=>{
@@ -1858,7 +1970,7 @@ function renderTable(){
   els.diaryToggle.setAttribute("aria-expanded",String(diaryExpanded));
   els.diaryToggle.textContent=diaryExpanded?"↑ Mostra soltanto gli ultimi 10":`↓ Mostra altri ${filtered.length-DIARY_INITIAL_LIMIT} allenamenti`;
   els.rows.innerHTML=visible.map(a=>{const k=activityKcal(a),gear=activityEquipment(a),label=escapeEquip(gear.full),short=escapeEquip(gear.short);return `<tr>
-    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${ICONS[a.type]||"🏅"} <span class="disc-name">${displayType(a)}</span></span><span class="equip-micro ${gear.pending?"pending":""}" title="${label}">${short}</span></td>
+    <td class="col-date"><span class="date-desktop">${dt(a.date)}</span><span class="date-mobile">${mobileDate(a.date)}</span></td><td><span class="pill" style="--c:${COLORS[a.type]}"><i class="dot"></i>${sportIcon(a.type)} <span class="disc-name">${displayType(a)}</span></span><span class="equip-micro ${gear.pending?"pending":""}" title="${label}">${short}</span></td>
     <td><b>${n(a.km,2)}</b></td><td>${a.duration}</td><td title="${k.estimated?"Stima":"Dato registrato"}"><b>${k.estimated?"~":""}${Math.round(k.value).toLocaleString("it-IT")}</b></td><td class="mobile-hide">${a.dplus==null?"—":a.dplus.toLocaleString("it-IT")+" m"}</td>
     <td>${a.metric}</td><td class="mobile-hide">${a.location||"—"}</td><td class="equipment-col"><span class="equip-text ${gear.pending?"pending":""}">${label}</span></td></tr>`}).join("");
 }
@@ -1873,17 +1985,20 @@ function renderEquipment(){
   if(!target)return;
   const equipment=typeof EQUIPMENT!=="undefined"?EQUIPMENT:[];
   const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const icons={run:"👟",trail:"🥾",bike:"🚴"};
   const mainIds=["run-noosa13","trail-hoka","bike-vr"];
   const cardFor=item=>{
     const usage=equipmentUsage(item);
     const known=usage.known,estimated=usage.estimated;
     const km=known?(estimated?"≈ ":"")+usage.loggedKm.toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
     const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?(estimated?"km attribuiti, compresa una stima":"km attribuiti a questa attrezzatura"):"km da ricostruire dagli screenshot";
+    const type=item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta";
     return '<button type="button" class="equipment-card equipment-trigger" data-equipment-id="'+escapeHtml(item.id)+'" aria-haspopup="dialog" aria-label="Apri stato e manutenzione: '+escapeHtml(item.name)+'">'
-      +'<div class="equip-kind">'+(icons[item.category]||"⚙")+' '+escapeHtml(item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta")+'</div>'
-      +'<h3>'+escapeHtml(item.name)+'</h3><div class="equip-km">'+km+' <small>km</small></div>'
-      +'<span class="gear-open-indicator">Stato e manutenzione ↗</span></button>';
+      +'<span class="gear-card-art" aria-hidden="true">'+gearArtwork(item)+'</span>'
+      +'<span class="gear-card-copy"><span class="equip-kind">'+escapeHtml(type)+'</span>'
+      +'<span class="gear-card-heading"><span class="gear-card-name">'+escapeHtml(item.name)+'</span>'
+      +'<span class="gear-card-sport-icon" aria-hidden="true">'+sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Corsa")+'</span></span>'
+      +'<span class="equip-km">'+km+' <small>km</small></span>'
+      +'<span class="gear-open-indicator">Stato e manutenzione ↗</span></span></button>';
   };
   target.innerHTML=equipment.filter(item=>mainIds.includes(item.id)).sort((a,b)=>mainIds.indexOf(a.id)-mainIds.indexOf(b.id)).map(cardFor).join("");
   const others=equipment.filter(item=>!mainIds.includes(item.id));
