@@ -1,0 +1,19 @@
+[
+  {
+    "date": "2026-10-11",
+    "type": "Triathlon",
+    "km": 25.28,
+    "location": "Savona",
+    "equipmentSegments": [
+      {
+        "equipmentId": "bike-vr",
+        "terrain": "frazione ciclismo triathlon Sprint",
+        "km": 19.86,
+        "confirmed": true,
+        "estimated": false,
+        "notes": "Van Rysel AF Discover (gravel) usata nella frazione bici di Savona Sprint, conferma diretta dell'utente del 19/10/2026; solo 19,86 km, non i 25,28 km totali del triathlon."
+      }
+    ],
+    "noteAppend": "Conferma attrezzatura: frazione bici 19,86 km con gravel Van Rysel AF Discover (utente 19/10/2026)."
+  }
+]
