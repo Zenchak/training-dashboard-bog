@@ -48,7 +48,7 @@ html = html.replace('<span class="equip-km">≈ 592 <small>km</small></span>','<
 const iconStart = html.indexOf("  Bici:'",html.indexOf('const SPORT_SVG={'));
 const iconEnd = html.indexOf(",\n  Nuoto:",iconStart);
 if(iconStart<0||iconEnd<0) throw new Error('Sport bicycle symbol not found');
-const bikeGlyph = '<circle cx="10" cy="35" r="8.3"/><circle cx="38" cy="35" r="8.3"/><path d="M10 35l10-16 8 16H10l11-16m17 16-7-19h-6m6 0h6" stroke-width="3.2"/><circle cx="27" cy="6.5" r="3.7" fill="currentColor" stroke="none"/><path d="m25 14-7 7 9 3 4-7-6-3Z" fill="currentColor" stroke="none"/><path d="m18 21-7 14m16-11 10 11m-9-20 6 4 7 1" stroke-width="3" stroke-linecap="round"/>';
+const bikeGlyph = '<circle cx="10" cy="34" r="8" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="38" cy="34" r="8" fill="none" stroke="currentColor" stroke-width="3"/><path d="M10 34L18 20L26 34H10M18 20H34L26 34M34 20L38 34M15 17h7M32 15h7" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="34" r="2" fill="currentColor" stroke="none"/>';
 html=html.slice(0,iconStart)+"  Bici:'"+bikeGlyph+"'"+html.slice(iconEnd);
 
 // Use the very same runner as the running discipline for the top 'Allenamenti'
@@ -78,6 +78,32 @@ const targetedUiCSS = `
 }
 `;
 html = html.replace('</style>',targetedUiCSS+'\n</style>');
+
+
+// Floating Refresh beside the NAS-provided Home link.
+// Cache-busting ensures iPhone Safari requests the latest built page.
+const floatingRefreshCss = `
+.hub-floating-refresh{
+  position:fixed;right:165px;bottom:max(16px,env(safe-area-inset-bottom));
+  z-index:2147483647;display:inline-flex;align-items:center;justify-content:center;
+  gap:7px;min-height:48px;padding:11px 15px;border-radius:15px;
+  border:1px solid rgba(255,255,255,.2);background:#14233a;color:white;
+  box-shadow:0 8px 24px rgba(0,0,0,.25);font:700 14px -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;
+  cursor:pointer;touch-action:manipulation;
+}
+.hub-floating-refresh:active{transform:scale(.97)}
+.hub-floating-refresh svg{width:19px;height:19px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:360px){.hub-floating-refresh{right:145px;padding:10px 11px}}
+`;
+const floatingRefreshButton = `<button type="button" class="hub-floating-refresh"
+  aria-label="Aggiorna la dashboard"
+  onclick="const url=new URL(window.location.href);url.searchParams.set('refresh',Date.now().toString());window.location.replace(url.href)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg>
+  Refresh
+</button>`;
+if (!html.includes('</style>') || !html.includes('</body>')) throw new Error('Cannot place Refresh');
+html = html.replace('</style>',floatingRefreshCss+'\n</style>');
+html = html.replace('</body>',floatingRefreshButton+'\n</body>');
 
 // NAS is the authoritative deployment: serve the locally built data.js,
 // avoiding an external GitHub fetch that could overwrite fresh training data.
