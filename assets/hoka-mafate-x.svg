@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 140" role="img" aria-label="Illustrazione HOKA Mafate X">
+<defs><linearGradient id="body" x2="1" y2=".8"><stop stop-color="#13273a"/><stop offset=".45" stop-color="#0c5160"/><stop offset="1" stop-color="#142333"/></linearGradient><linearGradient id="base" x2="0" y2="1"><stop stop-color="#c7ff38"/><stop offset=".58" stop-color="#f6ff37"/><stop offset="1" stop-color="#78c447"/></linearGradient><filter id="sh"><feGaussianBlur stdDeviation="5"/></filter></defs>
+<ellipse cx="125" cy="119" rx="108" ry="8" fill="#718196" opacity=".2" filter="url(#sh)"/>
+<path d="M18 78L38 72L63 43Q76 29 97 39L128 53Q147 62 170 64L217 79Q238 84 237 98Q234 105 223 111L110 116L33 105Q17 101 16 92Z" fill="url(#body)" stroke="#142a38" stroke-width="3"/>
+<path d="M16 94Q49 103 92 105L169 99L235 94L235 105Q224 120 180 121L59 122Q26 120 16 108Z" fill="url(#base)" stroke="#184936" stroke-width="2.5"/>
+<path d="M19 108Q75 123 132 115Q186 117 229 104" fill="none" stroke="#133b46" stroke-width="5"/>
+<path d="M30 100Q76 110 112 110L177 103L225 102" fill="none" stroke="#faff49" stroke-width="7" stroke-linecap="round"/>
+<path d="M33 101Q71 106 95 104" fill="none" stroke="#01b8a6" stroke-width="5"/>
+<path d="M36 73L57 48Q66 39 73 45L88 59" fill="none" stroke="#101e2c" stroke-width="9" stroke-linecap="round"/>
+<path d="M68 46L137 63L172 76M59 60L116 83L159 78M75 88L120 67" fill="none" stroke="#15b5ab" stroke-width="4.6" stroke-linecap="round"/>
+<path d="M90 47L77 74M110 56L99 81M130 63L122 85" fill="none" stroke="#24c7c2" stroke-width="3"/>
+<path d="M75 49L116 66M72 56L112 73M69 63L108 81" fill="none" stroke="#d2f1ee" stroke-width="2.4" stroke-linecap="round"/>
+<path d="M142 76l15-5 13 5-17 4Z" fill="#1d929e" opacity=".9"/>
+<path d="M181 85l10-3m5 6l10-3" stroke="#20b5b1" stroke-width="4"/>
+<path d="M29 88l24-5" stroke="#c3f449" stroke-width="5"/>
+</svg>
