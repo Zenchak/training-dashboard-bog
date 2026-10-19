@@ -861,6 +861,38 @@ button.equipment-trigger:focus-visible{
   }
 }
 
+
+/* Palette disciplinare unificata: nuoto azzurro, trail verde, trekking marrone, bici arancione. */
+:root{
+ --bike:#E67E22;--run:#168FFF;--swim:#00A9D6;
+ --trail:#18A65C;--hike:#91643E;--walk:#91643E;
+}
+.disciplines .disc .big{color:var(--c)}
+.disciplines .disc .mini{color:color-mix(in srgb,var(--c) 72%,#5a6980)}
+.disciplines .disc .name{color:color-mix(in srgb,var(--c) 76%,#405470)}
+.recent-row .recent-icon{background:color-mix(in srgb,currentColor 9%,#fff)!important}
+.recent-row .recent-name{font-weight:780}
+.pill[style*="--c:"]{
+ background:color-mix(in srgb,var(--c) 9%,white);
+ border-color:color-mix(in srgb,var(--c) 26%,white);
+ color:color-mix(in srgb,var(--c) 87%,#182a41)
+}
+.sport-chip[style*="--sport-color"] .sport-svg{color:var(--sport-color)}
+.sport-chip[style*="--sport-color"][aria-pressed="true"]{
+ background:color-mix(in srgb,var(--sport-color) 11%,white);
+ border-color:color-mix(in srgb,var(--sport-color) 40%,white);
+ color:color-mix(in srgb,var(--sport-color) 85%,#243a58)
+}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(1) .gear-card-sport-icon{color:var(--run)}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(2) .gear-card-sport-icon{color:var(--trail)}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(3) .gear-card-sport-icon{color:var(--bike)}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(1) .equip-km{color:var(--run)}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(2) .equip-km{color:var(--trail)}
+.hub-equipment-shell #equipmentCards .equipment-trigger:nth-child(3) .equip-km{color:var(--bike)}
+.monthly-legend span:nth-child(1) i{background:var(--run)!important}
+.monthly-legend span:nth-child(2) i{background:var(--bike)!important}
+.monthly-legend span:nth-child(3) i{background:var(--swim)!important}
+
 </style>
 </head>
 <body>
@@ -959,7 +991,7 @@ button.equipment-trigger:focus-visible{
 
 <script src="data.js"></script>
 <script>
-const COLORS={Bici:"#ff873d",Corsa:"#168fff",Nuoto:"#8643ec",Trekking:"#08b36c",Camminata:"#28b985",Trail:"#08b36c",Triathlon:"#6f5cf1"};
+const COLORS={Bici:"#E67E22",Corsa:"#168FFF",Nuoto:"#00A9D6",Trekking:"#91643E",Camminata:"#91643E",Trail:"#18A65C",Triathlon:"#7255D8"};
 const ICONS={Bici:"Bici",Corsa:"Corsa",Nuoto:"Nuoto",Trekking:"Trekking",Camminata:"Camminata",Trail:"Trail",Triathlon:"Triathlon"};
 /* Icone SVG leggere, senza dipendenze esterne: colori e tratto come il rendering chiaro */
 const SPORT_SVG={
@@ -1062,10 +1094,10 @@ function renderHero(){
 }
 function renderDisciplines(){
  const cards=[
-  {name:"Corsa",icon:sportIcon("Corsa"),types:["Corsa","Trail"],color:"#27b9ff"},
-  {name:"Bici",icon:sportIcon("Bici"),types:["Bici"],color:"#ff873d"},
-  {name:"Nuoto",icon:sportIcon("Nuoto"),types:["Nuoto"],color:"#9457ed"},
-  {name:"Tempo totale",icon:sportIcon("Totale"),types:null,color:"#38da8b"}
+  {name:"Corsa",icon:sportIcon("Corsa"),types:["Corsa"],color:COLORS.Corsa},
+  {name:"Bici",icon:sportIcon("Bici"),types:["Bici"],color:COLORS.Bici},
+  {name:"Nuoto",icon:sportIcon("Nuoto"),types:["Nuoto"],color:COLORS.Nuoto},
+  {name:"Tempo totale",icon:sportIcon("Totale"),types:null,color:"#536B93"}
  ];
  els.disciplines.innerHTML=cards.map(c=>{
   const z=c.types?AY.filter(a=>c.types.includes(a.type)):AY;
@@ -1080,7 +1112,7 @@ function renderRecent(){
   const icon=sportIcon(a.type),date=dt(a.date);
   const duration=a.duration||"—";
   const pace=a.metric||"";
-  return '<div class="recent-row"><div class="recent-icon" style="color:'+(COLORS[a.type]||"#168fff")+'">'+icon+'</div><div><div class="recent-name">'+(a.location||a.type)+' · '+a.type+'</div><div class="recent-meta">'+date+' · '+n(a.km,2)+' km</div></div><div class="recent-right">'+duration+'<small>'+pace+'</small></div></div>';
+  return '<div class="recent-row"><div class="recent-icon" style="color:'+(COLORS[a.type]||"#168fff")+'">'+icon+'</div><div><div class="recent-name" style="color:'+(COLORS[a.type]||COLORS.Corsa)+'">'+(a.location||a.type)+' · '+a.type+'</div><div class="recent-meta">'+date+' · '+n(a.km,2)+' km</div></div><div class="recent-right">'+duration+'<small>'+pace+'</small></div></div>';
  }).join("")||'<p>Nessuna attività per l’anno selezionato.</p>';
 }
 let monthlyMode="km";
@@ -1092,7 +1124,7 @@ function renderMonthly(){
   return monthlyMode==="km"?rows.reduce((s,a)=>s+(Number(a.km)||0),0):monthlyMode==="hours"?rows.reduce((s,a)=>s+hrs(a.duration),0):rows.length;
  }));
  const max=Math.max(1,...data.map(v=>v.reduce((a,b)=>a+b,0)));
- const colors=["#1e9bff","#ff873d","#8f48ec"];
+ const colors=[COLORS.Corsa,COLORS.Bici,COLORS.Nuoto];
  target.innerHTML=data.map((values,i)=>{
   const sum=values.reduce((a,b)=>a+b,0),height=sum/max*160;
   const tip=ML[i]+": "+values.map((v,j)=>groups[j][0]+" "+n(v,1)).join(" · ")+(monthlyMode==="km"?" km":monthlyMode==="hours"?" ore":" attività");
@@ -1940,7 +1972,7 @@ function populateFilters(){
 function renderSportFilters(){
   const counts=AY.reduce((res,a)=>(res[a.type]=(res[a.type]||0)+1,res),{});
   const options=[{type:"",icon:"◉",label:"Tutti",count:AY.length},...TYPES.filter(type=>counts[type]>0).map(type=>({type,icon:sportIcon(type),label:type,count:counts[type]}))];
-  els.sportFilters.innerHTML=options.map(opt=>`<button type="button" class="sport-chip" data-sport="${opt.type}" aria-pressed="${els.type.value===opt.type}">${opt.icon} ${opt.label} <span class="chip-count">${opt.count}</span></button>`).join("");
+  els.sportFilters.innerHTML=options.map(opt=>`<button type="button" class="sport-chip" data-sport="${opt.type}" style="--sport-color:${COLORS[opt.type]||"#536B93"}" aria-pressed="${els.type.value===opt.type}">${opt.icon} ${opt.label} <span class="chip-count">${opt.count}</span></button>`).join("");
   els.sportFilters.querySelectorAll(".sport-chip").forEach(btn=>{
     btn.onclick=()=>{
       els.type.value=btn.dataset.sport;
@@ -2022,7 +2054,7 @@ function renderEquipment(){
       +'<span class="gear-card-art" aria-hidden="true">'+gearArtwork(item)+'</span>'
       +'<span class="gear-card-copy"><span class="equip-kind">'+escapeHtml(type)+'</span>'
       +'<span class="gear-card-heading"><span class="gear-card-name">'+escapeHtml(item.name)+'</span>'
-      +'<span class="gear-card-sport-icon" aria-hidden="true">'+sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Corsa")+'</span></span>'
+      +'<span class="gear-card-sport-icon" style="color:'+(item.category==="bike"?COLORS.Bici:item.category==="trail"?COLORS.Trail:COLORS.Corsa)+'" aria-hidden="true">'+sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Corsa")+'</span></span>'
       +'<span class="equip-km">'+km+' <small>km</small></span>'
       +'<span class="gear-open-indicator">Stato e manutenzione ↗</span></span></button>';
   };
