@@ -6,12 +6,20 @@
     "duration": "2:00:15",
     "dplus": 229,
     "location": "Bergamo",
-    "kcal": null,
-    "kcalSource": "Garmin FIT: 1.645 kcal totali; calorie attive non disponibili nel FIT; eventuale valore Hub è una stima",
+    "kcal": 1462,
+    "kcalSource": "Garmin Connect - calorie attive (screenshot Statistiche 19/10/2026)",
     "startTime": "18:57",
     "equipmentId": "run-noosa13",
     "equipmentAttribution": "ASICS Noosa Tri 13 assegnate secondo storico delle corse su strada; da confermare per questa specifica uscita.",
-    "note": "Lungo registrato dal FIT 24782687428_ACTIVITY.fit, 22,61 km in 2:00:15 (5:19/km), frequenza cardiaca media 147 bpm, massima 178 bpm, dislivello positivo 229 m e negativo 230 m; 1.645 kcal totali registrate nel FIT; calorie attive esatte non disponibili nel file. Pre-corsa: pranzo abbondante, barretta con 20 g di carboidrati circa due ore prima; gel 40 g portato, consumo da confermare. Feedback: gambe stanche, anche le articolazioni affaticate; fiato stabile, mai sofferto, sotto controllo. Obiettivo iniziale 16-20 km superato; recupero raccomandato, attenzione alla recente lombalgia.",
-    "kcalTotal": 1645
+    "note": "Lungo registrato dal FIT 24782687428_ACTIVITY.fit, 22,61 km in 2:00:15 (5:19/km), frequenza cardiaca media 147 bpm, massima 178 bpm, dislivello positivo 229 m e negativo 230 m; Garmin Connect: 1.462 kcal attive + 183 kcal a riposo = 1.645 kcal totali. Sudorazione prevista 2.003 ml (stima Garmin, non misura); temperatura media 22 °C, minima 19 °C e massima 25 °C; quota minima 239 m, massima 386 m; Body Battery impatto netto -23. Tempo di corsa Garmin Connect 2:00:16 (FIT 2:00:15). Pre-corsa: pranzo abbondante, barretta con 20 g di carboidrati circa due ore prima; gel 40 g portato, consumo da confermare. Feedback: gambe stanche, anche le articolazioni affaticate; fiato stabile, mai sofferto, sotto controllo. Obiettivo iniziale 16-20 km superato; recupero raccomandato, attenzione alla recente lombalgia.",
+    "kcalTotal": 1645,
+    "kcalResting": 183,
+    "sweatLossMlEstimated": 2003,
+    "temperatureAvgC": 22,
+    "temperatureMinC": 19,
+    "temperatureMaxC": 25,
+    "bodyBatteryNetImpact": -23,
+    "altitudeMinM": 239,
+    "altitudeMaxM": 386
   }
 ]
