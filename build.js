@@ -80,30 +80,66 @@ const targetedUiCSS = `
 html = html.replace('</style>',targetedUiCSS+'\n</style>');
 
 
-// Floating Refresh beside the NAS-provided Home link.
-// Cache-busting ensures iPhone Safari requests the latest built page.
-const floatingRefreshCss = `
-.hub-floating-refresh{
-  position:fixed;right:165px;bottom:max(16px,env(safe-area-inset-bottom));
-  z-index:2147483647;display:inline-flex;align-items:center;justify-content:center;
-  gap:7px;min-height:48px;padding:11px 15px;border-radius:15px;
-  border:1px solid rgba(255,255,255,.2);background:#14233a;color:white;
-  box-shadow:0 8px 24px rgba(0,0,0,.25);font:700 14px -apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;
-  cursor:pointer;touch-action:manipulation;
+// Un unico gruppo flottante per Home e Refresh: stile, dimensioni e quota identici.
+const floatingNavigationCss = `
+.hub-floating-actions{
+  position:fixed;right:max(16px,env(safe-area-inset-right));
+  bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483646;
+  display:flex;align-items:stretch;gap:10px;
 }
-.hub-floating-refresh:active{transform:scale(.97)}
-.hub-floating-refresh svg{width:19px;height:19px;stroke:currentColor;stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
-@media(max-width:360px){.hub-floating-refresh{right:145px;padding:10px 11px}}
+.hub-floating-actions .hub-floating-action{
+  appearance:none;box-sizing:border-box;display:inline-flex!important;
+  align-items:center;justify-content:center;gap:9px;
+  width:126px;height:52px;min-height:52px;margin:0;padding:0 12px;
+  border:1px solid rgba(255,255,255,.2);border-radius:16px;
+  background:#14243c;color:#fff!important;text-decoration:none!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  line-height:1;white-space:nowrap;cursor:pointer;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.hub-floating-actions .hub-floating-action:active{transform:scale(.98)}
+.hub-floating-actions .hub-floating-action:focus-visible{
+  outline:3px solid #65a6fa;outline-offset:3px;
+}
+.hub-floating-actions svg{display:block;flex:none;width:21px;height:21px;
+  fill:none;stroke:currentColor;stroke-width:2.3;
+  stroke-linecap:round;stroke-linejoin:round}
+.hub-floating-actions .hub-home-icon{font-size:20px;line-height:1}
+.hub-floating-actions button:disabled{opacity:.84;cursor:wait}
+@media(max-width:370px){
+  .hub-floating-actions{right:12px;gap:8px}
+  .hub-floating-actions .hub-floating-action{width:112px;height:48px;min-height:48px;font-size:13px}
+}
 `;
-const floatingRefreshButton = `<button type="button" class="hub-floating-refresh"
-  aria-label="Aggiorna la dashboard"
-  onclick="const url=new URL(window.location.href);url.searchParams.set('refresh',Date.now().toString());window.location.replace(url.href)">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg>
-  Refresh
-</button>`;
-if (!html.includes('</style>') || !html.includes('</body>')) throw new Error('Cannot place Refresh');
-html = html.replace('</style>',floatingRefreshCss+'\n</style>');
-html = html.replace('</body>',floatingRefreshButton+'\n</body>');
+const floatingNavigationMarkup = `
+<div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
+  <button type="button" class="hub-floating-action" data-hub-refresh
+    aria-label="Ricarica gli ultimi dati degli allenamenti"
+    onclick="this.disabled=true;this.querySelector('.hub-action-caption').textContent='Aggiorno…';const u=new URL(window.location.href);u.searchParams.set('_hub_reload',Date.now().toString());window.location.assign(u.href)">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg>
+    <span class="hub-action-caption">Refresh</span>
+  </button>
+  <a class="hub-floating-action" data-hub-home href="/" aria-label="Torna alla Home">
+    <span class="hub-home-icon" aria-hidden="true">🏠</span>
+    <span class="hub-action-caption">Home</span>
+  </a>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const home=document.querySelector('[data-hub-home]');
+  if(home) home.href=window.location.protocol+'//'+window.location.hostname+'/';
+  // Nginx nelle versioni precedenti inietta un secondo Home:
+  // rimuoverlo per non mostrare due tasti sovrapposti.
+  document.querySelectorAll('body > a[style]').forEach(a=>{
+    if(a.textContent.trim()==='🏠 Home') a.remove();
+  });
+});
+</script>
+`;
+if (!html.includes('</style>') || !html.includes('</body>')) throw new Error('Missing HTML anchors for quick actions');
+html=html.replace('</style>',floatingNavigationCss+'\n</style>');
+html=html.replace('</body>',floatingNavigationMarkup+'\n</body>');
 
 // NAS is the authoritative deployment: serve the locally built data.js,
 // avoiding an external GitHub fetch that could overwrite fresh training data.
