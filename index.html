@@ -912,34 +912,45 @@ button.equipment-trigger:focus-visible{
 
 </style>
 </head>
-<body>
+<body id="overview">
+<aside class="hub-sidebar" aria-label="Navigazione Training Hub">
+<a href="#overview" class="sidebar-logo" aria-label="Training Hub"><span class="hub-mark"><i></i><i></i><i></i></span></a>
+<nav class="hub-side-links" aria-label="Sezioni">
+<a class="side-link active" href="#overview"><span class="side-icon">▥</span>Panoramica</a>
+<a class="side-link" href="#monthlyOverview"><span class="side-icon">▦</span>Calendario</a>
+<a class="side-link" href="#trainingDiary"><span class="side-icon">↗</span>Allenamenti</a>
+<a class="side-link" href="#stats"><span class="side-icon">▥</span>Statistiche</a>
+<a class="side-link" href="#equipment"><span class="side-icon">♧</span>Attrezzatura</a>
+<a class="side-link" href="#goals"><span class="side-icon">◎</span>Obiettivi</a>
+<a class="side-link" href="#recordsSection"><span class="side-icon">✦</span>Record</a>
+</nav><span class="sidebar-footer">● Storico personale</span>
+</aside>
 <div class="wrap">
   <header class="hero">
-    <div>
-      <div class="brand"><span class="logo">B</span> Bogdan · Training dashboard</div>
-      <h1><span id="heroYear">2026</span> in movimento</h1>
-      <p id="coverage"></p>
-    </div>
-    <div class="hero-actions"><button class="hero-refresh" type="button" onclick="location.reload()">↻ Refresh</button><div class="hero-art" aria-label="Triathlon">🏊‍♂️ 🚴‍♂️ 🏃‍♂️</div></div>
+   <div class="hub-heading"><span class="hub-mark heading-mark" aria-hidden="true"><i></i><i></i><i></i></span><div><h1>Training Hub</h1><p>Panoramica generale</p></div></div>
+   <div class="hub-time-controls" role="group" aria-label="Intervallo temporale">
+    <button type="button" class="range-btn" data-range="7">7G</button>
+    <button type="button" class="range-btn" data-range="30">30G</button>
+    <button type="button" class="range-btn" data-range="365">12M</button>
+    <button type="button" class="range-btn active" data-range="all">Tutti</button>
+   </div>
   </header>
+  <details class="archive-years"><summary>Archivio <span id="heroYear">2026</span> <span id="coverage" class="archive-summary-note"></span></summary>
+   <nav class="yearbar" aria-label="Selezione anno"><span class="label">ANNO</span><div id="yearButtons" style="display:flex;gap:8px;flex-wrap:wrap"></div></nav>
+  </details>
 
-  <nav class="yearbar" aria-label="Selezione anno">
-    <span class="label">📅 ANNO</span>
-    <div id="yearButtons" style="display:flex;gap:8px"></div>
-  </nav>
-
-  <section class="hub-equipment-shell" aria-label="Attrezzatura sportiva">
+  <section id="equipment" class="hub-equipment-shell" aria-label="Attrezzatura sportiva">
     <div class="hub-panel-head"><div><h2>Attrezzatura principale</h2><p>Chilometri documentati nell'Hub</p></div></div>
     <div class="equipment-grid" id="equipmentCards"></div>
     <details class="other-equipment"><summary>Altra attrezzatura <span id="otherEquipmentCount"></span><span class="expand-hint">Clicca per espandere</span></summary><div class="equipment-grid other-equipment-grid" id="otherEquipmentCards"></div></details>
   </section>
   <section class="grid disciplines" id="disciplines" aria-label="Riepilogo discipline"></section>
-  <section class="hub-overview">
+  <section class="hub-overview" id="monthlyOverview">
     <div class="hub-overview-panel"><div class="hub-panel-head"><h2>Attività recenti</h2><a href="#trainingDiary" class="hub-link">Vedi tutte →</a></div><div id="recentActivities" class="recent-activities"></div></div>
-    <div class="hub-overview-panel"><div class="hub-panel-head"><h2>Andamento mensile</h2><div class="monthly-switch" role="group" aria-label="Metrica grafico"><button class="active" data-mode="km" type="button">Distanza</button><button data-mode="hours" type="button">Tempo</button><button data-mode="count" type="button">Attività</button></div></div><div id="monthlyChart" class="monthly-chart"></div><div class="monthly-legend"><span><i style="background:#1e9bff"></i>Corsa</span><span><i style="background:#ff873d"></i>Bici</span><span><i style="background:#8f48ec"></i>Nuoto</span></div></div>
+    <div class="hub-overview-panel"><div class="hub-panel-head"><h2>Andamento mensile</h2><div class="monthly-switch" role="group" aria-label="Metrica grafico"><button class="active" data-mode="km" type="button">Distanza</button><button data-mode="hours" type="button">Tempo</button><button data-mode="load" type="button" title="Carico stimato da durata e intensità">Carico</button></div></div><div class="monthly-plot"><span id="monthlyAxisTitle" class="monthly-axis-title">Chilometri</span><div class="monthly-axis" id="monthlyAxis"></div><div id="monthlyChart" class="monthly-chart"></div></div><div class="monthly-legend"><span><i style="background:#1e9bff"></i>Corsa</span><span><i style="background:#ff873d"></i>Bici</span><span><i style="background:#8f48ec"></i>Nuoto</span></div></div>
   </section>
 
-  <div class="section-title"><h2>↗ Andamento</h2><span>Solo mesi con dati</span></div>
+  <div class="section-title" id="stats"><h2>↗ Andamento</h2><span>Solo mesi con dati</span></div>
   <section class="grid charts">
     <div class="card chart">
       <h3>Trend allenamento</h3>
@@ -962,10 +973,10 @@ button.equipment-trigger:focus-visible{
     </div>
   </section>
 
-  <div class="section-title"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
+  <div class="section-title" id="recordsSection"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
-  <div class="section-title"><h2>◎ Obbiettivi</h2><span>Triathlon e corsa</span></div>
+  <div class="section-title" id="goals"><h2>◎ Obiettivi</h2><span>Triathlon e corsa</span></div>
   <section class="card race-panel">
     <div class="race-note">
       <span class="ico">🧭</span>
