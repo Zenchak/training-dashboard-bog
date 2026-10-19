@@ -56,7 +56,7 @@ html=html.slice(0,iconStart)+"  Bici:'"+bikeGlyph+"'"+html.slice(iconEnd);
 const navAnchor='/* Illustrazioni inline: nessuna richiesta HTTP o dipendenza da assets/ nel deploy Pages. */';
 if(!html.includes(navAnchor)) throw new Error('Running navigation anchor not found');
 html=html.replace(navAnchor,
-  'document.querySelector(\\'.hub-side-links a[href="#trainingDiary"] .side-icon\\').innerHTML=sportIcon("Corsa");\n'+navAnchor);
+  `document.querySelector('.hub-side-links a[href="#trainingDiary"] .side-icon').innerHTML=sportIcon("Corsa");\n`+navAnchor);
 
 // Visually erase the gray studio-photo rectangle around the gravel bicycle:
 // its very light background is pushed to white, then blended into the card.
