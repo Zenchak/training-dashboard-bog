@@ -1229,7 +1229,7 @@ const COLORS={Bici:"#FF6B17",Corsa:"#8137F6",Nuoto:"#079AF0",Trekking:"#93623F",
 const ICONS={Bici:"Bici",Corsa:"Corsa",Nuoto:"Nuoto",Trekking:"Trekking",Camminata:"Camminata",Trail:"Trail",Triathlon:"Triathlon"};
 /* Icone SVG leggere, senza dipendenze esterne: colori e tratto come il rendering chiaro */
 const SPORT_SVG={
-  Corsa:'<circle cx="28" cy="8" r="4" fill="currentColor" stroke="none"/><path d="M26 17L23 28M26 18L19 22L14 19M27 18L34 23L41 21M23 28L33 34L42 33M23 28L15 35L9 42" />',
+  Corsa:'<circle cx="29" cy="7.5" r="4.2" fill="currentColor" stroke="none"/><path d="M28 17l-7 9 6 6m1-15 9 6 7-2M21 26l-8 3-7 8m21-5 11 1 4 9M21 26l10 2" />',
   Bici:'<circle cx="11" cy="34" r="8.5"/><circle cx="38" cy="34" r="8.5"/><path d="M11 34l8-18h7l12 18H23l-6-11-6 11M23 16l6-7h8M29 9h8M19 16l-2-5h-5"/>',
   Nuoto:'<path d="M3 15q5-7 10 0t10 0t10 0t10 0M3 24q5-7 10 0t10 0t10 0t10 0M3 33q5-7 10 0t10 0t10 0t10 0"/>',
   Trail:'<path d="M4 39l15-24 10 14 7-11 9 21M13 28l6-10 5 7M28 28l7-9 4 6"/><circle cx="34" cy="9" r="3.5" fill="currentColor" stroke="none"/>',
@@ -1381,16 +1381,16 @@ function renderMonthly(){
   return monthlyMode==="km"?rows.reduce((s,a)=>s+(Number(a.km)||0),0):monthlyMode==="hours"?rows.reduce((s,a)=>s+hrs(a.duration),0):rows.reduce((s,a)=>s+estimatedLoad(a),0);
  }));
  const max=Math.max(1,...data.map(v=>v.reduce((a,b)=>a+b,0)));
+ const niceStep=max>600?Math.ceil(max/400)*100:max>120?Math.ceil(max/40)*10:max>20?Math.ceil(max/20)*5:Math.ceil(max/4);
+ const axisMax=Math.max(4,niceStep*4);
  const colors=[COLORS.Corsa,COLORS.Bici,COLORS.Nuoto];
  const axes=document.getElementById("monthlyAxis"),axisTitle=document.getElementById("monthlyAxisTitle");
  if(axisTitle)axisTitle.textContent=monthlyMode==="km"?"Chilometri":monthlyMode==="hours"?"Ore":"Carico stimato";
  if(axes){
-   const step=max>600?Math.ceil(max/400)*100:max>120?Math.ceil(max/40)*10:max>20?Math.ceil(max/20)*5:Math.ceil(max/4);
-   const ceiling=Math.max(4,step*4);
-   axes.innerHTML=[4,3,2,1,0].map(k=>'<span>'+n(ceiling*k/4,ceiling>20?0:1)+'</span>').join("");
+   axes.innerHTML=[4,3,2,1,0].map(k=>'<span>'+n(axisMax*k/4,axisMax>20?0:1)+'</span>').join("");
  }
  target.innerHTML=data.map((values,i)=>{
-  const sum=values.reduce((a,b)=>a+b,0),height=sum/max*160;
+  const sum=values.reduce((a,b)=>a+b,0),height=sum/axisMax*160;
   const tip=ML[i]+": "+values.map((v,j)=>groups[j][0]+" "+n(v,1)).join(" · ")+(monthlyMode==="km"?" km":monthlyMode==="hours"?" ore":" punti di carico stimati");
   return '<div class="monthly-column" title="'+tip+'"><div class="monthly-bar" style="height:'+height+'px">'+[2,1,0].map(j=>'<span style="height:'+(sum?values[j]/sum*100:0)+'%;background:'+colors[j]+'"></span>').join("")+'</div><div class="monthly-month">'+ML[i]+'</div></div>';
  }).join("");
@@ -2313,11 +2313,17 @@ function renderEquipment(){
     const known=usage.known,estimated=usage.estimated;
     const km=known?(estimated?"≈ ":"")+usage.loggedKm.toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
     const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?(estimated?"km attribuiti, compresa una stima":"km attribuiti a questa attrezzatura"):"km da ricostruire dagli screenshot";
-    const type=item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta";
+    const display={
+      "run-noosa13":["ASICS","Noosa Tri 13"],
+      "trail-hoka":["HOKA","Mafate X"],
+      "bike-vr":["Van Rysel","AF Discover"]
+    }[item.id];
+    const type=display?display[0]:item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta";
+    const visibleName=display?display[1]:item.name;
     return '<button type="button" class="equipment-card equipment-trigger" data-equipment-id="'+escapeHtml(item.id)+'" aria-haspopup="dialog" aria-label="Apri stato e manutenzione: '+escapeHtml(item.name)+'">'
       +'<span class="gear-card-art" aria-hidden="true">'+gearArtwork(item)+'</span>'
       +'<span class="gear-card-copy"><span class="equip-kind">'+escapeHtml(type)+'</span>'
-      +'<span class="gear-card-heading"><span class="gear-card-name">'+escapeHtml(item.name)+'</span>'
+      +'<span class="gear-card-heading"><span class="gear-card-name">'+escapeHtml(visibleName)+'</span>'
       +'<span class="gear-card-sport-icon" style="color:'+(item.category==="bike"?COLORS.Bici:item.category==="trail"?COLORS.Trail:COLORS.Corsa)+'" aria-hidden="true">'+sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Corsa")+'</span></span>'
       +'<span class="equip-km">'+km+' <small>km</small></span>'
       +'<span class="gear-open-indicator">Stato e manutenzione ↗</span></span></button>';
