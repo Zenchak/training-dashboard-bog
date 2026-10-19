@@ -669,6 +669,84 @@ td{color:#32455f}
  .monthly-month{font-size:9px}
 }
 
+
+/* Dettagli e manutenzione dell'attrezzatura: modale chiara accessibile */
+button.equipment-trigger{
+  width:100%;appearance:none;-webkit-appearance:none;font:inherit;
+  text-align:left;color:var(--text);cursor:pointer;position:relative;
+}
+button.equipment-trigger:hover{
+  transform:translateY(-2px);border-color:#afd4ff!important;
+  box-shadow:0 10px 26px rgba(30,112,198,.12)!important
+}
+button.equipment-trigger:focus-visible{
+  outline:3px solid #62aaff;outline-offset:3px
+}
+.gear-open-indicator{
+  display:inline-flex;align-items:center;gap:5px;
+  color:#1676d1;font-size:11px;font-weight:750;margin-top:9px
+}
+.gear-dialog{
+  box-sizing:border-box;border:1px solid #e0e8f4;border-radius:22px;
+  color:#17243c;background:#fff;width:min(670px,calc(100% - 24px));
+  max-width:670px;max-height:min(87dvh,820px);padding:0;
+  box-shadow:0 26px 90px rgba(10,37,77,.22);overflow:auto
+}
+.gear-dialog::backdrop{background:rgba(13,32,61,.52);backdrop-filter:blur(4px)}
+.gear-dialog-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:18px;
+  padding:24px 25px 17px;background:linear-gradient(125deg,#f8fbff,#fff);
+  border-bottom:1px solid #e8edf5
+}
+.gear-dialog-kicker{font-size:12px;font-weight:750;color:#567092;margin-bottom:7px}
+.gear-dialog h2{font-size:clamp(19px,3vw,25px);letter-spacing:-.02em;margin:0;color:#122440;line-height:1.15}
+.gear-dialog-close{
+  flex:none;display:grid;place-items:center;width:36px;height:36px;
+  border:1px solid #dfe7f1;border-radius:10px;background:#fff;color:#3d5373;
+  font:inherit;font-size:25px;cursor:pointer
+}
+.gear-dialog-close:hover{background:#edf5ff}
+.gear-dialog-close:focus-visible{outline:3px solid #68aef7;outline-offset:2px}
+.gear-dialog-body{padding:20px 25px 26px;display:grid;gap:17px}
+.gear-info-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gear-info-box{
+  border:1px solid #e5ebf5;border-radius:15px;padding:15px;
+  background:#f8fbff;min-width:0
+}
+.gear-info-box .gear-label{color:#667b98;font-size:12px;margin-bottom:7px}
+.gear-info-box .gear-value{color:#142641;font-size:clamp(19px,4vw,27px);font-weight:850;line-height:1.1;overflow-wrap:anywhere}
+.gear-info-box .gear-sublabel{font-size:11px;color:#5e738e;margin-top:7px;line-height:1.4}
+.gear-info-box.gear-highlight{background:#eff8ff;border-color:#d7eaff}
+.gear-highlight .gear-value{color:#087acb}
+.gear-panel{border:1px solid #e4ebf5;border-radius:15px;padding:16px 18px;background:#fff}
+.gear-panel h3{margin:0 0 10px;font-size:16px;color:#142642}
+.gear-panel p{font-size:12px;line-height:1.55;color:#506582;margin:9px 0 0}
+.gear-panel .gear-note{color:#637995;font-size:12px;line-height:1.55}
+.gear-status-line{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.gear-status-line strong{font-size:15px;color:#183251}
+.gear-status-line span{font-size:12px;color:#657894}
+.gear-progress{height:11px;border-radius:999px;overflow:hidden;background:#eaf0f8;margin:12px 0 8px}
+.gear-progress>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#39b5ff,#0a83ed);min-width:0}
+.gear-progress.warn>span{background:linear-gradient(90deg,#ffbc59,#ed8a30)}
+.gear-progress.over>span{background:linear-gradient(90deg,#ff9c68,#de5d44)}
+.gear-maintenance-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.gear-maintenance-tags span{padding:6px 8px;background:#f1f6fd;border:1px solid #e1eaf7;border-radius:9px;font-size:11px;color:#425c7b}
+.gear-history{display:grid;gap:12px}
+.gear-history-entry{border-left:3px solid #3a9be8;padding:1px 0 3px 12px}
+.gear-history-entry strong{color:#233e5b;font-size:13px}
+.gear-history-entry p{margin:5px 0 0}
+.gear-dialog .gear-muted{color:#687c98;font-size:11px;line-height:1.5;margin:0}
+@media(max-width:680px){
+  .gear-dialog{max-height:91dvh;border-radius:17px}
+  .gear-dialog-head{padding:17px 16px 13px}
+  .gear-dialog-body{padding:15px 15px 20px;gap:12px}
+  .gear-info-row{gap:8px}
+  .gear-info-box{padding:11px}
+  .gear-panel{padding:13px}
+  .gear-open-indicator{font-size:9px;margin-top:6px}
+  button.equipment-trigger{min-height:126px!important}
+}
+
 </style>
 </head>
 <body>
@@ -724,9 +802,6 @@ td{color:#32455f}
   <div class="section-title"><h2>☆ Record</h2><span>Migliori valori dell'anno</span></div>
   <section class="grid records" id="records"></section>
 
-  <div class="section-title"><h2>🔧 Manutenzione bici</h2><span>Storico e prossima catena</span></div>
-  <section class="maintenance-grid" id="bikeMaintenance"></section>
-
   <div class="section-title"><h2>◎ Obbiettivi</h2><span>Triathlon e corsa</span></div>
   <section class="card race-panel">
     <div class="race-note">
@@ -762,6 +837,9 @@ td{color:#32455f}
     <button class="diary-toggle" id="diaryToggle" type="button" aria-expanded="false"></button>
   </div>
 
+  <dialog class="gear-dialog" id="equipmentDialog" aria-labelledby="gearDialogTitle">
+    <div id="equipmentDialogContents"></div>
+  </dialog>
   <footer id="footerNote"></footer>
 </div>
 
@@ -773,7 +851,7 @@ const TYPES=["Bici","Corsa","Trail","Trekking","Camminata","Nuoto","Triathlon"];
 const ML=["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
 const els={
   heroYear:document.getElementById("heroYear"),coverage:document.getElementById("coverage"),yearButtons:document.getElementById("yearButtons"),
-  disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),bikeMaintenance:document.getElementById("bikeMaintenance"),
+  disciplines:document.getElementById("disciplines"),records:document.getElementById("records"),raceGoals:document.getElementById("raceGoals"),
   q:document.getElementById("q"),type:document.getElementById("typeFilter"),month:document.getElementById("monthFilter"),
   rows:document.getElementById("rows"),count:document.getElementById("count"),empty:document.getElementById("emptyState"),
   sportFilters:document.getElementById("sportFilters"),diaryPagination:document.getElementById("diaryPagination"),diaryToggle:document.getElementById("diaryToggle"),
@@ -1142,28 +1220,132 @@ function raceStanding(r,dyn){
   return {placement:`${placement} · ${b.label}`,placementClass,gate,gateClass};
 }
 
-function renderBikeMaintenance(){
-  if(!els.bikeMaintenance)return;
-  const rows=Array.isArray(BM)?BM.slice().sort((a,b)=>b.date.localeCompare(a.date)):[];
-  if(!rows.length){els.bikeMaintenance.innerHTML="";return}
-  const last=rows[0];
-  const ridden=AY.filter(a=>a.type==="Bici"&&a.date>last.date).reduce((sum,a)=>sum+(Number(a.km)||0),0);
-  const target=Number(last.nextChainKm)||1000;
-  const remaining=Math.max(0,target-ridden);
-  const items=(last.items||[]).map(x=>`<span class="maintenance-chip">${x}</span>`).join("");
-  els.bikeMaintenance.innerHTML=`
-    <div class="card maintenance-card">
-      <div class="maintenance-title">Ultimo intervento · ${dt(last.date)}</div>
-      <div class="maintenance-meta">${last.place||"Officina"}${last.bike?" · "+last.bike:""}${Number.isFinite(Number(last.cost))?" · "+n(Number(last.cost),2)+" €":""}</div>
-      <div class="maintenance-items">${items}</div>
-    </div>
-    <div class="card maintenance-card">
-      <div class="maintenance-title">Prossima catena</div>
-      <div class="maintenance-km">${n(remaining,0)} km</div>
-      <div class="maintenance-note">${n(ridden,0)} km percorsi dal cambio · obiettivo sostituzione a ~${n(target,0)} km per preservare la cassetta.</div>
-    </div>`;
-}
 
+/* Un solo conteggio per attrezzatura, riutilizzato dalla scheda e dalla finestra. */
+function equipmentUsage(item){
+  const entries=A.map(a=>{
+    const segments=Array.isArray(a.equipmentSegments)?a.equipmentSegments:[];
+    const matches=segments.filter(seg=>seg.equipmentId===item.id);
+    const quantified=matches.filter(seg=>Number.isFinite(seg.km)&&seg.km>0);
+    if(quantified.length)return {
+      km:quantified.reduce((sum,seg)=>sum+seg.km,0),
+      estimated:quantified.some(seg=>seg.estimated===true),
+      uncertain:matches.some(seg=>seg.km==null),
+      sessions:1
+    };
+    if(matches.length)return {km:0,estimated:false,uncertain:true,sessions:1};
+    const assigned=(item.autoTypes&&item.autoTypes.includes(a.type))
+      ||a.equipmentId===item.id
+      ||(Array.isArray(a.equipmentIds)&&a.equipmentIds.includes(item.id))
+      ||(item.activityDates||[]).includes(a.date);
+    return assigned?{km:Number(a.km)||0,estimated:false,uncertain:false,sessions:1}:null;
+  }).filter(Boolean);
+  return {
+    loggedKm:entries.reduce((sum,e)=>sum+e.km,0)+(Number(item.baselineKm)||0),
+    known:Number.isFinite(item.baselineKm)||entries.some(e=>e.km>0),
+    estimated:entries.some(e=>e.estimated),
+    uncertain:entries.some(e=>e.uncertain),
+    sessions:entries.length
+  };
+}
+function gearProgress(used,target,level){
+  const pct=Math.min(100,Math.max(0,used/target*100));
+  return '<div class="gear-progress '+(level||'')+'" role="progressbar" aria-valuemin="0" aria-valuemax="'+target+'" aria-valuenow="'+Math.round(Math.min(used,target))+'"><span style="width:'+pct+'%"></span></div>';
+}
+function bikeMaintenanceDetails(item){
+  const entries=typeof BM!=="undefined"&&Array.isArray(BM)
+    ?BM.slice().filter(m=>m.type==="Bici").sort((a,b)=>b.date.localeCompare(a.date)):[];
+  if(!entries.length)return '<section class="gear-panel"><h3>Manutenzione</h3><p>Nessun intervento registrato. Non è ancora possibile stimare la prossima sostituzione dei componenti.</p></section>';
+  const last=entries[0];
+  /* Il giro del 14/10/2026 è identificato nel diario come collaudo dopo la manutenzione. */
+  const since=A.filter(a=>a.type==="Bici"&&a.equipmentId===item.id&&
+    (a.date>last.date||(a.date===last.date&&/dopo manutenzione|post manutenzione|collaudo dopo/i.test(a.note||""))));
+  const kmSince=since.reduce((sum,a)=>sum+(Number(a.km)||0),0);
+  const target=Number(last.nextChainKm);
+  const validTarget=Number.isFinite(target)&&target>0;
+  const remaining=validTarget?Math.max(0,target-kmSince):null;
+  const status=validTarget?(remaining>0?'Circa '+n(remaining,1)+' km residui':'Soglia indicativa raggiunta'):'Intervallo non definito';
+  const tags=(last.items||[]).map(x=>'<span>'+escapeEquip(x)+'</span>').join('');
+  const records=entries.map(m=>{
+    const date=dt(m.date),price=Number.isFinite(Number(m.cost))?n(Number(m.cost),2)+' €':'costo non indicato';
+    const shop=escapeEquip(m.place||'Officina non indicata');
+    return '<div class="gear-history-entry"><strong>'+date+' · '+shop+' · '+price+'</strong>'
+      +'<div class="gear-maintenance-tags">'+(m.items||[]).map(x=>'<span>'+escapeEquip(x)+'</span>').join('')+'</div>'
+      +(m.note?'<p>'+escapeEquip(m.note)+'</p>':'')
+      +(m.bike?'<p class="gear-muted">Modello indicato sul documento: '+escapeEquip(m.bike)+'</p>':'')
+      +'</div>';
+  }).join('');
+  return '<section class="gear-panel"><h3>⛓️ Catena · prossima sostituzione</h3>'
+    +'<div class="gear-status-line"><strong>'+status+'</strong><span>Obiettivo salvato: '+(validTarget?n(target,0)+' km':'da definire')+'</span></div>'
+    +(validTarget?gearProgress(kmSince,target,remaining<target*.2?'warn':''):'')
+    +'<p><strong>'+n(kmSince,2)+' km</strong> documentati dalla manutenzione del '+dt(last.date)+'.</p>'
+    +'<p class="gear-note">Il riferimento di '+(validTarget?n(target,0)+' km':'usura')+' è il promemoria preventivo registrato nell’Hub, non una soglia universale: controllare anche l’allungamento effettivo della catena. Uscite mancanti dallo storico possono ridurre i km residui.</p></section>'
+    +'<section class="gear-panel"><h3>🔩 Cassetta e freni</h3>'
+    +'<p>Intervento più recente: <strong>'+dt(last.date)+'</strong> presso '+escapeEquip(last.place||'officina')+'. Per cassetta, disco e pastiglie non è registrata una soglia di chilometri affidabile: controllarne lo stato di usura, invece di impostare una scadenza inventata.</p>'
+    +'<div class="gear-maintenance-tags">'+tags+'</div></section>'
+    +'<section class="gear-panel"><h3>📋 Storico manutenzione</h3><div class="gear-history">'+records+'</div></section>';
+}
+function replacementDetails(item,usage){
+  if(item.id==="bike-vr")return bikeMaintenanceDetails(item);
+  if(item.id==="bike-rental-ebike")
+    return '<section class="gear-panel"><h3>🚲 Biciclette a noleggio</h3><p>Queste e-bike non fanno parte dell’attrezzatura di proprietà. Non è previsto un contatore personale di usura o sostituzione.</p></section>';
+  const configs={
+    "run-noosa13":{start:600,target:800,description:"Scarpa da corsa su asfalto. Intervallo orientativo di controllo: 600–800 km."},
+    "trail-hoka":{start:500,target:800,description:"Scarpa da trail. Intervallo generico orientativo di controllo: 500–800 km; durata effettiva variabile con terreno e uso."}
+  };
+  const conf=configs[item.id];
+  if(!conf){
+    const historic=item.id==="run-stormer2"?"Scarpe usate prima delle Noosa, sostituite nel febbraio 2024.":item.id==="trail-tnf"?"Scarpe precedenti alle HOKA Mafate X, utilizzate per trail e trekking.":"Attrezzatura senza un intervallo di sostituzione definito.";
+    return '<section class="gear-panel"><h3>Stato di utilizzo</h3><p>'+historic+'</p><p>Non è stata impostata una soglia di sostituzione: servono controllo fisico, condizioni del battistrada e dello stato della scarpa. I chilometri storici potrebbero essere incompleti.</p></section>';
+  }
+  const used=usage.loggedKm,remaining=Math.max(0,conf.target-used);
+  const label=used>=conf.target?'Limite di riferimento superato':used>=conf.start?'Verifica usura consigliata':'In uso · verso la prima verifica';
+  const level=used>=conf.target?'over':used>=conf.start?'warn':'';
+  return '<section class="gear-panel"><h3>👟 Stato e sostituzione</h3>'
+    +'<div class="gear-status-line"><strong>'+escapeEquip(label)+'</strong><span>'+n(used,1)+' / '+n(conf.target,0)+' km</span></div>'
+    +gearProgress(used,conf.target,level)
+    +'<div class="gear-status-line"><strong>≈ '+n(remaining,1)+' km</strong><span>al limite superiore orientativo di '+n(conf.target,0)+' km</span></div>'
+    +'<p>'+escapeEquip(conf.description)+' Non è una scadenza certa: sostituire prima se diminuiscono ammortizzazione, stabilità o comfort, oppure se ricompare dolore.</p>'
+    +'<p class="gear-note">Il contatore utilizza solo allenamenti presenti nell’Hub'+(usage.estimated?', compresi tratti stimati':'')+'. I chilometri effettivi possono essere superiori.</p></section>';
+}
+function openEquipmentDialog(id){
+  const item=(typeof EQUIPMENT!=="undefined"?EQUIPMENT:[]).find(x=>x.id===id);
+  const dialog=document.getElementById('equipmentDialog');
+  const root=document.getElementById('equipmentDialogContents');
+  if(!item||!dialog||!root)return;
+  const usage=equipmentUsage(item);
+  const date=item.since?(item.since.length===4?item.since:dt(item.since)):'non registrata';
+  const unit=item.category==="bike"?"Bicicletta":item.category==="trail"?"Scarpe trail":"Scarpe da corsa";
+  root.innerHTML='<div class="gear-dialog-head"><div>'
+    +'<div class="gear-dialog-kicker">'+escapeEquip(unit)+' · stato e manutenzione</div>'
+    +'<h2 id="gearDialogTitle">'+escapeEquip(item.name)+'</h2>'
+    +'</div><button class="gear-dialog-close" type="button" data-close-equipment aria-label="Chiudi dettagli attrezzatura">×</button></div>'
+    +'<div class="gear-dialog-body"><div class="gear-info-row">'
+    +'<div class="gear-info-box gear-highlight"><div class="gear-label">Chilometri documentati</div>'
+    +'<div class="gear-value">'+(usage.known?(usage.estimated?'≈ ':'')+n(usage.loggedKm,2):'—')+' km</div>'
+    +'<div class="gear-sublabel">'+usage.sessions+' attività con questa attrezzatura</div></div>'
+    +'<div class="gear-info-box"><div class="gear-label">Acquisto / inizio utilizzo</div>'
+    +'<div class="gear-value" style="font-size:20px">'+escapeEquip(date)+'</div>'
+    +'<div class="gear-sublabel">'+escapeEquip(item.status||'Storico parziale')+'</div></div></div>'
+    +replacementDetails(item,usage)
+    +(usage.uncertain?'<p class="gear-muted">⚠ Almeno un tratto confermato non ha una distanza attribuibile: non è incluso nei chilometri visualizzati.</p>':'')
+    +'<p class="gear-muted">I chilometri sono calcolati dall’intero storico disponibile, indipendentemente dall’anno selezionato nella dashboard.</p>'
+    +'</div>';
+  if(typeof dialog.showModal==="function")dialog.showModal();
+  else dialog.setAttribute('open','');
+}
+document.addEventListener('click',event=>{
+  const trigger=event.target.closest('[data-equipment-id]');
+  if(trigger){openEquipmentDialog(trigger.dataset.equipmentId);return;}
+  const close=event.target.closest('[data-close-equipment]');
+  if(close){const dialog=document.getElementById('equipmentDialog');if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute('open');}
+});
+document.getElementById('equipmentDialog').addEventListener('click',event=>{
+  const dialog=event.currentTarget,rect=dialog.getBoundingClientRect();
+  if(event.target===dialog&&(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)){
+    if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute('open');
+  }
+});
 function renderRaceGoals(){
   const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
   const maxSwim=Math.max(0,...AY.filter(a=>a.type==="Nuoto").map(a=>a.km));
@@ -1694,21 +1876,14 @@ function renderEquipment(){
   const icons={run:"👟",trail:"🥾",bike:"🚴"};
   const mainIds=["run-noosa13","trail-hoka","bike-vr"];
   const cardFor=item=>{
-    const kmEntries=A.map(a=>{
-      const segments=Array.isArray(a.equipmentSegments)?a.equipmentSegments:[];
-      const matchedSegments=segments.filter(x=>x.equipmentId===item.id&&Number.isFinite(x.km)&&x.km>0);
-      if(matchedSegments.length)return {km:matchedSegments.reduce((n,x)=>n+x.km,0),estimated:matchedSegments.some(x=>x.estimated)};
-      const hasUnmeasuredSegment=segments.some(x=>x.equipmentId===item.id);
-      if(hasUnmeasuredSegment)return null;
-      const assigned=(item.autoTypes&&item.autoTypes.includes(a.type))||(a.equipmentId===item.id)||(Array.isArray(a.equipmentIds)&&a.equipmentIds.includes(item.id))||(item.activityDates||[]).includes(a.date);
-      return assigned?{km:Number(a.km)||0,estimated:false}:null;
-    }).filter(Boolean);
-    const loggedKm=kmEntries.reduce((sum,e)=>sum+e.km,0);
-    const estimated=kmEntries.some(e=>e.estimated);
-    const known=Number.isFinite(item.baselineKm)||kmEntries.length>0;
-    const km=known?(estimated?"≈ ":"")+(loggedKm+(Number(item.baselineKm)||0)).toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
+    const usage=equipmentUsage(item);
+    const known=usage.known,estimated=usage.estimated;
+    const km=known?(estimated?"≈ ":"")+usage.loggedKm.toLocaleString("it-IT",{maximumFractionDigits:1}):"—";
     const descriptor=item.autoTypes?"km di bici registrati nell’Hub (non totali da acquisto)":known?(estimated?"km attribuiti, compresa una stima":"km attribuiti a questa attrezzatura"):"km da ricostruire dagli screenshot";
-    return '<article class="equipment-card"><div class="equip-kind">'+(icons[item.category]||"⚙")+' '+escapeHtml(item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta")+'</div><h3>'+escapeHtml(item.name)+'</h3><div class="equip-km">'+km+' <small>km</small></div><p>'+escapeHtml(descriptor)+'</p><p>'+escapeHtml(item.since?"Dal "+item.since.split("-").reverse().join("/")+" · "+item.status:item.status)+'</p></article>';
+    return '<button type="button" class="equipment-card equipment-trigger" data-equipment-id="'+escapeHtml(item.id)+'" aria-haspopup="dialog" aria-label="Apri stato e manutenzione: '+escapeHtml(item.name)+'">'
+      +'<div class="equip-kind">'+(icons[item.category]||"⚙")+' '+escapeHtml(item.category==="run"?"Scarpe corsa":item.category==="trail"?"Scarpe trail":"Bicicletta")+'</div>'
+      +'<h3>'+escapeHtml(item.name)+'</h3><div class="equip-km">'+km+' <small>km</small></div>'
+      +'<span class="gear-open-indicator">Stato e manutenzione ↗</span></button>';
   };
   target.innerHTML=equipment.filter(item=>mainIds.includes(item.id)).sort((a,b)=>mainIds.indexOf(a.id)-mainIds.indexOf(b.id)).map(cardFor).join("");
   const others=equipment.filter(item=>!mainIds.includes(item.id));
@@ -1717,7 +1892,7 @@ function renderEquipment(){
 }
 function renderAll(){
   diaryExpanded=false;
-  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecent();renderMonthly();renderRecords();renderBikeMaintenance();renderRaceGoals();populateFilters();renderSportFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
+  yearlyData();renderYearButtons();renderHero();renderDisciplines();renderEquipment();renderRecent();renderMonthly();renderRecords();renderRaceGoals();populateFilters();renderSportFilters();renderTable();renderFooter();requestAnimationFrame(drawCharts)
 }
 els.diaryToggle.onclick=()=>{diaryExpanded=!diaryExpanded;renderTable()};
 els.q.oninput=()=>{diaryExpanded=false;renderTable()};
