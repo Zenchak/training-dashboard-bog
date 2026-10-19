@@ -21,41 +21,24 @@ html = html.replace(
   '<footer id="footerNote"></footer>\n<div class="bottom-nav"><a class="bottom-link secondary" href="/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\'/\'}">🏠 Home</a><button class="bottom-link secondary" type="button" onclick="location.reload()">↻ Refresh</button><a class="bottom-link" href="/gare/" onclick="if(location.port===\'8441\'){this.href=\'https://\'+location.hostname+\':8442/\'}">🏁 Gare</a></div>\n</div>'
 );
 
-// After this shell is deployed once, training data are read directly from GitHub.
-// Updating data.js will therefore not require another Netlify production deploy.
-const liveLoader = `
-async function loadLiveTrainingData(){
-  try{
-    const url='https://raw.githubusercontent.com/Zenchak/training-dashboard-bog/main/data.js?v='+Date.now();
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok) throw new Error('GitHub data HTTP '+response.status);
-    const source=await response.text();
-    const live=(new Function(source+'\\nreturn {A,W};'))();
-    if(live && Array.isArray(live.A)) A.splice(0,A.length,...live.A);
-    if(live && Array.isArray(live.W)) W.splice(0,W.length,...live.W);
-    if(live && Array.isArray(live.BM) && typeof BM!=="undefined") BM.splice(0,BM.length,...live.BM);
-  }catch(err){
-    console.warn('Dati live GitHub non disponibili: uso la copia locale del deploy.',err);
-  }
-}
-await loadLiveTrainingData();
-`;
-
-const scriptStart = '<script src="data.js"></script>\n<script>\nconst COLORS=';
-if (html.includes(scriptStart)) {
-  html = html.replace(
-    scriptStart,
-    '<script src="data.js"></script>\n<script>\n(async()=>{\n' + liveLoader + '\nconst COLORS='
-  );
-}
-
-const scriptEnd = 'renderAll();\n</script>';
-if (html.includes(scriptEnd)) {
-  html = html.replace(scriptEnd, 'renderAll();\n})();\n</script>');
-}
+// NAS is the authoritative deployment: serve the locally built data.js,
+// avoiding an external GitHub fetch that could overwrite fresh training data.
 
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
+
+// Small incremental records: do not rewrite the historical 187-activity data.js.
+// The NAS updater rebuilds dist/ after GitHub commits; duplicate keys are ignored.
+const additionsPath = path.join(__dirname, 'data-additions.json');
+if (fs.existsSync(additionsPath)) {
+  const additions = JSON.parse(fs.readFileSync(additionsPath, 'utf8'));
+  if (!Array.isArray(additions)) throw new Error('data-additions.json must contain an array');
+  const mergeScript = '\n;for (const addition of ' + JSON.stringify(additions) + ') {\n' +
+    '  if (!A.some(activity => activity.date === addition.date && activity.type === addition.type && activity.duration === addition.duration && Math.abs(Number(activity.km) - Number(addition.km)) < 0.01)) A.push(addition);\n' +
+    '}\n';
+  fs.appendFileSync(path.join(out, 'data.js'), mergeScript);
+}
+
 
 // LAN fallbacks: materialize Hub and Finanze inside dist so Nginx can serve them
 // with its normal static-file path and without special alias locations.
