@@ -116,7 +116,7 @@ const floatingNavigationMarkup = `
 <div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
   <button type="button" class="hub-floating-action" data-hub-refresh
     aria-label="Ricarica gli ultimi dati degli allenamenti"
-    onclick="this.disabled=true;this.querySelector('.hub-action-caption').textContent='Aggiorno…';const u=new URL(window.location.href);u.searchParams.set('_hub_reload',Date.now().toString());window.location.assign(u.href)">
+    onclick="const u=new URL(window.location.href);u.searchParams.set('_hub_reload',Date.now().toString());window.location.replace(u.href)">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg>
     <span class="hub-action-caption">Refresh</span>
   </button>
