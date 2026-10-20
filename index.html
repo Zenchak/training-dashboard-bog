@@ -1117,9 +1117,13 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 }
 
 .hub-sidebar .side-icon svg{display:block;width:21px;height:21px;overflow:visible}\n@media(max-width:900px){.hub-sidebar .side-icon svg{width:17px;height:17px}}\n
-/* Record: colore coerente con la disciplina cui appartiene il risultato. */
+/* Record: palette coerente con la categoria del risultato. */
 .records .record{border-left:3px solid var(--record-color,#536B93)}
-.records .record .ico{color:var(--record-color,#536B93)}
+.records .record .ico{
+  color:var(--record-color,#536B93);
+  background:color-mix(in srgb,var(--record-color,#536B93) 11%,#fff)
+}
+.records .record .ico .sport-svg{color:var(--record-color,#536B93)!important}
 .records .record .v{color:var(--record-color,#536B93)}
 .records .record .t{color:#61718f}
 
@@ -1642,7 +1646,7 @@ function renderRecords(){
     [sportIcon("Trail"),"D+ completo più alto",climb?`${climb.dplus.toLocaleString("it-IT")} m`:"—",climb?dt(climb.date):""],
     [sportIcon("Tempo"),"Sessione più lunga",long?long.duration:"—",long?`${dt(long.date)} · ${long.type}`:""]
   ];
-  const recordColors=[COLORS.Corsa,COLORS.Corsa,COLORS.Bici,COLORS[run?.type]||COLORS.Corsa,COLORS[climb?.type]||"#536B93",COLORS[long?.type]||"#536B93"];
+  const recordColors=[COLORS.Corsa,COLORS.Corsa,COLORS.Bici,COLORS.Corsa,COLORS.Trail,COLORS.Bici];
   els.records.innerHTML=rec.map((x,i)=>`<div class="card record" style="--record-color:${recordColors[i]}"><div class="ico">${x[0]}</div><div class="t">${x[1]}</div><div class="v">${x[2]}</div><div class="d">${x[3]}</div></div>`).join("");
 }
 
