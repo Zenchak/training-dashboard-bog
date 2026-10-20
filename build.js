@@ -106,7 +106,8 @@ floatingNavigationCss += `\n/* Stile coerente con il tasto Refresh della Home Hu
 .hub-floating-actions [data-hub-refresh]{background:rgba(255,255,255,.96);color:#18243c!important;border:1px solid rgba(135,149,172,.22);box-shadow:0 8px 22px rgba(47,59,90,.08)}
 .hub-floating-actions [data-hub-refresh] svg{stroke:#18243c}
 .hub-floating-actions [data-hub-refresh]:active,.hub-floating-actions [data-hub-refresh].is-pressed{background:#e9e7ff;color:#5546cf!important;border-color:#9e94f5;box-shadow:inset 0 2px 7px rgba(111,92,241,.18)}
-`;\nconst floatingNavigationMarkup = `
+`;
+const floatingNavigationMarkup = `
 <div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
  <button type="button" class="hub-floating-action" data-hub-refresh aria-label="Aggiorna Allenamenti">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg><span class="hub-action-caption">Refresh</span>
