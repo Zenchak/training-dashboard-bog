@@ -84,6 +84,18 @@ body{background:#f8faff;color:var(--navy)}
 .vehicle-visual{height:250px;overflow:visible;display:flex;align-items:center;justify-content:center}
 .vehicle-visual img{display:block;width:100%;max-width:430px;height:100%;object-fit:contain;object-position:center;mix-blend-mode:multiply}
 @media(max-width:720px){.car-summary .car-picture{height:155px;min-height:155px}.vehicle-visual{height:225px}}
+
+/* Schede auto compatte: nome e descrizione affiancati */
+.car-summary{min-height:0;padding:17px 18px}
+.car-heading{display:grid;grid-template-columns:minmax(100px,0.85fr) minmax(0,1.5fr);gap:12px;align-items:start}
+.car-heading h2{margin:0;font-size:23px;line-height:1.2}
+.car-heading .meta{font-size:11px;line-height:1.45;padding-top:3px}
+.car-summary .car-picture{height:145px;min-height:145px;margin:2px 0 5px}
+.car-summary .status{margin:5px 0 0}
+.car-summary .km{margin:6px 0 0}
+.car-summary .quick-grid{margin:9px 0}
+.car-summary .detail-btn{padding:11px}
+@media(max-width:720px){.car-summary{min-height:0;padding:15px}.car-heading{grid-template-columns:minmax(95px,.8fr) minmax(0,1.6fr);gap:9px}.car-heading h2{font-size:21px}.car-summary .car-picture{height:135px;min-height:135px;margin:2px 0 5px}}
 </style>
 </head>
 <body>
@@ -152,7 +164,7 @@ function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<
 function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
 function summary(c){
  const card=document.createElement('article');card.className='car-summary';
- card.innerHTML='<h2>'+c.name+'</h2><div class="meta">Auto di '+c.owner+'<br>'+c.subtitle+'</div><div class="car-picture">'+carPhoto(c)+'</div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+(c.statusTone==='neutral'?'⚠':'✓')+' '+statusText(c)+'</span><div class="km">'+km(c.currentKm)+'</div><div class="quick-grid">'+quickCard('wrench','Tagliando',c.maintenance.length+' interventi')+quickCard('file','Bollo',c.tax?'Vedi dati':'Da inserire')+quickCard('shield','Assicurazione',c.insurance?date(c.insurance.validTo):'Da inserire')+quickCard('calendar','Revisione',arr(c.inspections).length?'Vedi dati':'Da inserire')+'</div><button class="detail-btn" type="button">Vedi dettagli &nbsp; →</button>';
+ card.innerHTML='<div class="car-heading"><h2>'+c.name+'</h2><div class="meta">Auto di '+c.owner+'<br>'+c.subtitle+'</div></div><div class="car-picture">'+carPhoto(c)+'</div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+(c.statusTone==='neutral'?'⚠':'✓')+' '+statusText(c)+'</span><div class="km">'+km(c.currentKm)+'</div><div class="quick-grid">'+quickCard('wrench','Tagliando',c.maintenance.length+' interventi')+quickCard('file','Bollo',c.tax?'Vedi dati':'Da inserire')+quickCard('shield','Assicurazione',c.insurance?date(c.insurance.validTo):'Da inserire')+quickCard('calendar','Revisione',arr(c.inspections).length?'Vedi dati':'Da inserire')+'</div><button class="detail-btn" type="button">Vedi dettagli &nbsp; →</button>';
  card.querySelector('button').addEventListener('click',()=>openVehicle(c.id));
  return card;
 }
