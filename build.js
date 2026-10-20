@@ -103,9 +103,9 @@ let floatingNavigationCss = `
 @media(max-width:370px){.hub-floating-actions{gap:7px;padding:6px}.hub-floating-actions .hub-floating-action{width:90px;min-height:34px;font-size:11px}}
 `;
 floatingNavigationCss += `\n/* Stile coerente con il tasto Refresh della Home Hub */
-.hub-floating-actions [data-hub-refresh]{background:rgba(255,255,255,.96);color:#18243c!important;border:1px solid rgba(135,149,172,.22);box-shadow:0 8px 22px rgba(47,59,90,.08)}
-.hub-floating-actions [data-hub-refresh] svg{stroke:#18243c}
-.hub-floating-actions [data-hub-refresh]:active,.hub-floating-actions [data-hub-refresh].is-pressed{background:#e9e7ff;color:#5546cf!important;border-color:#9e94f5;box-shadow:inset 0 2px 7px rgba(111,92,241,.18)}
+.hub-floating-actions [data-hub-refresh]{background:linear-gradient(145deg,#8a4dff,#6733df);color:#fff!important;border:1px solid #7439ec;box-shadow:0 5px 14px rgba(104,51,223,.30)}
+.hub-floating-actions [data-hub-refresh] svg{stroke:#fff}
+.hub-floating-actions [data-hub-refresh]:active,.hub-floating-actions [data-hub-refresh].is-pressed{background:#5d2cc9;color:#fff!important;border-color:#5d2cc9;box-shadow:inset 0 2px 7px rgba(55,22,126,.35)}
 `;
 const floatingNavigationMarkup = `
 <div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
