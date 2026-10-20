@@ -156,6 +156,20 @@ dialog::backdrop{background:rgba(55,65,81,.20);backdrop-filter:blur(6px)}
 .grid .card .desc{font-size:clamp(11px,2.3vw,13px);line-height:1.25}
 @media(max-width:620px){.grid{gap:10px}.grid .card{min-height:0;border-radius:23px}.grid .card-icon{width:46px;height:46px;font-size:21px;border-radius:15px}.grid .arrow{width:32px;height:32px;font-size:19px;border-radius:12px}}
 @media(max-width:390px){.grid{gap:8px}.grid .card{padding:12px}.grid .card .title{font-size:17px}.grid .card .desc{font-size:11px}.grid .card-icon{width:40px;height:40px}.grid .arrow{width:29px;height:29px}}
+/* Header compatto e pulsante Refresh coerente con Allenamenti */
+.hero{padding:17px 20px;gap:14px;align-items:center;border-radius:24px}
+.brand{gap:8px;font-size:10px;letter-spacing:.11em}
+.logo{width:36px;height:36px;border-radius:12px;font-size:18px}
+h1{font-size:clamp(35px,5vw,48px);margin:11px 0 5px}
+.sub{font-size:12px}
+.hero-actions{gap:7px}
+.hero-actions .switch,.hero-actions .refresh{min-width:0;width:116px;min-height:37px;padding:7px 10px;border-radius:14px;font-size:12px;gap:6px}
+.hero-actions .refresh{background:rgba(255,255,255,.96);color:#18243c;border:1px solid rgba(135,149,172,.22);box-shadow:0 8px 22px rgba(47,59,90,.08);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .13s,background .13s,box-shadow .13s}
+.hero-actions .refresh svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hero-actions .refresh:active,.hero-actions .refresh.is-pressed{transform:scale(.93);background:#e9e7ff;color:#5546cf;border-color:#9e94f5;box-shadow:inset 0 2px 7px rgba(111,92,241,.18)}
+.hero-actions .refresh:disabled{opacity:1;cursor:progress}
+@media(max-width:620px){.hero{padding:15px 15px;gap:9px;border-radius:22px}.logo{width:34px;height:34px;font-size:17px}.brand{font-size:9px}.hero-actions .switch,.hero-actions .refresh{width:105px;min-height:35px;padding:6px 8px;font-size:11px}.sub{font-size:11px}h1{font-size:38px;margin:9px 0 4px}}
+@media(max-width:390px){.hero{padding:13px 12px;gap:7px}.hero-actions .switch,.hero-actions .refresh{width:94px;font-size:10px}.logo{width:31px;height:31px;font-size:16px}h1{font-size:34px}.sub{font-size:10px}}
 </style>
 </head>
 <body>
@@ -167,7 +181,7 @@ dialog::backdrop{background:rgba(55,65,81,.20);backdrop-filter:blur(6px)}
       <div class="sub">Accesso privato ai siti del NAS</div>
     </div>
     <div class="hero-actions">
-      <button class="refresh" type="button" onclick="location.reload()">↻ Refresh</button>
+      <button class="refresh" id="hubRefresh" type="button" aria-label="Aggiorna Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button>
       <button class="switch" id="profileButton" type="button">👤 <span id="profileName">Bogdan</span></button>
     </div>
   </div>
@@ -212,6 +226,12 @@ dialog::backdrop{background:rgba(55,65,81,.20);backdrop-filter:blur(6px)}
   </div>
 </dialog>
 <script>
+document.getElementById('hubRefresh')?.addEventListener('click',function(){
+ this.classList.add('is-pressed');this.disabled=true;this.setAttribute('aria-busy','true');
+ this.querySelector('span').textContent='Aggiorno…';
+ const u=new URL(location.href);u.searchParams.set('_hub_reload',Date.now().toString());
+ setTimeout(()=>location.replace(u.href),220);
+});
 (function(){
   const cookieName='zenchack_profile';
   const readCookie=()=>{const m=document.cookie.match(new RegExp('(?:^|; )'+cookieName+'=([^;]*)'));return m?decodeURIComponent(m[1]):''};
