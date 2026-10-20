@@ -1989,7 +1989,7 @@ const TRIATHLON_ORIGINAL_PATHS={"Sprint":"M127,205 120,205 113,209 109,205 103,2
 function goalProvidedIcon(name){
  const files={"Sprint":"ChatGPT Image Oct 20, 2026, 05_44_00 PM-1.png","Olimpico":"ChatGPT Image Oct 20, 2026, 05_44_01 PM-2.png","10 km":"ChatGPT Image Oct 20, 2026, 05_44_01 PM-3.png","Mezza maratona":"ChatGPT Image Oct 20, 2026, 05_44_03 PM-4.png","Maratona":"ChatGPT Image Oct 20, 2026, 05_44_04 PM-5.png","70.3":"ChatGPT Image Oct 20, 2026, 05_55_40 PM-1.png","Full":"ChatGPT Image Oct 20, 2026, 05_55_41 PM-2.png"};
  const file=files[name];
- return file?`<img src="assets/icons/${encodeURIComponent(file)}" alt="${name}" loading="lazy" style="display:block;width:100%;height:100%;object-fit:contain">`:"";
+ return file?`<img src="assets/icons/${encodeURIComponent(file)}" alt="${name}" loading="eager" decoding="async" width="135" height="135" style="display:block;width:100%;height:100%;object-fit:contain">`:"";
 }
 function recordedBestForGoal(r){
  // Un allenamento più lungo contiene anche la distanza obiettivo.
