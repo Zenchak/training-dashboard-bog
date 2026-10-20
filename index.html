@@ -1178,6 +1178,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 .goal-identity{display:flex;flex-direction:column;align-items:flex-start;gap:7px;font-size:15px;font-weight:850;line-height:1.1;min-width:0}
 .goal-logo{font-size:35px;line-height:1;display:flex;align-items:center;min-height:48px}
 .goal-logo img{width:59px;height:70px;object-fit:contain}
+.goal-tri .goal-logo svg{width:84px;height:90px;max-width:100%;display:block}
 .goal-run .goal-logo .sport-icon-original{width:46px;height:46px}
 .goal-distances,.goal-progress{display:grid;gap:9px}
 .goal-distance{display:flex;align-items:center;gap:9px;padding:7px 12px;border-radius:999px;width:max-content;max-width:100%;font-size:14px;white-space:nowrap}
@@ -1196,7 +1197,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 .goal-detail.ok{color:#20885f}.goal-detail.warn{color:#b26b14}.goal-detail.risk{color:#c44545}
 .goal-chevron{position:absolute;right:13px;top:16px;border-radius:50%;width:29px;height:29px;display:grid;place-items:center;background:#f1f5fc;color:#536b96;font-size:29px}
 @media(max-width:850px){.goal-card{grid-template-columns:92px minmax(100px,1fr) minmax(105px,1fr) minmax(150px,1.55fr);gap:9px;padding:15px 34px 15px 12px}.goal-distance{font-size:12px;padding:6px 8px}.goal-est{font-size:19px}.goal-estimate{font-size:11px;padding-left:9px}.goal-identity{font-size:12px}}
-@media(max-width:590px){.goal-card-list{padding:8px;gap:11px}.goal-card{grid-template-columns:minmax(65px,.65fr) minmax(85px,1fr) minmax(83px,1fr);gap:7px;padding:13px 11px;border-radius:19px}.goal-identity{font-size:12px}.goal-logo{font-size:29px;min-height:42px}.goal-logo img{width:46px;height:56px}.goal-distance{font-size:11px;padding:6px 7px;gap:5px}.goal-small-icon,.goal-small-icon .sport-svg{width:15px;height:15px}.goal-progress-heading{font-size:10px}.goal-estimate{grid-column:1/-1;border-left:0;border-top:1px solid #e2eaf5;padding:9px 0 0;display:block;font-size:12px}.goal-est{font-size:21px}.goal-chevron{right:10px;top:10px;width:24px;height:24px;font-size:22px}.goal-identity{padding-right:12px}}
+@media(max-width:590px){.goal-card-list{padding:8px;gap:11px}.goal-card{grid-template-columns:minmax(65px,.65fr) minmax(85px,1fr) minmax(83px,1fr);gap:7px;padding:13px 11px;border-radius:19px}.goal-identity{font-size:12px}.goal-logo{font-size:29px;min-height:42px}.goal-logo img{width:46px;height:56px}.goal-tri .goal-logo svg{width:68px;height:74px}.goal-distance{font-size:11px;padding:6px 7px;gap:5px}.goal-small-icon,.goal-small-icon .sport-svg{width:15px;height:15px}.goal-progress-heading{font-size:10px}.goal-estimate{grid-column:1/-1;border-left:0;border-top:1px solid #e2eaf5;padding:9px 0 0;display:block;font-size:12px}.goal-est{font-size:21px}.goal-chevron{right:10px;top:10px;width:24px;height:24px;font-size:22px}.goal-identity{padding-right:12px}}
 </style>
 </head>
 <body id="overview">
@@ -1981,6 +1982,17 @@ document.getElementById('equipmentDialog').addEventListener('click',event=>{
     if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute('open');
   }
 });
+/* Icone triathlon vettorializzate dai simboli forniti: stesso pittogramma,
+   colore dedicato per formato e nome integrato nel logo. */
+function triathlonGoalLogo(name){
+ const color=name==="Sprint"?"#00a7c7":"#2869df";
+ const word=name==="Sprint"?"sprint":"olimpico";
+ const fontSize=name==="Sprint"?18:14;
+ return `<svg viewBox="0 0 100 104" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Triathlon ${name}" style="display:block;width:100%;height:100%;overflow:visible">
+ <path d="M71,63 67,61 64,66 60,70 59,72 57,75 59,76 68,69ZM22,58 18,58 15,60 13,63 11,67 12,71 14,74 17,77 21,78 24,78 27,76 29,74 31,72 29,71 28,70 28,68 31,63 29,61 27,59 24,58ZM21,61 24,61 26,63 27,64 28,67 28,69 27,72 25,73 22,74 20,74 18,73 16,71 15,69 15,66 16,64 18,62ZM42,57 37,61 34,68 35,68 43,59 43,60 40,63 39,67 39,71 41,74 44,77 47,78 51,78 54,76 57,74 59,70 59,66 57,62 56,60 53,59 50,58 46,59 45,56ZM49,61 52,62 53,63 55,65 56,67 55,70 54,72 52,74 49,74 46,74 45,73 43,71 42,68 43,66 45,63 48,69 49,70 50,69 50,68 48,62ZM69,45 67,46 62,50 61,51 61,52 62,53 64,53 69,49 72,49 68,56 67,58 68,60 69,61 77,65 72,73 72,75 74,76 76,75 82,66 82,65 82,63 81,62 74,58 77,54 81,58 83,58 84,58 90,54 91,52 90,50 88,50 84,53 76,46 74,45ZM52,53 51,52 44,52 40,45 39,44 37,44 34,44 25,51 24,53 24,54 25,56 33,60 29,68 29,70 31,71 32,70 37,59 37,57 31,54 37,50 40,55 42,56 51,56 52,55ZM44,40 42,41 41,43 41,45 42,46 43,47 44,48 46,48 49,47 49,45 50,43 49,41 48,40ZM80,39 79,40 78,41 77,44 78,46 80,47 82,47 85,46 85,44 85,42 85,41 84,40 82,39ZM27,35 27,36 29,36 32,35 35,34 41,37 44,38 49,38 55,36 57,36 62,38 65,38 68,37 72,35 73,34 73,33 72,32 71,31 66,34 63,34 57,32 55,32 49,34 46,34 42,34 37,31 33,30 28,32 27,33ZM24,28 24,30 26,31 32,28 35,27 37,28 41,31 46,32 49,32 55,30 61,31 64,31 71,28 74,29 78,31 79,31 80,30 80,29 79,28 74,25 72,24 68,25 65,27 63,27 61,27 57,26 54,26 49,28 46,28 43,28 37,24 35,23 30,24 25,27ZM64,13 63,13 60,15 60,16 59,18 60,20 61,22 63,23 65,23 67,22 68,21 69,20 70,17 69,15 68,14ZM36,16 36,19 38,20 39,20 47,16 48,17 51,20 42,25 44,26 48,27 55,24 57,24 61,26 63,26 53,13 50,11 48,10 45,11 37,15Z" fill="${color}" fill-rule="evenodd"/>
+ <text x="50" y="96" text-anchor="middle" fill="${color}" font-family="Arial,Helvetica,sans-serif" font-weight="900" font-size="${fontSize}" letter-spacing="-1.1">${word}</text>
+ </svg>`;
+}
 function renderRaceGoals(){
  const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
  const maxSwim=Math.max(0,...AY.filter(a=>a.type==="Nuoto").map(a=>a.km));
@@ -1998,8 +2010,8 @@ function renderRaceGoals(){
   const dyn=dynamicRaceEstimate(r,pct,maxSwim,maxBike,maxRun);
   const standing=raceStanding(r,dyn);
   const is703=r.name==="70.3",isFull=r.name==="Full";
-  const logo=is703?INLINE_SPORT_SVG["ironman-703.svg"]:isFull?INLINE_SPORT_SVG["ironman-full.svg"]:isRun?sym.run:r.icon;
-  const label=is703||isFull?"":r.name;
+  const logo=is703?INLINE_SPORT_SVG["ironman-703.svg"]:isFull?INLINE_SPORT_SVG["ironman-full.svg"]:(r.name==="Sprint"||r.name==="Olimpico")?triathlonGoalLogo(r.name):isRun?sym.run:r.icon;
+  const label=is703||isFull||r.name==="Sprint"||r.name==="Olimpico"?"":r.name;
   return `<article class="goal-card ${is703||isFull?'goal-ironman':isRun?'goal-run':'goal-tri'}">
    <div class="goal-identity"><span class="goal-logo">${logo}</span>${label?'<strong>'+label+'</strong>':''}</div>
    <div class="goal-distances">${parts.map(x=>`<div class="goal-distance goal-${x.key}"><span class="goal-small-icon">${sym[x.key]}</span><b>${x.distance}</b></div>`).join("")}</div>
