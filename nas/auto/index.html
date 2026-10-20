@@ -76,12 +76,20 @@ body{background:#f8faff;color:var(--navy)}
 .add-vehicle{display:block;width:100%;border:1px dashed #bad3ff;border-radius:15px;background:transparent;padding:16px;margin-top:14px;color:#1e4a9e;font-weight:800;cursor:pointer}
 .section{margin-top:15px}
 @media(max-width:720px){.wrap{padding:16px 12px 60px}.hero{padding-bottom:20px}.hero h1{font-size:28px}.grid{grid-template-columns:1fr;gap:12px}.car-summary{min-height:320px;padding:15px}.car-picture .car-silhouette{font-size:112px}.car-summary .car-picture{height:112px}.detail-section .admin-grid{grid-template-columns:1fr}.hero .actions .btn{padding:10px}}
-.car-picture img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.vehicle-visual img{max-width:100%;width:380px;height:100%;object-fit:contain;mix-blend-mode:multiply}.car-summary .car-picture{height:150px}.vehicle-visual{height:230px}@media(max-width:720px){.car-summary .car-picture{height:135px}.vehicle-visual{height:205px}}</style>
+.car-picture img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.vehicle-visual img{max-width:100%;width:380px;height:100%;object-fit:contain;mix-blend-mode:multiply}.car-summary .car-picture{height:150px}.vehicle-visual{height:230px}@media(max-width:720px){.car-summary .car-picture{height:135px}.vehicle-visual{height:205px}}
+/* Fotografie auto: contenimento integrale senza tagli o zoom */
+.car-summary{overflow:visible}
+.car-summary .car-picture{height:170px;min-height:170px;overflow:visible;display:flex;align-items:center;justify-content:center;margin:8px 0 12px}
+.car-summary .car-picture img{display:block;width:100%;max-width:100%;height:100%;object-fit:contain;object-position:center;mix-blend-mode:multiply}
+.vehicle-visual{height:250px;overflow:visible;display:flex;align-items:center;justify-content:center}
+.vehicle-visual img{display:block;width:100%;max-width:430px;height:100%;object-fit:contain;object-position:center;mix-blend-mode:multiply}
+@media(max-width:720px){.car-summary .car-picture{height:155px;min-height:155px}.vehicle-visual{height:225px}}
+</style>
 </head>
 <body>
 <main class="wrap">
-<header class="hero"><div style="display:flex;align-items:center"><a class="back-link" href="/" aria-label="Torna alla Home">‹</a><div><h1 id="page-title">Auto di famiglia</h1><p id="page-subtitle">Veicoli, manutenzione e scadenze</p></div></div><div class="actions"><button class="btn" id="top-action" type="button" onclick="showAddVehicle()" aria-label="Aggiungi veicolo">＋</button></div></header>
-<div id="overview" class="car-view active"><section class="grid" id="summaries"></section><button class="add-vehicle" type="button" onclick="showAddVehicle()">＋ &nbsp; Aggiungi veicolo</button></div>
+<header class="hero"><div style="display:flex;align-items:center"><a class="back-link" href="/" aria-label="Torna alla Home">‹</a><div><h1 id="page-title">Auto di famiglia</h1><p id="page-subtitle">Veicoli, manutenzione e scadenze</p></div></div><div class="actions"><button class="btn" id="top-action" type="button" style="display:none" aria-label="Menu veicolo">⋮</button></div></header>
+<div id="overview" class="car-view active"><section class="grid" id="summaries"></section></div>
 <div id="vehicle" class="car-view"><div id="vehicle-content"></div></div>
 <div class="footer">I dati provengono dallo storico registrato. Le scadenze non documentate sono indicate come da verificare; non equivalgono a pagamenti o revisioni mancanti.</div>
 </main>
@@ -165,7 +173,7 @@ function openVehicle(id){
  document.getElementById('overview').classList.remove('active');document.getElementById('vehicle').classList.add('active');
  document.getElementById('page-title').textContent=c.name;document.getElementById('page-subtitle').textContent='Auto di '+c.owner;
  document.querySelector('.back-link').onclick=e=>{e.preventDefault();showOverview()};
- document.getElementById('top-action').textContent='⋮';document.getElementById('top-action').onclick=()=>{document.querySelector('[data-tab="notes"]').click()};
+ document.getElementById('top-action').style.display='inline-flex';document.getElementById('top-action').textContent='⋮';document.getElementById('top-action').onclick=()=>{document.querySelector('[data-tab="notes"]').click()};
  const panels=detailPanels(c);
  const nav=[['maintenance','🔧','Manutenzione','Tagliandi, interventi e storico'],['deadlines','▣','Scadenze','Bollo, assicurazione, revisione e promemoria'],['documents','▤','Documenti','Libretto, assicurazione, ricevute, ecc.'],['costs','▱','Costi','Spese di gestione e storico costi'],['notes','▢','Note','Appunti personali e promemoria']];
  const urgent=c.statusTone==='neutral';
@@ -173,8 +181,7 @@ function openVehicle(id){
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.tab;document.querySelectorAll('.detail-section').forEach(x=>x.classList.toggle('active',x.id==='tab-'+id));document.getElementById('tab-'+id).scrollIntoView({behavior:'smooth',block:'start'})}));
  history.replaceState(null,'','#'+id);window.scrollTo(0,0);
 }
-function showOverview(){document.getElementById('vehicle').classList.remove('active');document.getElementById('overview').classList.add('active');document.getElementById('page-title').textContent='Auto di famiglia';document.getElementById('page-subtitle').textContent='Veicoli, manutenzione e scadenze';document.querySelector('.back-link').onclick=null;document.getElementById('top-action').textContent='＋';document.getElementById('top-action').onclick=showAddVehicle;history.replaceState(null,'',location.pathname);window.scrollTo(0,0)}
-function showAddVehicle(){alert('Per aggiungere un veicolo servono modello, anno e dati di manutenzione. La gestione dei veicoli è attualmente basata sui dati registrati nel repository.')}
+function showOverview(){document.getElementById('vehicle').classList.remove('active');document.getElementById('overview').classList.add('active');document.getElementById('page-title').textContent='Auto di famiglia';document.getElementById('page-subtitle').textContent='Veicoli, manutenzione e scadenze';document.querySelector('.back-link').onclick=null;document.getElementById('top-action').style.display='none';document.getElementById('top-action').onclick=null;history.replaceState(null,'',location.pathname);window.scrollTo(0,0)}
 document.getElementById('summaries').replaceChildren(...DATA.cars.map(summary));
 if(location.hash){const id=location.hash.slice(1);if(DATA.cars.some(c=>c.id===id))openVehicle(id)}
 </script>
