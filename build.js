@@ -80,60 +80,50 @@ const targetedUiCSS = `
 html = html.replace('</style>',targetedUiCSS+'\n</style>');
 
 
-// Un unico gruppo flottante per Home e Refresh: stile, dimensioni e quota identici.
+// Comandi flottanti unificati: icone SVG colorate e feedback tattile.
 const floatingNavigationCss = `
 .hub-floating-actions{
-  position:fixed;right:max(16px,env(safe-area-inset-right));
-  bottom:max(16px,env(safe-area-inset-bottom));z-index:2147483646;
-  display:flex;align-items:stretch;gap:10px;
+ position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));z-index:2147483646;
+ display:flex;gap:10px;padding:7px;border:1px solid #e0e8f5;border-radius:26px;
+ background:rgba(255,255,255,.94);box-shadow:0 10px 28px rgba(25,52,92,.17);backdrop-filter:blur(14px)
 }
 .hub-floating-actions .hub-floating-action{
-  appearance:none;box-sizing:border-box;display:inline-flex!important;
-  align-items:center;justify-content:center;gap:9px;
-  width:126px;height:52px;min-height:52px;margin:0;padding:0 12px;
-  border:1px solid rgba(255,255,255,.2);border-radius:16px;
-  background:#14243c;color:#fff!important;text-decoration:none!important;
-  box-shadow:0 8px 24px rgba(0,0,0,.22);
-  font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-  line-height:1;white-space:nowrap;cursor:pointer;touch-action:manipulation;
-  -webkit-tap-highlight-color:transparent;
+ appearance:none;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+ width:150px;min-height:54px;padding:11px 15px;border:0;border-radius:22px;
+ color:#fff!important;text-decoration:none!important;font:750 15px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+ white-space:nowrap;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+ transition:transform .13s,filter .13s,box-shadow .13s
 }
-.hub-floating-actions .hub-floating-action:active{transform:scale(.98)}
-.hub-floating-actions .hub-floating-action:focus-visible{
-  outline:3px solid #65a6fa;outline-offset:3px;
-}
-.hub-floating-actions svg{display:block;flex:none;width:21px;height:21px;
-  fill:none;stroke:currentColor;stroke-width:2.3;
-  stroke-linecap:round;stroke-linejoin:round}
-.hub-floating-actions .hub-home-icon{font-size:20px;line-height:1}
-.hub-floating-actions button:disabled{opacity:.84;cursor:wait}
-@media(max-width:370px){
-  .hub-floating-actions{right:12px;gap:8px}
-  .hub-floating-actions .hub-floating-action{width:112px;height:48px;min-height:48px;font-size:13px}
-}
+.hub-floating-actions [data-hub-refresh]{background:linear-gradient(145deg,#2daaff,#1269ee);box-shadow:0 5px 12px rgba(18,105,238,.22)}
+.hub-floating-actions [data-hub-home]{background:linear-gradient(145deg,#ffc349,#ff821c);box-shadow:0 5px 12px rgba(255,130,28,.24)}
+.hub-floating-actions .hub-floating-action:active,.hub-floating-actions .hub-floating-action.is-pressed{transform:scale(.93);filter:brightness(.84);box-shadow:inset 0 3px 8px rgba(0,0,0,.2)}
+.hub-floating-actions .hub-floating-action:focus-visible{outline:3px solid #163c8c;outline-offset:3px}
+.hub-floating-actions svg{display:block;width:25px;height:25px;flex:none;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hub-floating-actions button:disabled{opacity:1;cursor:progress;filter:saturate(.75)}
+@media(max-width:370px){.hub-floating-actions{gap:7px;padding:6px}.hub-floating-actions .hub-floating-action{width:125px;min-height:48px;font-size:13px}}
 `;
 const floatingNavigationMarkup = `
 <div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
-  <button type="button" class="hub-floating-action" data-hub-refresh
-    aria-label="Ricarica gli ultimi dati degli allenamenti"
-    onclick="const u=new URL(window.location.href);u.searchParams.set('_hub_reload',Date.now().toString());window.location.replace(u.href)">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg>
-    <span class="hub-action-caption">Refresh</span>
-  </button>
-  <a class="hub-floating-action" data-hub-home href="/" aria-label="Torna alla Home">
-    <span class="hub-home-icon" aria-hidden="true">🏠</span>
-    <span class="hub-action-caption">Home</span>
-  </a>
+ <button type="button" class="hub-floating-action" data-hub-refresh aria-label="Aggiorna Allenamenti">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg><span class="hub-action-caption">Refresh</span>
+ </button>
+ <a class="hub-floating-action" data-hub-home href="/" aria-label="Torna alla Home">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span class="hub-action-caption">Home</span>
+ </a>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
-  const home=document.querySelector('[data-hub-home]');
-  if(home) home.href=window.location.protocol+'//'+window.location.hostname+'/';
-  // Nginx nelle versioni precedenti inietta un secondo Home:
-  // rimuoverlo per non mostrare due tasti sovrapposti.
-  document.querySelectorAll('body > a[style]').forEach(a=>{
-    if(a.textContent.trim()==='🏠 Home') a.remove();
-  });
+ const home=document.querySelector('[data-hub-home]');
+ if(home)home.href=window.location.protocol+'//'+window.location.hostname+'/';
+ document.querySelectorAll('body > a[style]').forEach(a=>{if(a.textContent.trim()==='🏠 Home')a.remove()});
+ const refresh=document.querySelector('[data-hub-refresh]');
+ refresh?.addEventListener('click',()=>{
+  refresh.classList.add('is-pressed');refresh.disabled=true;refresh.setAttribute('aria-busy','true');
+  refresh.querySelector('.hub-action-caption').textContent='Aggiorno…';
+  const u=new URL(window.location.href);u.searchParams.set('_hub_reload',Date.now().toString());
+  setTimeout(()=>window.location.replace(u.href),220);
+ });
+ home?.addEventListener('click',()=>home.classList.add('is-pressed'));
 });
 </script>
 `;
