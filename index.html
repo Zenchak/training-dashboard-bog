@@ -1306,7 +1306,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
         <div id="raceGoals" class="goal-card-list"></div>
       </div>
     </div>
-    <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Per 70.3 e Full i cutoff indicati sono riferimenti IRONMAN; per 10 km, mezza e maratona i cutoff dipendono dalla singola gara.</div>
+    <div class="legendline">Il progresso confronta le tue distanze massime registrate con i relativi traguardi di preparazione: non misura da solo la reale prontezza a gareggiare. La stima è orientativa e viene ricalcolata dai dati disponibili. Le valutazioni di categoria confrontano stime e riferimenti indicativi per uomini 35–39, non classifiche ufficiali di una gara.</div>
   </section>
 
   <div id="trainingDiary" class="section-title"><h2>☷ Diario allenamenti</h2><span id="count"></span></div>
@@ -1794,12 +1794,23 @@ function raceStanding(r,dyn){
   if(!Number.isFinite(dyn.center)) return {placement:"Posizione non stimabile",placementClass:"neutral",gate:"Cutoff non valutabile",gateClass:"neutral"};
 
   if(r.kind==="run"){
-    return {
-      placement:"Stima personale basata sui tuoi allenamenti",
-      placementClass:"neutral",
-      gate:"Cutoff: dipende dalla gara",
-      gateClass:"neutral"
+    // Tempi indicativi uomini 35–39: 10 km RunRepeat (2019),
+    // mezza riferimento divulgativo 2026, maratona studio scientifico 2017.
+    // Non sono classifiche di una specifica gara.
+    const runningBenchmarks={
+      "10 km":{seconds:54*60+27,label:"riferimento uomini 35–39 ~54'27"},
+      "Mezza maratona":{seconds:2*3600+2*60+37,label:"riferimento uomini 35–39 ~2h03"},
+      "Maratona":{seconds:4*3600+24*60+12,label:"riferimento uomini 35–39 ~4h24"}
     };
+    const bench=runningBenchmarks[r.name];
+    if(!bench)return {placement:"Riferimento di categoria non disponibile",placementClass:"neutral"};
+    const ratio=dyn.center/bench.seconds;
+    let placement,placementClass;
+    if(ratio<=.90){placement="sopra la media";placementClass="ok"}
+    else if(ratio<=1.08){placement="circa nella media";placementClass="neutral"}
+    else if(ratio<=1.20){placement="sotto la media";placementClass="warn"}
+    else {placement="parte bassa del gruppo";placementClass="warn"}
+    return {placement:placement+" · "+bench.label+" (indicativo)",placementClass};
   }
 
   const b=RACE_BENCHMARKS[r.name];
@@ -1996,7 +2007,7 @@ function renderRaceGoals(){
    <div class="goal-estimate"><div class="goal-est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span>
     <div class="goal-splits">${dyn.splits}</div>
     <div class="goal-detail ${standing.placementClass}"><b>ⓘ Valutazione:</b> ${standing.placement}</div>
-    <div class="goal-detail ${standing.gateClass}"><b>◷ Cutoff:</b> ${standing.gate}</div>
+
    </div>
    <span class="goal-chevron" aria-hidden="true">›</span>
   </article>`;
