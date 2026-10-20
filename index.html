@@ -2006,7 +2006,7 @@ function renderRaceGoals(){
    <div class="goal-progress">${parts.map(x=>`<div class="goal-progress-item goal-${x.key}"><div class="goal-progress-heading"><span class="goal-small-icon">${sym[x.key]}</span><b>${x.pct}%</b></div><div class="goal-track"><span style="width:${x.pct}%"></span></div></div>`).join("")}</div>
    <div class="goal-estimate"><div class="goal-est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span>
     <div class="goal-splits">${dyn.splits}</div>
-    <div class="goal-detail ${standing.placementClass}"><b>ⓘ Valutazione:</b> ${standing.placement}</div>
+    <div class="goal-detail ${standing.placementClass}"><b>ⓘ Stima:</b> ${standing.placement}</div>
 
    </div>
    <span class="goal-chevron" aria-hidden="true">›</span>
