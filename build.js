@@ -83,14 +83,14 @@ html = html.replace('</style>',targetedUiCSS+'\n</style>');
 // Comandi flottanti unificati: icone SVG colorate e feedback tattile.
 const floatingNavigationCss = `
 .hub-floating-actions{
- position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));z-index:2147483646;
- display:flex;gap:10px;padding:7px;border:1px solid #e0e8f5;border-radius:26px;
+ position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));z-index:2147483646;
+ display:flex;gap:6px;padding:4px;border:1px solid #e0e8f5;border-radius:18px;
  background:rgba(255,255,255,.94);box-shadow:0 10px 28px rgba(25,52,92,.17);backdrop-filter:blur(14px)
 }
 .hub-floating-actions .hub-floating-action{
  appearance:none;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:10px;
- width:150px;min-height:54px;padding:11px 15px;border:0;border-radius:22px;
- color:#fff!important;text-decoration:none!important;font:750 15px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+ width:96px;min-height:36px;padding:6px 9px;border:0;border-radius:14px;
+ color:#fff!important;text-decoration:none!important;font:750 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
  white-space:nowrap;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;
  transition:transform .13s,filter .13s,box-shadow .13s
 }
@@ -98,9 +98,9 @@ const floatingNavigationCss = `
 .hub-floating-actions [data-hub-home]{background:linear-gradient(145deg,#ffc349,#ff821c);box-shadow:0 5px 12px rgba(255,130,28,.24)}
 .hub-floating-actions .hub-floating-action:active,.hub-floating-actions .hub-floating-action.is-pressed{transform:scale(.93);filter:brightness(.84);box-shadow:inset 0 3px 8px rgba(0,0,0,.2)}
 .hub-floating-actions .hub-floating-action:focus-visible{outline:3px solid #163c8c;outline-offset:3px}
-.hub-floating-actions svg{display:block;width:25px;height:25px;flex:none;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.hub-floating-actions svg{display:block;width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 .hub-floating-actions button:disabled{opacity:1;cursor:progress;filter:saturate(.75)}
-@media(max-width:370px){.hub-floating-actions{gap:7px;padding:6px}.hub-floating-actions .hub-floating-action{width:125px;min-height:48px;font-size:13px}}
+@media(max-width:370px){.hub-floating-actions{gap:7px;padding:6px}.hub-floating-actions .hub-floating-action{width:90px;min-height:34px;font-size:11px}}
 `;
 const floatingNavigationMarkup = `
 <div class="hub-floating-actions" role="group" aria-label="Comandi rapidi">
@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 if (!html.includes('</style>') || !html.includes('</body>')) throw new Error('Missing HTML anchors for quick actions');
 html=html.replace('</style>',floatingNavigationCss+'\n</style>');
 html=html.replace('</body>',floatingNavigationMarkup+'\n</body>');
+// Il vecchio tasto "↻ Aggiorna" nell'header è ridondante: rimane solo il Refresh flottante.
+html=html.replace(/<button\b[^>]*\bid="trainingRefresh"[^>]*>[\s\S]*?<\/button>/,'');
+
 
 // NAS is the authoritative deployment: serve the locally built data.js,
 // avoiding an external GitHub fetch that could overwrite fresh training data.
