@@ -1174,7 +1174,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 
 /* Obiettivi: schede leggibili e adattive secondo il rendering approvato */
 .goal-card-list{display:grid;gap:13px;padding:12px;background:#f4f8ff}
-.goal-card{position:relative;display:grid;grid-template-columns:minmax(94px,1fr) minmax(125px,1.15fr) minmax(130px,1.3fr) minmax(215px,2fr);align-items:center;gap:14px;padding:20px 42px 20px 18px;min-height:172px;border:1px solid #e2eaf8;border-radius:23px;background:linear-gradient(140deg,#fff 65%,#f9fbff);box-shadow:0 6px 19px rgba(37,75,130,.07);color:#102044}
+.goal-card{position:relative;display:grid;grid-template-columns:minmax(94px,1fr) minmax(125px,1.15fr) minmax(130px,1.3fr) minmax(215px,2fr);align-items:center;gap:14px;padding:20px 18px;min-height:172px;border:1px solid #e2eaf8;border-radius:23px;background:linear-gradient(140deg,#fff 65%,#f9fbff);box-shadow:0 6px 19px rgba(37,75,130,.07);color:#102044}
 .goal-identity{display:flex;flex-direction:column;align-items:flex-start;gap:7px;font-size:15px;font-weight:850;line-height:1.1;min-width:0}
 .goal-logo{font-size:35px;line-height:1;display:flex;align-items:center;min-height:48px}
 .goal-logo img{width:59px;height:70px;object-fit:contain}
@@ -1195,8 +1195,8 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 .goal-splits{color:#64799a;margin-bottom:8px}
 .goal-detail{padding-top:6px;margin-top:6px;border-top:1px solid #e3eaf5;color:#536a91}
 .goal-detail.ok{color:#20885f}.goal-detail.warn{color:#b26b14}.goal-detail.risk{color:#c44545}
-.goal-chevron{position:absolute;right:13px;top:16px;border-radius:50%;width:29px;height:29px;display:grid;place-items:center;background:#f1f5fc;color:#536b96;font-size:29px}
-@media(max-width:850px){.goal-card{grid-template-columns:92px minmax(100px,1fr) minmax(105px,1fr) minmax(150px,1.55fr);gap:9px;padding:15px 34px 15px 12px}.goal-distance{font-size:12px;padding:6px 8px}.goal-est{font-size:19px}.goal-estimate{font-size:11px;padding-left:9px}.goal-identity{font-size:12px}}
+.goal-best{margin-top:10px;padding:10px 12px;background:#f0f5ff;border:1px solid #dce8ff;border-radius:12px;display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 10px}.goal-best span{color:#526a93;font-weight:750}.goal-best strong{font-size:17px;color:#152448}.goal-best small{color:#687e9d}.goal-chevron{position:absolute;right:13px;top:16px;border-radius:50%;width:29px;height:29px;display:grid;place-items:center;background:#f1f5fc;color:#536b96;font-size:29px}
+@media(max-width:850px){.goal-card{grid-template-columns:92px minmax(100px,1fr) minmax(105px,1fr) minmax(150px,1.55fr);gap:9px;padding:15px 12px}.goal-distance{font-size:12px;padding:6px 8px}.goal-est{font-size:19px}.goal-estimate{font-size:11px;padding-left:9px}.goal-identity{font-size:12px}}
 @media(max-width:590px){.goal-card-list{padding:8px;gap:11px}.goal-card{grid-template-columns:minmax(65px,.65fr) minmax(85px,1fr) minmax(83px,1fr);gap:7px;padding:13px 11px;border-radius:19px}.goal-identity{font-size:12px}.goal-logo{font-size:29px;min-height:42px}.goal-logo img{width:46px;height:56px}.goal-tri .goal-logo img{width:68px;height:74px}.goal-distance{font-size:11px;padding:6px 7px;gap:5px}.goal-small-icon,.goal-small-icon .sport-svg{width:15px;height:15px}.goal-progress-heading{font-size:10px}.goal-estimate{grid-column:1/-1;border-left:0;border-top:1px solid #e2eaf5;padding:9px 0 0;display:block;font-size:12px}.goal-est{font-size:21px}.goal-chevron{right:10px;top:10px;width:24px;height:24px;font-size:22px}.goal-identity{padding-right:12px}}
 </style>
 </head>
@@ -1990,6 +1990,22 @@ function triathlonGoalLogo(name){
  const file=name==="Sprint"?"triathlon-sprint-multicolor.svg":"triathlon-olimpico-multicolor.svg";
  return `<img src="assets/icons/${file}" alt="Triathlon ${name}" loading="lazy" style="width:100%;height:100%;object-fit:contain;display:block">`;
 }
+function recordedBestForGoal(r){
+ // Solo tempi realmente registrati: nessuna proiezione o tempo stimato.
+ // Per il triathlon richiediamo una gara multisport esplicitamente identificata.
+ const tol=r.kind==="run"?.025:.025;
+ const rows=AY.filter(a=>{
+  if(!Number.isFinite(a.km)||!a.duration||!Number.isFinite(sec(a.duration))||sec(a.duration)<=0)return false;
+  if(r.kind==="run")return a.type==="Corsa"&&Math.abs(a.km-r.run)<=r.run*tol;
+  const type=(a.type||"").toLowerCase(),note=(a.note||"").toLowerCase();
+  return (type.includes("triathlon")||note.includes("triathlon"))&&Math.abs(a.km-(r.swim+r.bike+r.run))<=(r.swim+r.bike+r.run)*tol;
+ });
+ if(!rows.length)return "";
+ const best=rows.reduce((x,y)=>sec(x.duration)<=sec(y.duration)?x:y);
+ const total=sec(best.duration),h=Math.floor(total/3600),m=Math.floor(total%3600/60),ss=Math.floor(total%60);
+ const time=h?h+"h"+String(m).padStart(2,"0")+"'"+String(ss).padStart(2,"0")+'"':m+"'"+String(ss).padStart(2,"0")+'"';
+ return `<div class="goal-best"><span>🏅 Miglior tempo registrato</span><strong>${time}</strong><small>${dt(best.date)} · ${n(best.km,2)} km</small></div>`;
+}
 function renderRaceGoals(){
  const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
  const maxSwim=Math.max(0,...AY.filter(a=>a.type==="Nuoto").map(a=>a.km));
@@ -2015,10 +2031,10 @@ function renderRaceGoals(){
    <div class="goal-progress">${parts.map(x=>`<div class="goal-progress-item goal-${x.key}"><div class="goal-progress-heading"><span class="goal-small-icon">${sym[x.key]}</span><b>${x.pct}%</b></div><div class="goal-track"><span style="width:${x.pct}%"></span></div></div>`).join("")}</div>
    <div class="goal-estimate"><div class="goal-est">${dyn.estimate}</div><span class="rating ${dyn.ratingClass}">Conf. ${dyn.confidence}</span>
     <div class="goal-splits">${dyn.splits}</div>
+    ${recordedBestForGoal(r)}
     <div class="goal-detail ${standing.placementClass}"><b>ⓘ Stima:</b> ${standing.placement}</div>
 
    </div>
-   <span class="goal-chevron" aria-hidden="true">›</span>
   </article>`;
  }).join("");
 }
