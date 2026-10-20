@@ -81,7 +81,7 @@ html = html.replace('</style>',targetedUiCSS+'\n</style>');
 
 
 // Comandi flottanti unificati: icone SVG colorate e feedback tattile.
-const floatingNavigationCss = `
+let floatingNavigationCss = `
 .hub-floating-actions{
  position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));z-index:2147483646;
  display:flex;gap:6px;padding:4px;border:1px solid #e0e8f5;border-radius:18px;
