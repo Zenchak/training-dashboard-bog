@@ -24,17 +24,66 @@
 .footer{margin:16px 3px 0;color:var(--muted);font-size:9px;line-height:1.45}
 @media(max-width:720px){.wrap{padding:10px 10px 56px}.hero{padding:17px;border-radius:19px;align-items:flex-start}.hero h1{font-size:34px}.actions{flex-direction:column}.btn{padding:8px 9px;font-size:10px}.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(3,1fr)}.todo-grid,.admin-grid{grid-template-columns:1fr}.section{margin-top:13px}.car-summary{padding:14px}.km{font-size:25px}
 .tablewrap{overflow:visible}table{min-width:0}thead{display:none}tbody,tr,td{display:block;width:100%}tr{padding:12px 13px;border-bottom:1px solid #edf0f5}td{border:0;padding:2px 0;font-size:10px}td:before{content:attr(data-label);display:inline-block;min-width:86px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.04em;font-weight:800}.chips{display:inline-flex;vertical-align:top;max-width:calc(100% - 90px)}.note{margin-left:90px}}
+
+/* Interfaccia auto: panoramica e scheda veicolo */
+:root{--navy:#101f52;--muted:#8290ae;--blue:#2365e8}
+body{background:#f8faff;color:var(--navy)}
+.wrap{max-width:940px;padding:24px 16px 80px}
+.hero{background:transparent;border:0;box-shadow:none;border-radius:0;padding:0 0 24px;align-items:center;overflow:visible}
+.hero:after,.brand{display:none}
+.hero h1{font-size:clamp(27px,4vw,36px);margin:5px 0 4px;letter-spacing:-.035em}
+.hero p{font-size:13px;color:var(--muted)}
+.hero .actions{align-items:center}
+.btn{border-radius:999px;background:#e9f1ff;border:0;color:#2554a8;font-size:13px;padding:12px}
+.back-link{color:var(--navy);font-size:24px;text-decoration:none;margin-right:8px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.car-summary{position:relative;overflow:hidden;min-height:350px;border:0;box-shadow:none;padding:21px;border-radius:22px;background:linear-gradient(145deg,#eaf3ff,#f5faff 70%);display:flex;flex-direction:column}
+.car-summary:nth-child(2){background:linear-gradient(145deg,#fff0ec,#fff8f6 70%)}
+.car-summary h2{font-size:24px;position:relative;z-index:2;margin:0 0 3px}
+.car-summary .meta{position:relative;z-index:2;font-size:12px;color:#7181a4}
+.car-summary .car-picture{height:130px;display:grid;place-items:center;position:relative;overflow:hidden;margin:4px 0}
+.car-picture .car-silhouette{font-size:105px;line-height:1;filter:drop-shadow(0 12px 9px rgba(25,38,73,.16));transform:scaleX(-1)}
+.car-summary .km{font-size:17px;margin:8px 0 0;position:relative;z-index:2}
+.car-summary .km small{font-size:10px}
+.car-summary .status{align-self:flex-start;font-size:11px;margin:10px 0 0;padding:6px 11px}
+.car-summary .status.neutral{background:#fff0d8;color:#bf6b00}
+.quick-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:13px 0}
+.quick{border-radius:12px;background:rgba(255,255,255,.85);padding:10px 6px;min-width:0;color:var(--navy);font-size:10px;font-weight:800}
+.quick svg{width:19px;height:19px;display:block;margin-bottom:5px;color:#2365e8}
+.quick small{display:block;font-size:9px;font-weight:600;color:#7c8bab;margin:2px 0}
+.quick strong{display:block;font-size:10px;overflow-wrap:anywhere}
+.detail-btn{margin-top:auto;width:100%;background:rgba(255,255,255,.8);border:0;border-radius:12px;padding:13px;color:var(--navy);font-weight:800;cursor:pointer}
+.car-view{display:none}.car-view.active{display:block}
+.vehicle-header{text-align:center;position:relative}
+.vehicle-header h2{font-size:28px;margin:0}.vehicle-header p{margin:0;color:var(--muted);font-size:13px}
+.vehicle-visual{height:190px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#e9f2ff,transparent 75%);margin:8px 0}
+.vehicle-visual .car-silhouette{font-size:155px;filter:drop-shadow(0 18px 11px rgba(30,50,90,.2));transform:scaleX(-1)}
+.alert-strip{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:#fff6df;color:#ab5b00;margin:12px 0}
+.alert-strip.ok{background:#eafaf1;color:#14804d}.alert-icon{font-size:25px}
+.alert-strip strong{display:block;font-size:14px}.alert-strip small{display:block;font-size:11px;color:#78849a;margin-top:3px}
+.vehicle-nav{display:grid;gap:8px;margin-top:16px}
+.vehicle-nav button{display:flex;align-items:center;text-align:left;gap:12px;background:#fff;border:1px solid #e9edf5;border-radius:15px;padding:13px 15px;color:var(--navy);cursor:pointer;font:inherit}
+.nav-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:11px;background:#edf4ff;color:#2167e7;font-size:19px}
+.vehicle-nav button:nth-child(2) .nav-icon{background:#f3eaff;color:#974be8}
+.vehicle-nav button:nth-child(3) .nav-icon{background:#fff0e8;color:#ed7138}
+.vehicle-nav button:nth-child(4) .nav-icon{background:#eaf2ff}
+.vehicle-nav button:nth-child(5) .nav-icon{background:#fff2d7;color:#cb8900}
+.nav-copy{flex:1}.nav-copy strong{display:block;font-size:13px}.nav-copy small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.detail-section{display:none;margin-top:18px}.detail-section.active{display:block}
+.detail-section .section-title{margin:18px 0 10px}
+.detail-section .admin-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.detail-section .panel{box-shadow:none}
+.add-vehicle{display:block;width:100%;border:1px dashed #bad3ff;border-radius:15px;background:transparent;padding:16px;margin-top:14px;color:#1e4a9e;font-weight:800;cursor:pointer}
+.section{margin-top:15px}
+@media(max-width:720px){.wrap{padding:16px 12px 60px}.hero{padding-bottom:20px}.hero h1{font-size:28px}.grid{grid-template-columns:1fr;gap:12px}.car-summary{min-height:320px;padding:15px}.car-picture .car-silhouette{font-size:112px}.car-summary .car-picture{height:112px}.detail-section .admin-grid{grid-template-columns:1fr}.hero .actions .btn{padding:10px}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <header class="hero">
-    <div><div class="brand">Zenchack · famiglia</div><h1>Auto di famiglia</h1><p>Stato, tagliandi, preventivi e prossimi interventi.</p></div>
-    <div class="actions"><button class="btn" type="button" onclick="location.reload()">↻ Refresh</button><a class="btn" href="/">🏠 Home</a></div>
-  </header>
-  <section class="grid" id="summaries"></section>
-  <div id="details"></div>
-  <div class="footer">Dati ricostruiti da libretto, storico manutenzione e documenti collegati. Le targhe e gli identificativi amministrativi sono mascherati perché il codice sorgente dell’Hub è sincronizzato tramite un repository pubblico. L’assenza di una ricevuta nello storico non equivale a mancato pagamento o mancata revisione.</div>
+<header class="hero"><div style="display:flex;align-items:center"><a class="back-link" href="/" aria-label="Torna alla Home">‹</a><div><h1 id="page-title">Auto di famiglia</h1><p id="page-subtitle">Veicoli, manutenzione e scadenze</p></div></div><div class="actions"><button class="btn" id="top-action" type="button" onclick="showAddVehicle()" aria-label="Aggiungi veicolo">＋</button></div></header>
+<div id="overview" class="car-view active"><section class="grid" id="summaries"></section><button class="add-vehicle" type="button" onclick="showAddVehicle()">＋ &nbsp; Aggiungi veicolo</button></div>
+<div id="vehicle" class="car-view"><div id="vehicle-content"></div></div>
+<div class="footer">I dati provengono dallo storico registrato. Le scadenze non documentate sono indicate come da verificare; non equivalgono a pagamenti o revisioni mancanti.</div>
 </main>
 <script src="data.js"></script>
 <script>
@@ -83,23 +132,50 @@ function adminCards(c){
  }
  return cards.length?'<div class="section-title"><h3>Documenti e amministrazione</h3><span>assicurazione · bollo · revisioni · permessi · multe</span></div><div class="admin-grid">'+cards.join('')+'</div>':'';
 }
+
+const icons={
+ wrench:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 3a6 6 0 0 1-8 8L5 19a2 2 0 0 1-3-3l8-8a6 6 0 0 1 8-8l-4 4 3 3 4-4z"/></svg>',
+ file:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2h8l5 5v15H6zM14 2v5h5M9 12h7M9 16h7"/></svg>',
+ shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 6v6c0 5-4 8-9 10-5-2-9-5-9-10V6z"/></svg>',
+ calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></svg>'
+};
+function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<small>'+label+'</small><strong>'+value+'</strong></div>'}
+function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
 function summary(c){
  const card=document.createElement('article');card.className='car-summary';
- card.innerHTML='<div class="eyebrow">'+c.owner+' · '+c.plateMasked+'</div><h2>'+c.name+'</h2><div class="meta">'+c.subtitle+'</div><div class="km">'+km(c.currentKm)+' <small>'+c.kmLabel+'</small></div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+c.status+'</span><div class="kpis"><div class="kpi"><b>'+c.maintenance.length+'</b><span>interventi</span></div><div class="kpi"><b>'+euro(knownTotal(c))+'</b><span>spesa nota</span></div><div class="kpi"><b>'+c.estimates.length+'</b><span>preventivi</span></div></div>';
+ card.innerHTML='<h2>'+c.name+'</h2><div class="meta">Auto di '+c.owner+'<br>'+c.subtitle+'</div><div class="car-picture"><span class="car-silhouette" aria-label="Automobile">🚙</span></div><span class="status '+(c.statusTone==='neutral'?'neutral':'')+'">'+(c.statusTone==='neutral'?'⚠':'✓')+' '+statusText(c)+'</span><div class="km">'+km(c.currentKm)+'</div><div class="quick-grid">'+quickCard('wrench','Tagliando',c.maintenance.length+' interventi')+quickCard('file','Bollo',c.tax?'Vedi dati':'Da inserire')+quickCard('shield','Assicurazione',c.insurance?date(c.insurance.validTo):'Da inserire')+quickCard('calendar','Revisione',arr(c.inspections).length?'Vedi dati':'Da inserire')+'</div><button class="detail-btn" type="button">Vedi dettagli &nbsp; →</button>';
+ card.querySelector('button').addEventListener('click',()=>openVehicle(c.id));
  return card;
 }
-function tableRows(c){
- return c.maintenance.map(x=>'<tr><td class="date" data-label="Data">'+date(x.date)+'</td><td data-label="Km">'+km(x.km)+'</td><td class="shop" data-label="Officina">'+(x.shop||'—')+'</td><td data-label="Lavori"><div class="chips">'+x.work.map(w=>'<span class="chip">'+w+'</span>').join('')+'</div>'+(x.note?'<div class="note">'+x.note+'</div>':'')+'</td><td class="money" data-label="Costo">'+euro(x.amount)+'</td></tr>').join('');
+function tableRows(c){return c.maintenance.map(x=>'<tr><td class="date" data-label="Data">'+date(x.date)+'</td><td data-label="Km">'+km(x.km)+'</td><td class="shop" data-label="Officina">'+(x.shop||'—')+'</td><td data-label="Lavori"><div class="chips">'+x.work.map(w=>'<span class="chip">'+w+'</span>').join('')+'</div>'+(x.note?'<div class="note">'+x.note+'</div>':'')+'</td><td class="money" data-label="Costo">'+euro(x.amount)+'</td></tr>').join('')}
+function detailPanels(c){
+ const todos=arr(c.next).map(x=>'<div class="todo '+(x.tone==='attention'?'attention':'')+'"><strong>'+x.title+'</strong><p>'+x.detail+'</p></div>').join('');
+ const estimates=arr(c.estimates).map(x=>'<div class="estimate"><div class="estimate-title">'+x.title+'</div><div class="estimate-meta">'+date(x.date)+' · '+x.shop+' · '+euro(x.amount)+'</div><div class="note">'+x.note+'</div></div>').join('')||'<div class="empty">Nessun preventivo registrato.</div>';
+ return {
+ maintenance:'<div class="section-title"><h3>Manutenzione</h3><span>'+c.maintenance.length+' interventi</span></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Intervento</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div><div class="section-title"><h3>Prossimi interventi</h3></div><div class="todo-grid">'+todos+'</div><div class="section-title"><h3>Preventivi</h3></div><div class="panel">'+estimates+'</div>',
+ deadlines:'<div class="section-title"><h3>Scadenze e documenti</h3></div>'+adminCards(c),
+ documents:'<div class="section-title"><h3>Documenti e dati veicolo</h3></div>'+adminCards(c),
+ costs:'<div class="section-title"><h3>Costi registrati</h3></div><div class="panel situation"><strong>Manutenzione: '+euro(knownTotal(c))+'</strong><p>'+knownCosts(c)+' interventi con costo registrato su '+c.maintenance.length+'.</p></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Lavori</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div>',
+ notes:'<div class="section-title"><h3>Note e situazione</h3></div><div class="panel situation"><ul>'+arr(c.situation).map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="section-title"><h3>Da tenere d’occhio</h3></div><div class="todo-grid">'+todos+'</div>'
+ };
 }
-function details(c){
- const wrap=document.createElement('section');wrap.className='section';
- const todos=c.next.map(x=>'<div class="todo '+(x.tone==='attention'?'attention':'')+'"><strong>'+x.title+'</strong><p>'+x.detail+'</p></div>').join('');
- const estimates=c.estimates.length?c.estimates.map(x=>'<div class="estimate"><div class="estimate-top"><div><div class="estimate-title">'+x.title+'</div><div class="estimate-meta">'+date(x.date)+' · '+x.shop+(x.amount!=null?' · '+euro(x.amount):'')+'</div></div><span class="badge">'+x.status+'</span></div><div class="note" style="margin-top:8px">'+x.note+'</div></div>').join(''):'<div class="empty">Nessun preventivo registrato.</div>';
- wrap.innerHTML='<div class="section-title"><h3>'+c.name+' · situazione</h3><span>'+c.owner+'</span></div><div class="panel situation"><ul>'+c.situation.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="section-title"><h3>Prossimi punti</h3><span>priorità operative</span></div><div class="todo-grid">'+todos+'</div>'+adminCards(c)+'<div class="section-title"><h3>Storico manutenzione</h3><span>'+c.maintenance.length+' interventi · '+knownCosts(c)+' con costo</span></div><div class="panel tablewrap"><table><thead><tr><th>Data</th><th>Km</th><th>Officina</th><th>Intervento</th><th>Costo</th></tr></thead><tbody>'+tableRows(c)+'</tbody></table></div><div class="section-title"><h3>Preventivi</h3><span>da confrontare prima dei lavori</span></div><div class="panel">'+estimates+'</div>';
- return wrap;
+function openVehicle(id){
+ const c=DATA.cars.find(x=>x.id===id);if(!c)return;
+ document.getElementById('overview').classList.remove('active');document.getElementById('vehicle').classList.add('active');
+ document.getElementById('page-title').textContent=c.name;document.getElementById('page-subtitle').textContent='Auto di '+c.owner;
+ document.querySelector('.back-link').onclick=e=>{e.preventDefault();showOverview()};
+ document.getElementById('top-action').textContent='⋮';document.getElementById('top-action').onclick=()=>{document.querySelector('[data-tab="notes"]').click()};
+ const panels=detailPanels(c);
+ const nav=[['maintenance','🔧','Manutenzione','Tagliandi, interventi e storico'],['deadlines','▣','Scadenze','Bollo, assicurazione, revisione e promemoria'],['documents','▤','Documenti','Libretto, assicurazione, ricevute, ecc.'],['costs','▱','Costi','Spese di gestione e storico costi'],['notes','▢','Note','Appunti personali e promemoria']];
+ const urgent=c.statusTone==='neutral';
+ document.getElementById('vehicle-content').innerHTML='<div class="vehicle-header"><div class="vehicle-visual"><span class="car-silhouette" aria-label="Automobile">🚙</span></div></div><div class="alert-strip '+(urgent?'':'ok')+'"><span class="alert-icon">'+(urgent?'❕':'✓')+'</span><div><strong>'+(urgent?'Da controllare':'In gestione')+'</strong><small>'+(urgent?'Alcuni interventi e scadenze da verificare.':'Consulta interventi e scadenze registrati.')+'</small></div></div><div class="quick-grid">'+quickCard('wrench','Tagliando',c.maintenance.length+' interventi')+quickCard('file','Bollo',c.tax?'Vedi dati':'Da inserire')+quickCard('shield','Assicurazione',c.insurance?date(c.insurance.validTo):'Da inserire')+quickCard('calendar','Revisione',arr(c.inspections).length?'Vedi dati':'Da inserire')+'</div><div class="vehicle-nav">'+nav.map(([id,ico,title,sub])=>'<button type="button" data-tab="'+id+'"><span class="nav-icon">'+ico+'</span><span class="nav-copy"><strong>'+title+'</strong><small>'+sub+'</small></span><span>›</span></button>').join('')+'</div>'+nav.map(([id])=>'<section class="detail-section" id="tab-'+id+'">'+panels[id]+'</section>').join('');
+ document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.tab;document.querySelectorAll('.detail-section').forEach(x=>x.classList.toggle('active',x.id==='tab-'+id));document.getElementById('tab-'+id).scrollIntoView({behavior:'smooth',block:'start'})}));
+ history.replaceState(null,'','#'+id);window.scrollTo(0,0);
 }
+function showOverview(){document.getElementById('vehicle').classList.remove('active');document.getElementById('overview').classList.add('active');document.getElementById('page-title').textContent='Auto di famiglia';document.getElementById('page-subtitle').textContent='Veicoli, manutenzione e scadenze';document.querySelector('.back-link').onclick=null;document.getElementById('top-action').textContent='＋';document.getElementById('top-action').onclick=showAddVehicle;history.replaceState(null,'',location.pathname);window.scrollTo(0,0)}
+function showAddVehicle(){alert('Per aggiungere un veicolo servono modello, anno e dati di manutenzione. La gestione dei veicoli è attualmente basata sui dati registrati nel repository.')}
 document.getElementById('summaries').replaceChildren(...DATA.cars.map(summary));
-document.getElementById('details').replaceChildren(...DATA.cars.map(details));
+if(location.hash){const id=location.hash.slice(1);if(DATA.cars.some(c=>c.id===id))openVehicle(id)}
 </script>
 </body>
 </html>
