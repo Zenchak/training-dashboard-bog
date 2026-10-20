@@ -147,7 +147,7 @@ const icons={
  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 6v6c0 5-4 8-9 10-5-2-9-5-9-10V6z"/></svg>',
  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></svg>'
 };
-function carPhoto(c){const src=c.id==='kia-rio'?'https://images.carexpert.com.au/resize/1400/-/vehicles/source-j/m/5/jm5sgs8g20130722.jpg':'https://servicemanuals.info/2849-large_default/fiat-punto-188-1-manuel-de-reparation-atelier-schemas-de-cablage-electrique.jpg';return '<img src="'+src+'" alt="'+c.name+'" loading="lazy" referrerpolicy="no-referrer">'}
+function carPhoto(c){const src=c.id==='kia-rio'?'kia_rio.png':'fiat_punto.png';return '<img src="'+src+'" alt="'+c.name+'" loading="lazy">'}
 function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<small>'+label+'</small><strong>'+value+'</strong></div>'}
 function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
 function summary(c){
