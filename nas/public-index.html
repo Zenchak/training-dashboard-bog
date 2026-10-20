@@ -150,6 +150,12 @@ dialog::backdrop{background:rgba(55,65,81,.20);backdrop-filter:blur(6px)}
   .hero-actions{min-width:94px}.switch,.refresh{min-width:94px;font-size:10px;padding:9px 8px}
   .card{min-height:186px}.title{font-size:17px}.desc{font-size:10px}.card-icon{width:42px;height:42px}
 }
+/* Riquadri Hub compatti, perfettamente quadrati */
+.grid .card{aspect-ratio:1/1;min-height:0;padding:clamp(12px,3vw,20px)}
+.grid .card .title{padding-top:10px;font-size:clamp(18px,3.5vw,23px)}
+.grid .card .desc{font-size:clamp(11px,2.3vw,13px);line-height:1.25}
+@media(max-width:620px){.grid{gap:10px}.grid .card{min-height:0;border-radius:23px}.grid .card-icon{width:46px;height:46px;font-size:21px;border-radius:15px}.grid .arrow{width:32px;height:32px;font-size:19px;border-radius:12px}}
+@media(max-width:390px){.grid{gap:8px}.grid .card{padding:12px}.grid .card .title{font-size:17px}.grid .card .desc{font-size:11px}.grid .card-icon{width:40px;height:40px}.grid .arrow{width:29px;height:29px}}
 </style>
 </head>
 <body>
