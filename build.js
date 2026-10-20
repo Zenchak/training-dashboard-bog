@@ -175,7 +175,7 @@ const sourceIcons=path.join(__dirname,'assets','icons');
 const outputIcons=path.join(out,'assets','icons');
 fs.mkdirSync(outputIcons,{recursive:true});
 for(const name of fs.readdirSync(sourceIcons)){
-  if(name.endsWith('.svg')) fs.copyFileSync(path.join(sourceIcons,name),path.join(outputIcons,name));
+  if(/\.(svg|png)$/i.test(name)) fs.copyFileSync(path.join(sourceIcons,name),path.join(outputIcons,name));
 }
 
 
