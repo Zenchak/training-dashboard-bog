@@ -1992,20 +1992,25 @@ function goalProvidedIcon(name){
  return file?`<img src="assets/icons/${file}" alt="${name}" loading="lazy" style="display:block;width:100%;height:100%;object-fit:contain">`:"";
 }
 function recordedBestForGoal(r){
- // Solo tempi realmente registrati: nessuna proiezione o tempo stimato.
- // Per il triathlon richiediamo una gara multisport esplicitamente identificata.
- const tol=r.kind==="run"?.025:.025;
+ // Un allenamento più lungo contiene anche la distanza obiettivo.
+ // Se mancano split GPS, il passaggio è una STIMA a ritmo medio, mai un tempo misurato.
+ const target=r.kind==="run"?(r.run===21.1?21.0975:r.run):r.swim+r.bike+r.run;
  const rows=AY.filter(a=>{
   if(!Number.isFinite(a.km)||!a.duration||!Number.isFinite(sec(a.duration))||sec(a.duration)<=0)return false;
-  if(r.kind==="run")return a.type==="Corsa"&&Math.abs(a.km-r.run)<=r.run*tol;
+  if(r.kind==="run")return a.type==="Corsa"&&a.km>=target*.975;
   const type=(a.type||"").toLowerCase(),note=(a.note||"").toLowerCase();
-  return (type.includes("triathlon")||note.includes("triathlon"))&&Math.abs(a.km-(r.swim+r.bike+r.run))<=(r.swim+r.bike+r.run)*tol;
+  return (type.includes("triathlon")||note.includes("triathlon"))&&Math.abs(a.km-target)<=target*.025;
+ }).map(a=>{
+  const exact=Math.abs(a.km-target)<=target*.025;
+  const estimated=r.kind==="run"&&!exact;
+  return {a,estimated,seconds:estimated?sec(a.duration)*target/a.km:sec(a.duration)};
  });
  if(!rows.length)return "";
- const best=rows.reduce((x,y)=>sec(x.duration)<=sec(y.duration)?x:y);
- const total=sec(best.duration),h=Math.floor(total/3600),m=Math.floor(total%3600/60),ss=Math.floor(total%60);
+ const best=rows.reduce((x,y)=>x.seconds<=y.seconds?x:y);
+ const total=Math.round(best.seconds),h=Math.floor(total/3600),m=Math.floor(total%3600/60),ss=total%60;
  const time=h?h+"h"+String(m).padStart(2,"0")+"'"+String(ss).padStart(2,"0")+'"':m+"'"+String(ss).padStart(2,"0")+'"';
- return `<div class="goal-best"><span>🏅 Miglior tempo registrato</span><strong>${time}</strong><small>${dt(best.date)} · ${n(best.km,2)} km</small></div>`;
+ const label=best.estimated?"⏱ Passaggio stimato a "+n(target,2)+" km":"🏅 Miglior tempo registrato";
+ return `<div class="goal-best"><span>${label}</span><strong>${time}</strong><small>${dt(best.a.date)} · attività ${n(best.a.km,2)} km${best.estimated?" · calcolato dal passo medio":""}</small></div>`;
 }
 function renderRaceGoals(){
  const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
