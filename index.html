@@ -1130,6 +1130,14 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 /* Fix: SVG delle discipline sempre proporzionate e contenute, senza alterare il layout. */
 .disciplines .disc .ico{display:flex!important;align-items:center;justify-content:center;min-width:0;min-height:0;overflow:visible}
 .disciplines .disc .ico > svg.sport-svg{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;aspect-ratio:1/1!important;object-fit:contain!important;flex:0 0 auto!important;transform:none!important}
+
+/* Refined iPhone-friendly training trend */
+#trend{display:block;width:100%;border-radius:16px}
+.chart:has(#trend){background:linear-gradient(155deg,#ffffff 0%,#fcfdff 70%,#f6f9ff 100%);border:1px solid #e5ebf5;box-shadow:0 10px 28px rgba(37,65,115,.065);border-radius:24px;padding:22px}
+.chart:has(#trend) h3{font-weight:800;letter-spacing:-.025em}
+.chart:has(#trend) .trend-legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 8px}
+.chart:has(#trend) .trend-legend span{border:1px solid #e4eaf4;background:#f9fbff;border-radius:999px;padding:7px 11px;font-weight:600}
+@media(max-width:600px){.chart:has(#trend){padding:16px 13px;border-radius:22px}.chart:has(#trend) .trend-legend span{padding:6px 9px;font-size:11px}}
 </style>
 </head>
 <body id="overview">
@@ -1235,13 +1243,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
       </div>
       <canvas id="trend"></canvas>
     </div>
-    <div class="card chart">
-      <h3>🏃 Prestazione corsa</h3>
-      <p id="runInfo">Ogni corsa di almeno 5 km, con trend mobile sulle ultime 3 corse. Più in alto = più veloce.</p>
-      <div class="trend-legend">
-        <span><i class="trend-dot run"></i>Singole corse</span>
-        <span><i class="trend-dot runtrend"></i>Trend 3 corse</span>
-      </div>
+
       <canvas id="runTrend"></canvas>
     </div>
   </section>
