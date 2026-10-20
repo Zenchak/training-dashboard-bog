@@ -1995,6 +1995,7 @@ function recordedBestForGoal(r){
  // Un allenamento più lungo contiene anche la distanza obiettivo.
  // Se mancano split GPS, il passaggio è una STIMA a ritmo medio, mai un tempo misurato.
  const target=r.kind==="run"?(r.run===21.1?21.0975:r.run):r.swim+r.bike+r.run;
+ const fitHalfMarathon={date:"2026-10-19",km:22.61,seconds:6842.3923304,source:"FIT Garmin 24782687428_ACTIVITY.fit"};
  const rows=AY.filter(a=>{
   if(!Number.isFinite(a.km)||!a.duration||!Number.isFinite(sec(a.duration))||sec(a.duration)<=0)return false;
   if(r.kind==="run")return a.type==="Corsa"&&a.km>=target*.975;
@@ -2005,12 +2006,16 @@ function recordedBestForGoal(r){
   const estimated=r.kind==="run"&&!exact;
   return {a,estimated,seconds:estimated?sec(a.duration)*target/a.km:sec(a.duration)};
  });
+ if(r.kind==="run"&&r.run===21.1){
+  const measured={a:{date:fitHalfMarathon.date,km:fitHalfMarathon.km},seconds:fitHalfMarathon.seconds,estimated:false,fitMeasured:true};
+  rows.push(measured);
+ }
  if(!rows.length)return "";
  const best=rows.reduce((x,y)=>x.seconds<=y.seconds?x:y);
  const total=Math.round(best.seconds),h=Math.floor(total/3600),m=Math.floor(total%3600/60),ss=total%60;
  const time=h?h+"h"+String(m).padStart(2,"0")+"'"+String(ss).padStart(2,"0")+'"':m+"'"+String(ss).padStart(2,"0")+'"';
- const label=best.estimated?"⏱ Passaggio stimato a "+n(target,2)+" km":"🏅 Miglior tempo registrato";
- return `<div class="goal-best"><span>${label}</span><strong>${time}</strong><small>${dt(best.a.date)} · attività ${n(best.a.km,2)} km${best.estimated?" · calcolato dal passo medio":""}</small></div>`;
+ const label=best.fitMeasured?"🏅 Passaggio Garmin FIT a 21,0975 km":best.estimated?"⏱ Passaggio stimato a "+n(target,2)+" km":"🏅 Miglior tempo registrato";
+ return `<div class="goal-best"><span>${label}</span><strong>${time}</strong><small>${dt(best.a.date)} · attività ${n(best.a.km,2)} km${best.fitMeasured?" · tempo trascorso dai punti FIT":best.estimated?" · calcolato dal passo medio":""}</small></div>`;
 }
 function renderRaceGoals(){
  const allRun=AY.filter(a=>["Corsa","Trail"].includes(a.type));
