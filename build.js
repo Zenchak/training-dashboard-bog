@@ -183,6 +183,15 @@ if (fs.existsSync(correctionPath)) {
 
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
+/* Copia le icone SVG nel sito pubblicato: prima erano presenti solo nel sorgente,
+   quindi nel dist/ del NAS il browser non poteva caricarle. */
+const sourceIcons=path.join(__dirname,'assets','icons');
+const outputIcons=path.join(out,'assets','icons');
+fs.mkdirSync(outputIcons,{recursive:true});
+for(const name of fs.readdirSync(sourceIcons)){
+  if(name.endsWith('.svg')) fs.copyFileSync(path.join(sourceIcons,name),path.join(outputIcons,name));
+}
+
 
 // Small incremental records: do not rewrite the historical 187-activity data.js.
 // The NAS updater rebuilds dist/ after GitHub commits; duplicate keys are ignored.
