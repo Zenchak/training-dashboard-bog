@@ -1168,6 +1168,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 .hero-refresh:focus-visible{outline:3px solid #1685e8;outline-offset:3px}
 /* Pulsante aggiornamento Training Hub */
 .hero #trainingRefresh{flex-shrink:0;min-height:36px}
+.sport-icon-original{display:inline-block;object-fit:contain;vertical-align:middle;flex:none}
 </style>
 </head>
 <body id="overview">
@@ -1472,7 +1473,19 @@ const SPORT_SVG={
   Triathlon:'<path d="M5 28l7-9 7 9 7-9 7 9 9-9M5 38l7-9 7 9 7-9 7 9 9-9"/>',
   Scarpe:'<path d="M7 30q11 3 15-8 3-5 8 3 4 7 12 8v5H6q-5-5 1-8Z"/><path d="m16 28 9 5m-6-10 8 6"/>'
 };
+const SPORT_ICON_FILES={
+  Corsa:"running_viola.svg",
+  Bici:"bici_arancione.svg",
+  Nuoto:"nuoto_azzurro_blu.svg",
+  Trail:"trail_running_verde.svg",
+  "Trail running":"trail_running_verde.svg",
+  Trekking:"camminata_marrone.svg",
+  Camminata:"camminata_marrone.svg",
+  Palestra:"palestra_rosso.svg"
+};
 function sportIcon(type){
+  const file=SPORT_ICON_FILES[type];
+  if(file)return '<img class="sport-svg sport-icon-original" src="assets/icons/'+file+'" alt="" aria-hidden="true" loading="lazy" decoding="async">';
   const key=SPORT_SVG[type]?type:"Totale";
   return '<svg class="sport-svg" viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">'+SPORT_SVG[key]+'</svg>';
 }
