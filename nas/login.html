@@ -29,16 +29,79 @@ h1{font-size:28px;margin:16px 0 7px;letter-spacing:-.03em}.sub{color:var(--muted
 <body>
 <main class="card">
   <div class="brand"><span class="logo">Z</span> Zenchack Hub</div>
-  <h1>Accesso rapido</h1>
-  <div class="sub">Inserisci la password una sola volta su questo dispositivo. L’Hub resterà collegato per 30 giorni.</div>
-
-  <a class="choice" href="/fallback/bogdan"><span>👨</span><span>Bogdan<small>Accedi e ricorda questo dispositivo</small></span></a>
-  <a class="choice" href="/fallback/camilla"><span>👩</span><span>Camilla<small>Accedi e ricorda questo dispositivo</small></span></a>
-
-  <div class="note">La sessione è salvata in un cookie sicuro sul dispositivo. Dopo 30 giorni verrà richiesta di nuovo la password.</div>
+  <h1 id="headline">Accesso personale</h1>
+  <div class="sub" id="subtitle">Ogni profilo è protetto dalle proprie credenziali. Le pagine condivise rimangono accessibili a entrambi.</div>
+  <div id="choices">
+    <button class="choice" type="button" data-user="bogdan"><span>👨</span><span>Bogdan<small>Accedi al tuo profilo</small></span></button>
+    <button class="choice" type="button" data-user="camilla"><span>👩</span><span>Camilla<small>Accedi al tuo profilo</small></span></button>
+  </div>
+  <form id="loginForm" hidden autocomplete="on">
+    <label for="username">Nome utente</label>
+    <input id="username" name="username" autocomplete="username" required autocapitalize="off" spellcheck="false">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <p id="status" role="alert" aria-live="polite"></p>
+    <button class="submit" type="submit" id="loginSubmit">Accedi</button>
+    <button class="other" type="button" id="chooseOther">Scegli un altro profilo</button>
+  </form>
+  <div class="note">Quando cambi da Bogdan a Camilla o viceversa, devi inserire le credenziali del profilo richiesto. La sessione viene ricordata per 30 giorni su questo dispositivo.</div>
+  <a class="back-home" href="/">Torna all’Hub</a>
 </main>
+<style>
+.choice{font:inherit;cursor:pointer;text-align:left}
+form{margin-top:14px;display:grid;gap:7px}
+form[hidden]{display:none}
+form label{color:#596b83;font-size:12px;font-weight:800;margin-top:8px}
+form input{border-radius:12px;border:1px solid #dbe3f2;background:#fff;min-height:47px;padding:11px 13px;font:inherit;font-size:16px;color:#182944;width:100%}
+form input:focus{outline:2px solid #9caaff;border-color:#9284ef}
+.submit{width:100%;border:0;border-radius:12px;background:linear-gradient(145deg,#755cf5,#537fff);color:#fff;font:inherit;font-weight:850;min-height:47px;cursor:pointer;margin-top:5px}
+.other{border:0;background:transparent;font:inherit;color:#6479aa;font-size:12px;padding:12px;cursor:pointer}
+.back-home{display:block;margin-top:12px;color:#65758b;font-size:12px;text-decoration:none;text-align:center}
+#status{color:#b72a43;font-size:12px;min-height:0;margin:2px 0}
+</style>
 <script>
-(async()=>{try{const r=await fetch('/auth/me',{cache:'no-store'});if(r.ok)location.replace('/')}catch{}})();
+const form=document.getElementById('loginForm'),choices=document.getElementById('choices');
+const urlParams=new URLSearchParams(location.search);
+const requested=urlParams.get('switch');
+let target=null;
+function showForm(user,locked=false){
+ if(user!=='bogdan'&&user!=='camilla')return;
+ target=user;form.hidden=false;choices.hidden=true;document.getElementById('chooseOther').hidden=locked;
+ document.getElementById('username').value=user;
+ document.getElementById('password').value='';
+ document.getElementById('status').textContent='';
+ const name=user==='bogdan'?'Bogdan':'Camilla';
+ document.getElementById('headline').textContent='Accedi come '+name;
+ document.getElementById('subtitle').textContent='Per entrare in questo profilo servono il suo nome utente e la sua password.';
+}
+if(requested==='bogdan'||requested==='camilla')showForm(requested,true);
+else (async()=>{try{const r=await fetch('/auth/me',{cache:'no-store',credentials:'same-origin'});if(r.ok)location.replace('/')}catch{}})();
+document.querySelectorAll('[data-user]').forEach(b=>b.addEventListener('click',()=>showForm(b.dataset.user)));
+document.getElementById('chooseOther').addEventListener('click',()=>{
+ target=null;form.hidden=true;choices.hidden=false;document.getElementById('headline').textContent='Accesso personale';
+ document.getElementById('subtitle').textContent='Scegli il profilo da utilizzare.';
+});
+form.addEventListener('submit',async e=>{
+ e.preventDefault();const username=document.getElementById('username').value.trim().toLowerCase();
+ const password=document.getElementById('password').value;
+ const status=document.getElementById('status'),btn=document.getElementById('loginSubmit');
+ if(!target||username!==target){status.textContent='Inserisci il nome utente corrispondente al profilo scelto.';return}
+ btn.disabled=true;btn.textContent='Verifico credenziali…';status.textContent='';
+ try{
+  const bytes=new TextEncoder().encode(username+':'+password);let binary='';
+  for(const byte of bytes)binary+=String.fromCharCode(byte);
+  const r=await fetch('/auth/password/'+target,{
+   method:'POST',credentials:'same-origin',cache:'no-store',
+   headers:{Authorization:'Basic '+btoa(binary),'Content-Type':'application/json','X-Zenchak-Login':'1'},
+   body:'{}'
+  });
+  if(!r.ok)throw Error(r.status===401?'Nome utente o password non validi.':'Accesso non riuscito ('+r.status+').');
+  const data=await r.json();
+  if(data.user.toLowerCase()!==target)throw Error('Identità non corrispondente.');
+  location.replace('/');
+ }catch(err){status.textContent=err.message||'Accesso non riuscito.'}
+ finally{btn.disabled=false;btn.textContent='Accedi';document.getElementById('password').value=''}
+});
 </script>
 </body>
 </html>
