@@ -1199,6 +1199,7 @@ body{background:radial-gradient(ellipse at 35% -5%,#ffffff 0%,#f8fbff 48%,#f3f8f
 @media(max-width:850px){.goal-card{grid-template-columns:92px minmax(100px,1fr) minmax(105px,1fr) minmax(150px,1.55fr);gap:9px;padding:15px 12px}.goal-distance{font-size:12px;padding:6px 8px}.goal-est{font-size:19px}.goal-estimate{font-size:11px;padding-left:9px}.goal-identity{font-size:12px}}
 @media(max-width:590px){.goal-card-list{padding:8px;gap:11px}.goal-card{grid-template-columns:minmax(65px,.65fr) minmax(85px,1fr) minmax(83px,1fr);gap:7px;padding:13px 11px;border-radius:19px}.goal-identity{font-size:12px}.goal-logo{font-size:29px;min-height:42px}.goal-logo img{width:76px;height:76px}.goal-tri .goal-logo img{width:82px;height:82px}.goal-distance{font-size:11px;padding:6px 7px;gap:5px}.goal-small-icon,.goal-small-icon .sport-svg{width:15px;height:15px}.goal-progress-heading{font-size:10px}.goal-estimate{grid-column:1/-1;border-left:0;border-top:1px solid #e2eaf5;padding:9px 0 0;display:block;font-size:12px}.goal-est{font-size:21px}.goal-chevron{right:10px;top:10px;width:24px;height:24px;font-size:22px}.goal-identity{padding-right:12px}}
 </style>
+<script defer src="/media-client.js"></script>
 </head>
 <body id="overview">
 <aside class="hub-sidebar" aria-label="Navigazione Training Hub">
@@ -1415,7 +1416,15 @@ const SPORT_ICON_FILES={
   Camminata:"camminata_marrone.svg",
   Palestra:"palestra_rosso.svg"
 };
+const SPORT_MEDIA_SLOTS={
+  Corsa:'sport-running', Bici:'sport-bike', Nuoto:'sport-swim',
+  Trail:'sport-trail', 'Trail running':'sport-trail',
+  Trekking:'sport-walk', Camminata:'sport-walk', Palestra:'sport-gym'
+};
 function sportIcon(type){
+  const slot=SPORT_MEDIA_SLOTS[type];
+  const media=slot?window.ZenchakMedia?.src(slot,null):null;
+  if(media)return '<img class="sport-svg sport-icon-original" data-media-slot="'+slot+'" src="'+media+'" alt="" decoding="async" style="object-fit:contain">';
   const file=SPORT_ICON_FILES[type];
   if(file)return INLINE_SPORT_SVG[file];
   const key=SPORT_SVG[type]?type:"Totale";
@@ -2588,6 +2597,6 @@ document.getElementById("trainingRefresh")?.addEventListener("click",function(){
 });
 </script>
 
-
+<script>window.addEventListener("zenchak-media-loaded",()=>{if(typeof renderAll==="function")renderAll()});</script>
 </body>
 </html>
