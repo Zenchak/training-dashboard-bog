@@ -1,0 +1,41 @@
+name: Verifica accessi Hub e Nginx
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'nas/nginx.conf'
+      - 'nas/login.html'
+      - 'nas/public-index.html'
+      - 'nas/docker-compose.yml'
+      - '.github/workflows/test-profile-routing.yml'
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Controlla separazione profili
+        shell: bash
+        run: |
+          set -eu
+          grep -q 'location = /_auth_bogdan' nas/nginx.conf
+          grep -q 'location = /_auth_camilla' nas/nginx.conf
+          grep -q 'auth_request /_auth_bogdan' nas/nginx.conf
+          grep -q 'location = /auth/password/bogdan' nas/nginx.conf
+          grep -q 'location = /auth/password/camilla' nas/nginx.conf
+          grep -q '127.0.0.1:8081:8081' nas/docker-compose.yml
+          grep -q '127.0.0.1:8082:8082' nas/docker-compose.yml
+          grep -q '127.0.0.1:8083:8083' nas/docker-compose.yml
+          grep -q "fetch('/auth/me'" nas/public-index.html
+          ! grep -q "const cookieName='zenchack_profile'" nas/public-index.html
+          grep -q "loginForm" nas/login.html
+      - name: Validazione sintassi Nginx
+        shell: bash
+        run: |
+          set -eu
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx
+          echo '127.0.0.1 house-api' | sudo tee -a /etc/hosts
+          sudo mkdir -p /etc/nginx/conf.d
+          sudo cp nas/nginx.conf /etc/nginx/conf.d/zenchak-hub.conf
+          sudo nginx -t
