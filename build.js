@@ -176,7 +176,7 @@ if(fs.existsSync(garminOverlayPath)){
  const pack=JSON.parse(fs.readFileSync(garminOverlayPath,'utf8'));
  if(!Array.isArray(pack.entries)||pack.entries.length!==48||pack.entries.filter(e=>e.newActivity).length!==7)throw new Error('Invalid Garmin overlay');
  garminOverlayScript='\n;for(const row of '+JSON.stringify(pack.entries)+'){\n'
- + ' let a=A.find(x=>x.date===row.date&&x.type===row.type&&Math.abs(Number(x.km)-Number(row.km))<0.26);\n'
+ + ' let a=A.find(x=>x.date===row.date&&x.type===row.type&&Math.abs(Number(x.km)-Number(row.km))<0.26&&(!row.newActivity||String(x.duration)===String(row.newActivity.duration)));\n'
  + ' if(!a&&row.newActivity){a={...row.newActivity};A.push(a)}\n'
  + ' if(a){a.garminId=row.id;a.garmin=row.stats;if(!a.startTime&&row.stats.start)a.startTime=row.stats.start}\n'
  + '}\n';
