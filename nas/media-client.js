@@ -12,7 +12,7 @@ function apply(root){
  const parent=root||document;
  for(const img of parent.querySelectorAll('img[data-media-slot]')){
   const slot=img.getAttribute('data-media-slot');
-  const next=items[slot]?.url;
+  const next=items[slot]?.url||img.getAttribute('data-default-src');
   if(next&&img.getAttribute('src')!==next)img.setAttribute('src',next);
  }
 }
@@ -28,6 +28,7 @@ function load(){
   return items;
  }).catch(e=>{
   console.warn('Zenchak media: uso immagini originali',e.message);
+  apply(document);
   return items;
  });
  return pending;
