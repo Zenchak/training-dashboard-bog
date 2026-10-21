@@ -106,7 +106,7 @@ function build(){
    card.querySelector('.reset').onclick=()=>reset(slot);
    grid.appendChild(card);
   }
-  section.append(title,grid);$('mediaGroups').appendChild(section);
+  if(grid.childElementCount){section.append(title,grid);$('mediaGroups').appendChild(section)}
  }
  allSlots.forEach((_,slot)=>refresh(slot));
 }
@@ -114,8 +114,8 @@ async function load(){
  try{
   const r=await fetch('/api/media/',{credentials:'same-origin',cache:'no-store'});
   if(!r.ok)throw Error(r.status===401?'Accedi nuovamente all’Hub.':'Errore API '+r.status);
-  const data=await r.json();remote=data.items||{};
-  allSlots.forEach((_,slot)=>refresh(slot));
+  const data=await r.json();remote=data.items||{};allowedSlots=new Set(data.slots||[]);
+  build();
  }catch(e){message('Gestione media non disponibile: '+e.message)}
 }
 async function convert(file,slot){
@@ -164,6 +164,6 @@ async function reset(slot){
  finally{card.classList.remove('busy')}
 }
 $('picker').addEventListener('change',async e=>{const file=e.target.files?.[0];if(file&&selectedSlot)await upload(selectedSlot,file)});
-build();load();
+load();
 </script>
 </body></html>
