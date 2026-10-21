@@ -47,7 +47,7 @@ button{font:inherit;cursor:pointer}
 <section class="toolbar"><label><input id="optimise" type="checkbox" checked> Ottimizza automaticamente in WebP</label><small>Consigliato per PNG, foto e SVG. Riduce il peso mantenendo la trasparenza. Le GIF animate rimangono GIF, così l'animazione continua a funzionare.</small></section>
 <div id="mediaGroups"></div>
 <section class="help"><strong>Vuoi che scelga io un'icona?</strong> Puoi inviarmi l'immagine direttamente nella chat oppure chiedermi di cercarne una e adattarla. Qui puoi anche caricare e sostituire autonomamente le immagini. Le personalizzazioni sono archiviate sul NAS, non nelle cartelle GitHub sincronizzate.</section>
-<input type="file" id="picker" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg,.gif" hidden>
+<input type="file" id="picker" accept="image/*,.svg,.gif,.heic,.heif" hidden>
 <div id="message" role="status" aria-live="polite"></div>
 </main>
 <script>
