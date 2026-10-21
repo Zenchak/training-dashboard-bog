@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f8fc">
+<title>Gestione icone · Zenchak Hub</title>
+<style>
+:root{color-scheme:light;--ink:#14264c;--muted:#7a8ba8;--line:#e5eaf4;--blue:#2674eb;--bg:#f6f8fc}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink)}
+main{width:min(960px,100%);margin:auto;padding:18px 15px 90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:8px 0 18px}
+.back{text-decoration:none;color:var(--blue);font-weight:750;font-size:13px;display:flex;align-items:center;gap:7px}
+h1{font-size:clamp(25px,5vw,34px);letter-spacing:-.035em;margin:4px 0 6px}
+.lead{color:var(--muted);font-size:13px;line-height:1.55;max-width:650px;margin:0 0 14px}
+.intro{background:linear-gradient(120deg,#fff,#eaf1ff);border:1px solid #e6edf8;border-radius:22px;padding:22px 20px}
+.toolbar{margin:16px 0 8px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:15px}
+.toolbar label{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:720}
+.toolbar input{width:18px;height:18px;accent-color:var(--blue)}
+.toolbar small{display:block;color:var(--muted);font-size:11px;margin:7px 0 0 28px;line-height:1.4}
+h2{font-size:18px;margin:25px 2px 12px;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.media-card{min-width:0;display:grid;grid-template-columns:93px minmax(0,1fr);gap:12px;padding:13px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 5px 18px rgba(24,51,95,.035)}
+.preview{background:linear-gradient(140deg,#f2f6fc,#fff);display:grid;place-items:center;border-radius:12px;height:93px;width:93px;overflow:hidden}
+.preview img{display:block;max-width:88px;max-height:88px;width:100%;height:100%;object-fit:contain}
+.media-card[data-slot^="auto-"] .preview img{max-width:100px;max-height:100px}
+.item-main{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.item-name{font-size:14px;font-weight:830}
+.item-meta{color:var(--muted);font-size:11px;overflow-wrap:anywhere;line-height:1.35}
+.item-actions{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+button{font:inherit;cursor:pointer}
+.choose{background:var(--blue);border:1px solid var(--blue);border-radius:9px;color:white;padding:9px 12px;font-size:12px;font-weight:750}
+.reset{background:#f5f7fb;border:1px solid #e5e9f0;border-radius:9px;color:#596a84;padding:9px 10px;font-size:11px;font-weight:740}
+.reset:disabled{opacity:.42;cursor:default}
+.media-card.busy{opacity:.68;pointer-events:none}
+.help{margin-top:22px;padding:16px;background:#fff;border:1px solid var(--line);border-radius:15px;color:#536780;font-size:12px;line-height:1.6}
+.help strong{color:var(--ink)}
+#message{position:fixed;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));max-width:calc(100vw - 30px);background:#152a51;color:#fff;padding:11px 16px;border-radius:13px;font-size:12px;font-weight:730;box-shadow:0 8px 24px #152a5130;z-index:10}
+#message:empty{display:none}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.media-card{grid-template-columns:84px minmax(0,1fr);padding:11px}.preview{width:84px;height:84px}.preview img{max-width:81px;max-height:81px}.intro{padding:18px 16px}main{padding:15px 12px 70px}}
+</style>
+</head>
+<body><main>
+<header><a href="/" class="back">‹ &nbsp; Zenchak Hub</a></header>
+<section class="intro"><h1>Gestione icone e immagini</h1><p class="lead">Sostituisci le icone direttamente dall'iPhone, senza aprire GitHub. Puoi caricare PNG, JPG, WebP, SVG e GIF. Le immagini originali restano disponibili per il ripristino.</p></section>
+<section class="toolbar"><label><input id="optimise" type="checkbox" checked> Ottimizza automaticamente in WebP</label><small>Consigliato per PNG, foto e SVG. Riduce il peso mantenendo la trasparenza. Le GIF animate rimangono GIF, così l'animazione continua a funzionare.</small></section>
+<div id="mediaGroups"></div>
+<section class="help"><strong>Vuoi che scelga io un'icona?</strong> Puoi inviarmi l'immagine direttamente nella chat oppure chiedermi di cercarne una e adattarla. Qui puoi anche caricare e sostituire autonomamente le immagini. Le personalizzazioni sono archiviate sul NAS, non nelle cartelle GitHub sincronizzate.</section>
+<input type="file" id="picker" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,.svg,.gif" hidden>
+<div id="message" role="status" aria-live="polite"></div>
+</main>
+<script>
+'use strict';
+const groups=[
+  {title:'Home',items:[
+    ['home-allenamenti','Allenamenti','/assets/home/allenamenti.png'],
+    ['home-casa','Ricerca Casa','/assets/home/ricerca_casa.png'],
+    ['home-finanze','Finanze','/assets/home/finanze.png'],
+    ['home-auto','Auto e Veicoli','/assets/home/auto_e_veicoli.png'],
+    ['home-gare','Mappa Gare','/assets/home/mappa_gare.png']
+  ]},
+  {title:'Automobili',items:[
+    ['auto-kia','Kia Rio','/auto/kia_rio.png'],
+    ['auto-fiat','Fiat Punto','/auto/fiat_punto.png']
+  ]},
+  {title:'Sport · Allenamenti',items:[
+    ['sport-running','Corsa','/training/assets/icons/running_viola.svg'],
+    ['sport-bike','Bici','/training/assets/icons/bici_arancione.svg'],
+    ['sport-swim','Nuoto','/training/assets/icons/nuoto_azzurro_blu.svg'],
+    ['sport-trail','Trail running','/training/assets/icons/trail_running_verde.svg'],
+    ['sport-walk','Camminata e trekking','/training/assets/icons/camminata_marrone.svg'],
+    ['sport-gym','Palestra','/training/assets/icons/palestra_rosso.svg']
+  ]}
+];
+const $=id=>document.getElementById(id);
+const allSlots=new Map(groups.flatMap(g=>g.items.map(([id,name,url])=>[id,{name,url}])));
+let remote={},selectedSlot=null,messageTimer;
+function message(text){
+ const box=$('message');box.textContent=text;clearTimeout(messageTimer);
+ messageTimer=setTimeout(()=>box.textContent='',5000);
+}
+function mediaUrl(slot){return remote[slot]?.url || allSlots.get(slot).url}
+function meta(slot){
+ const item=remote[slot];
+ if(!item)return 'Originale · nessuna personalizzazione';
+ return 'Personalizzata · '+(item.type?.split('/')[1]||'immagine').toUpperCase()+' · '+Math.round(item.size/1024)+' KB';
+}
+function refresh(slot){
+ const card=document.querySelector('[data-slot="'+slot+'"]');if(!card)return;
+ const img=card.querySelector('.preview img');img.src=mediaUrl(slot);
+ card.querySelector('.item-meta').textContent=meta(slot);
+ card.querySelector('.reset').disabled=!remote[slot];
+}
+function build(){
+ $('mediaGroups').replaceChildren();
+ for(const group of groups){
+  const section=document.createElement('section'),title=document.createElement('h2'),grid=document.createElement('div');
+  title.textContent=group.title;grid.className='grid';
+  for(const [slot,name] of group.items){
+   const card=document.createElement('article');card.className='media-card';card.dataset.slot=slot;
+   card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
+   card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
+   card.querySelector('.choose').onclick=()=>{selectedSlot=slot;$('picker').value='';$('picker').click()};
+   card.querySelector('.reset').onclick=()=>reset(slot);
+   grid.appendChild(card);
+  }
+  section.append(title,grid);$('mediaGroups').appendChild(section);
+ }
+ allSlots.forEach((_,slot)=>refresh(slot));
+}
+async function load(){
+ try{
+  const r=await fetch('/api/media/',{credentials:'same-origin',cache:'no-store'});
+  if(!r.ok)throw Error(r.status===401?'Accedi nuovamente all’Hub.':'Errore API '+r.status);
+  const data=await r.json();remote=data.items||{};
+  allSlots.forEach((_,slot)=>refresh(slot));
+ }catch(e){message('Gestione media non disponibile: '+e.message)}
+}
+async function convert(file,slot){
+ const isGif=file.type==='image/gif'||/\.gif$/i.test(file.name);
+ if(isGif)return {blob:file,type:'image/gif'};
+ const isSvg=file.type==='image/svg+xml'||/\.svg$/i.test(file.name);
+ if(!$('optimise').checked&&!isSvg && ['image/png','image/jpeg','image/webp'].includes(file.type))
+   return {blob:file,type:file.type};
+ const url=URL.createObjectURL(file);
+ try{
+  const img=new Image();img.decoding='async';
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('Immagine non leggibile'));img.src=url});
+  const max=slot.startsWith('auto-')?1080:320;
+  const ratio=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));
+  canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));
+  canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+  let blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',.84));
+  if(!blob||blob.type!=='image/webp')blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('Conversione non riuscita');
+  return {blob,type:blob.type};
+ }finally{URL.revokeObjectURL(url)}
+}
+async function upload(slot,file){
+ const card=document.querySelector('[data-slot="'+slot+'"]');card.classList.add('busy');
+ try{
+  const {blob,type}=await convert(file,slot);
+  if(blob.size>8*1024*1024)throw Error('File troppo grande: massimo 8 MB');
+  const response=await fetch('/api/media/'+slot,{method:'POST',credentials:'same-origin',headers:{'Content-Type':type,'X-Zenchak-Media':'1'},body:blob});
+  const result=await response.json();
+  if(!response.ok)throw Error(result.error||'Caricamento non riuscito');
+  remote[slot]=result.item;refresh(slot);
+  message(allSlots.get(slot).name+' aggiornata · '+Math.round(blob.size/1024)+' KB');
+ }catch(e){message('Errore: '+e.message)}
+ finally{card.classList.remove('busy')}
+}
+async function reset(slot){
+ if(!confirm('Ripristinare l’immagine originale di '+allSlots.get(slot).name+'?'))return;
+ const card=document.querySelector('[data-slot="'+slot+'"]');card.classList.add('busy');
+ try{
+  const response=await fetch('/api/media/'+slot,{method:'DELETE',credentials:'same-origin',headers:{'X-Zenchak-Media':'1'}});
+  const result=await response.json();if(!response.ok)throw Error(result.error||'Ripristino non riuscito');
+  delete remote[slot];refresh(slot);message('Originale ripristinata per '+allSlots.get(slot).name);
+ }catch(e){message('Errore: '+e.message)}
+ finally{card.classList.remove('busy')}
+}
+$('picker').addEventListener('change',async e=>{const file=e.target.files?.[0];if(file&&selectedSlot)await upload(selectedSlot,file)});
+build();load();
+</script>
+</body></html>
