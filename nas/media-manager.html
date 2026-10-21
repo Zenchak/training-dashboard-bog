@@ -75,7 +75,7 @@ const groups=[
 ];
 const $=id=>document.getElementById(id);
 const allSlots=new Map(groups.flatMap(g=>g.items.map(([id,name,url])=>[id,{name,url}])));
-let remote={},selectedSlot=null,messageTimer;
+let remote={},selectedSlot=null,messageTimer,allowedSlots=new Set();
 function message(text){
  const box=$('message');box.textContent=text;clearTimeout(messageTimer);
  messageTimer=setTimeout(()=>box.textContent='',5000);
@@ -98,6 +98,7 @@ function build(){
   const section=document.createElement('section'),title=document.createElement('h2'),grid=document.createElement('div');
   title.textContent=group.title;grid.className='grid';
   for(const [slot,name] of group.items){
+   if(!allowedSlots.has(slot))continue;
    const card=document.createElement('article');card.className='media-card';card.dataset.slot=slot;
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
