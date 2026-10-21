@@ -167,6 +167,34 @@ if (fs.existsSync(correctionPath)) {
   html=html.replace(normMarker,equipmentCorrectionsJS+'\n'+normMarker);
 }
 
+// GARMIN_RECONCILIATION_20261021
+// Recover precisely seven missing workouts and attach Garmin metrics to 48 existing/new activities.
+// Preserve manually curated time, distance, calories and equipment; never double-count multisport.
+let garminOverlayScript = '';
+const garminOverlayPath=path.join(__dirname,'garmin-overlay.json');
+if(fs.existsSync(garminOverlayPath)){
+ const pack=JSON.parse(fs.readFileSync(garminOverlayPath,'utf8'));
+ if(!Array.isArray(pack.entries)||pack.entries.length!==48||pack.entries.filter(e=>e.newActivity).length!==7)throw new Error('Invalid Garmin overlay');
+ garminOverlayScript='\n;for(const row of '+JSON.stringify(pack.entries)+'){\n'
+ + ' let a=A.find(x=>x.date===row.date&&x.type===row.type&&Math.abs(Number(x.km)-Number(row.km))<0.26);\n'
+ + ' if(!a&&row.newActivity){a={...row.newActivity};A.push(a)}\n'
+ + ' if(a){a.garminId=row.id;a.garmin=row.stats;if(!a.startTime&&row.stats.start)a.startTime=row.stats.start}\n'
+ + '}\n';
+ const marker='A.forEach(a=>{a.year=Number(a.date.slice(0,4));a.month=Number(a.date.slice(5,7));a.metric=metric(a)});';
+ if(!html.includes(marker))throw new Error('Garmin merge marker missing');
+ html=html.replace(marker,garminOverlayScript+'\n'+marker);
+ const garminHintFn="function garminRowDetails(g){\n if(!g)return \"\";\n const items=[[\"FC max\",g.hrMax,\"bpm\"],[\"Potenza media\",g.powerAvg,\"W\"],[\"Cadenza media\",g.cadenceAvg,\"spm/rpm\"],[\"TE aerobico\",g.trainingEffectAerobic,\"\"],[\"TE anaerobico\",g.trainingEffectAnaerobic,\"\"],[\"VO₂ max\",g.vo2Max,\"\"],[\"Carico\",g.trainingLoad,\"\"],[\"Calorie attive Garmin\",g.caloriesActive,\"kcal\"],[\"Calorie totali Garmin\",g.caloriesTotal,\"kcal\"],[\"Body Battery\",g.bodyBatteryDelta,\"\"],[\"Sudorazione stimata\",g.sweatEstMl,\"ml\"],[\"D+ Garmin\",g.ascentGarminM,\"m\"],[\"Contatto suolo\",g.groundContactMs,\"ms\"],[\"Oscillazione verticale\",g.verticalOscillationCm,\"cm\"],[\"Rapporto verticale\",g.verticalRatioPct,\"%\"],[\"Falcata\",g.strideLengthCm,\"cm\"]];\n const details=items.filter(r=>r[1]!=null&&r[1]!==\"\").map(r=>\"<span><b>\"+escapeEquip(r[0])+\"</b> \"+escapeEquip(r[1])+\" \"+escapeEquip(r[2])+\"</span>\").join(\"\");\n const fc=g.hrAvg==null?\"\":(\" · FC \"+escapeEquip(g.hrAvg)+\" bpm\");\n return '<details class=\"garmin-metrics\"><summary>⌁ Garmin'+fc+'</summary><div class=\"garmin-details\">'+details\n  +(g.garminUrl?'<a href=\"'+escapeEquip(g.garminUrl)+'\" target=\"_blank\" rel=\"noopener\">Apri su Garmin Connect ↗</a>':\"\")\n  +'</div></details>';\n}";
+ if(!html.includes('function renderTable(){'))throw new Error('Diary renderer missing');
+ html=html.replace('function renderTable(){',garminHintFn+'\nfunction renderTable(){');
+ const interpolation=String.fromCharCode(36);
+ const oldCell='<span class="equip-text '+interpolation+'{gear.pending?"pending":""}">'+interpolation+'{label}</span></td></tr>';
+ const newCell='<span class="equip-text '+interpolation+'{gear.pending?"pending":""}">'+interpolation+'{label}</span>'+interpolation+'{a.garmin?garminRowDetails(a.garmin):""}</td></tr>';
+ if(!html.includes(oldCell))throw new Error('Diary equipment cell missing');
+ html=html.replace(oldCell,newCell);
+ const garminCss=".garmin-metrics{margin-top:6px;font-size:11px;color:#326a9c}\n.garmin-metrics>summary{cursor:pointer;font-weight:800;color:#256ea6;list-style:none;padding:3px 0;white-space:nowrap}\n.garmin-metrics>summary::-webkit-details-marker{display:none}\n.garmin-metrics>summary:after{content:\" ▾\";font-size:10px}\n.garmin-metrics[open]>summary:after{content:\" ▴\"}\n.garmin-details{display:flex;flex-wrap:wrap;gap:5px 10px;min-width:190px;max-width:400px;max-height:180px;overflow:auto;white-space:normal;padding:8px 0;line-height:1.5}\n.garmin-details span{display:block}\n.garmin-details b{font-weight:800;color:#3c5064}\n.garmin-details a{color:#1269ee;font-weight:800;text-decoration:underline}";
+ html=html.replace('</style>',garminCss+'\n</style>');
+}
+
 fs.writeFileSync(path.join(out, 'index.html'), html);
 fs.copyFileSync(path.join(__dirname, 'data.js'), path.join(out, 'data.js'));
 /* Copia le icone SVG nel sito pubblicato: prima erano presenti solo nel sorgente,
@@ -193,6 +221,7 @@ if (fs.existsSync(additionsPath)) {
 
 
 if (equipmentCorrectionsJS) fs.appendFileSync(path.join(out, 'data.js'), equipmentCorrectionsJS);
+if(garminOverlayScript) fs.appendFileSync(path.join(out,'data.js'),garminOverlayScript);
 
 // LAN fallbacks: materialize Hub and Finanze inside dist so Nginx can serve them
 // with its normal static-file path and without special alias locations.
