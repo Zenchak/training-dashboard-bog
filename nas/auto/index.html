@@ -163,8 +163,8 @@ const icons={
 function carPhoto(c){
  const slot=c.id==='kia-rio'?'auto-kia':'auto-fiat';
  const fallback=c.id==='kia-rio'?'kia_rio.png?v=847d763b':'fiat_punto.png?v=ee141e6e';
- const src=window.ZenchakMedia?.src(slot,fallback)||fallback;
- return '<img data-media-slot="'+slot+'" src="'+src+'" alt="'+c.name+'" loading="lazy" decoding="async">';
+ const src=window.ZenchakMedia?.src(slot,null);
+ return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="lazy" decoding="async">';
 }
 function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<small>'+label+'</small><strong>'+value+'</strong></div>'}
 function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
@@ -196,6 +196,7 @@ function openVehicle(id){
  const nav=[['maintenance','🔧','Manutenzione','Tagliandi, interventi e storico'],['deadlines','▣','Scadenze','Bollo, assicurazione, revisione e promemoria'],['documents','▤','Documenti','Libretto, assicurazione, ricevute, ecc.'],['costs','▱','Costi','Spese di gestione e storico costi'],['notes','▢','Note','Appunti personali e promemoria']];
  const urgent=c.statusTone==='neutral';
  document.getElementById('vehicle-content').innerHTML='<div class="vehicle-header"><div class="vehicle-visual">'+carPhoto(c)+'</div></div><div class="alert-strip '+(urgent?'':'ok')+'"><span class="alert-icon">'+(urgent?'❕':'✓')+'</span><div><strong>'+(urgent?'Da controllare':'In gestione')+'</strong><small>'+(urgent?'Alcuni interventi e scadenze da verificare.':'Consulta interventi e scadenze registrati.')+'</small></div></div><div class="quick-grid">'+quickCard('wrench','Tagliando',c.maintenance.length+' interventi')+quickCard('file','Bollo',c.tax?'Vedi dati':'Da inserire')+quickCard('shield','Assicurazione',c.insurance?date(c.insurance.validTo):'Da inserire')+quickCard('calendar','Revisione',arr(c.inspections).length?'Vedi dati':'Da inserire')+'</div><div class="vehicle-nav">'+nav.map(([id,ico,title,sub])=>'<button type="button" data-tab="'+id+'"><span class="nav-icon">'+ico+'</span><span class="nav-copy"><strong>'+title+'</strong><small>'+sub+'</small></span><span>›</span></button>').join('')+'</div>'+nav.map(([id])=>'<section class="detail-section" id="tab-'+id+'">'+panels[id]+'</section>').join('');
+ window.ZenchakMedia?.apply(document.getElementById('vehicle-content'));
  document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.tab;document.querySelectorAll('.detail-section').forEach(x=>x.classList.toggle('active',x.id==='tab-'+id));document.getElementById('tab-'+id).scrollIntoView({behavior:'smooth',block:'start'})}));
  history.replaceState(null,'','#'+id);window.scrollTo(0,0);
 }
