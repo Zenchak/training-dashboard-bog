@@ -111,10 +111,10 @@ function build(){
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
    const permitted=allowedSlots.has(slot);
-   card.querySelector('.choose').disabled=!permitted && !slot.startsWith('profile-');
+   card.querySelector('.choose').disabled=!permitted && !slot.startsWith('profile-') && slot!=='home-viaggi' && slot!=='home-logo';
    card.querySelector('.reset').disabled=!permitted;
    if(!permitted)card.querySelector('.item-meta').textContent='Caricamento soggetto ai permessi del profilo';
-   card.querySelector('.choose').onclick=()=>{selectedSlot=slot;const picker=$('picker');picker.value='';picker.click()};
+   card.querySelector('.choose').onclick=()=>{selectedSlot=slot;const picker=$('picker');picker.value='';if(picker.showPicker)picker.showPicker();else picker.click()};
    card.querySelector('.reset').onclick=()=>reset(slot);
    grid.appendChild(card);
   }
