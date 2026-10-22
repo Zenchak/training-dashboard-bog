@@ -285,9 +285,9 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
   const cards=[...document.querySelectorAll('[data-visible-profile]')];
   function paint(){
     label.textContent=authenticatedUser||'Accedi';
-     avatar.textContent=authenticatedUser==='Bogdan'?'A':authenticatedUser==='Camilla'?'O':'👤';
+     avatar.textContent=authenticatedUser?'':'👤';
      avatar.classList.toggle('character-avatar',Boolean(authenticatedUser));
-     avatar.style.backgroundImage='none';
+     avatar.style.backgroundImage=authenticatedUser==='Bogdan'?"url('/assets/profiles/asterix.webp')":authenticatedUser==='Camilla'?"url('/assets/profiles/obelix.webp')":'none';
     for(const b of buttons){
       const current=b.dataset.profile===authenticatedUser;
       b.classList.toggle('active',current);
