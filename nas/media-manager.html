@@ -56,6 +56,7 @@ button{font:inherit;cursor:pointer}
 const groups=[
   {title:'Home',items:[
     ['home-logo','Zenchak Hub · logo','/assets/home/zenchak-hub-logo.svg'],
+    ['home-viaggi','Viaggi','/assets/home/viaggi.svg'],
     ['home-allenamenti','Allenamenti','/assets/home/allenamenti-09da96285aa7.webp'],
     ['home-casa','Ricerca Casa','/assets/home/ricerca_casa-eea474075f66.webp'],
     ['home-finanze','Finanze','/assets/home/finanze-c9cfc3c35ee3.webp'],
@@ -105,7 +106,7 @@ function build(){
   title.textContent=group.title;grid.className='grid';
   for(const [slot,name] of group.items){
    // Mostra sempre i profili; il backend decide chi puo modificarli.
-   if(!allowedSlots.has(slot) && !slot.startsWith('profile-'))continue;
+   if(!allowedSlots.has(slot) && !slot.startsWith('profile-') && slot!=='home-viaggi' && slot!=='home-logo')continue;
    const card=document.createElement('article');card.className='media-card';card.dataset.slot=slot;
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
