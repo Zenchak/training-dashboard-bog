@@ -163,11 +163,36 @@ const icons={
  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 21 6v6c0 5-4 8-9 10-5-2-9-5-9-10V6z"/></svg>',
  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18"/></svg>'
 };
+// Elimina esclusivamente i pixel grigi connessi ai bordi: non tocca la carrozzeria.
+window.ZenchakCarBackdrop=function(img){
+ if(img.dataset.cleaned==='1'||img.dataset.cleaning==='1')return;
+ img.dataset.cleaning='1';
+ try{
+  const w=img.naturalWidth,h=img.naturalHeight;
+  if(!w||!h||w*h>2500000)return;
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
+  const frame=ctx.getImageData(0,0,w,h),d=frame.data;
+  const corners=[0,w-1,(h-1)*w,(h*w)-1].map(p=>[d[p*4],d[p*4+1],d[p*4+2]]);
+  if(corners.some(c=>Math.max(...c)-Math.min(...c)>22))return;
+  const bg=corners[0];
+  if(bg.some((v,i)=>Math.abs(v-corners[3][i])>35))return;
+  const seen=new Uint8Array(w*h),stack=[];
+  function add(p){if(p<0||p>=w*h||seen[p])return;seen[p]=1;const i=p*4;const a=d[i+3];if(a<16)return;const rgb=[d[i],d[i+1],d[i+2]];if(Math.max(...rgb)-Math.min(...rgb)<26&&rgb.every((v,k)=>Math.abs(v-bg[k])<45))stack.push(p)}
+  for(let x=0;x<w;x++){add(x);add((h-1)*w+x)}
+  for(let y=0;y<h;y++){add(y*w);add(y*w+w-1)}
+  let erased=0;
+  while(stack.length){const p=stack.pop(),i=p*4;d[i+3]=0;erased++;const x=p%w,y=(p-x)/w;if(x>0)add(p-1);if(x<w-1)add(p+1);if(y>0)add(p-w);if(y<h-1)add(p+w)}
+  if(erased<w*h*.08)return;
+  ctx.putImageData(frame,0,0);img.dataset.cleaned='1';img.removeAttribute('data-media-slot');img.src=canvas.toDataURL('image/png');
+ }catch(e){console.warn('Sfondo auto non modificabile',e)}
+ finally{delete img.dataset.cleaning}
+};
 function carPhoto(c){
  const slot=c.id==='kia-rio'?'auto-kia':'auto-fiat';
  const fallback=c.id==='kia-rio'?'/assets/car/kia_rio-49e17eecf29c.webp':'/assets/car/fiat_punto-75d185809de8.webp';
  const src=window.ZenchakMedia?.src(slot,null);
- return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="eager" decoding="async">';
+ return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="eager" decoding="async" onload="window.ZenchakCarBackdrop?.(this)">';
 }
 function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<small>'+label+'</small><strong>'+value+'</strong></div>'}
 function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
