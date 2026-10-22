@@ -202,6 +202,22 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
 #profileAvatar{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;flex:0 0 26px;font-size:18px}
 #profileAvatar.character-avatar{background-size:cover}
 @media(max-width:390px){.hero{gap:7px;padding:10px 2px 15px}.brand-word,.brand-hub{font-size:23px}.headcopy .sub{font-size:10px}.hero-actions{gap:5px}.hero-actions .refresh{width:36px!important;height:36px;min-width:36px!important;min-height:36px!important}.hero-actions .switch{height:36px;min-height:36px!important;padding:0 7px!important}#profileName{max-width:62px;font-size:11px}}
+
+/* Layout intestazione conforme al riferimento: logo | profilo | refresh */
+.hero{display:grid!important;grid-template-columns:auto minmax(0,1fr) 42px;align-items:center!important;column-gap:clamp(10px,3vw,24px);padding:12px 2px 15px!important;min-height:68px;margin:0 0 14px!important;border:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important}
+.headcopy{grid-column:1;min-width:0;flex:none}
+.brand-lockup{display:flex!important;flex-direction:column!important;align-items:flex-start!important;line-height:.91!important;white-space:nowrap}
+.brand-word{display:block!important;font-size:clamp(17px,4vw,22px)!important;line-height:1.05!important;letter-spacing:-.045em!important;color:#12182d!important}
+.brand-hub{display:block!important;font-size:clamp(32px,8vw,44px)!important;line-height:.91!important;letter-spacing:-.055em!important;color:#3978ff!important}
+.headcopy .sub{display:none!important}
+.hero-actions{grid-column:2/4;display:contents!important}
+.hero-actions .switch{grid-column:2;grid-row:1;justify-self:start;display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;gap:7px!important;max-width:100%;width:auto!important;height:42px!important;min-height:42px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#26354a;font-weight:500!important;font-size:15px!important}
+#profileAvatar{display:inline-flex;width:39px!important;height:39px!important;flex:0 0 39px!important;font-size:20px!important;background-position:center;background-size:contain!important;background-repeat:no-repeat}
+#profileName{display:inline!important;font-size:15px!important;font-weight:500!important;max-width:100px!important;overflow:hidden;text-overflow:ellipsis}
+.hero-actions .refresh{grid-column:3;grid-row:1;justify-self:end;display:inline-flex!important;align-items:center;justify-content:center;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;padding:0!important;background:#f3f5fa!important;border:0!important;border-radius:50%!important;box-shadow:none!important}
+.hero-actions .refresh svg{width:20px;height:20px}
+.hero-actions .refresh span{display:none!important}
+@media(max-width:390px){.hero{grid-template-columns:auto minmax(0,1fr) 38px;column-gap:10px}.brand-word{font-size:17px!important}.brand-hub{font-size:32px!important}.hero-actions .refresh{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important}#profileAvatar{width:34px!important;height:34px!important;flex-basis:34px!important}#profileName{font-size:13px!important}}
 </style>
 <script defer src="/media-client.js"></script>
 </head>
