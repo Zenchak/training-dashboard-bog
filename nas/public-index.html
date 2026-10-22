@@ -239,7 +239,7 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
   const cards=[...document.querySelectorAll('[data-visible-profile]')];
   function paint(){
     label.textContent=authenticatedUser||'Accedi';
-     avatar.textContent=authenticatedUser?'':'👤';
+     avatar.textContent=authenticatedUser==='Bogdan'?'A':authenticatedUser==='Camilla'?'O':'👤';
      avatar.classList.toggle('character-avatar',Boolean(authenticatedUser));
      avatar.style.backgroundImage=authenticatedUser==='Bogdan'?"url('/assets/profiles/asterix.svg')":authenticatedUser==='Camilla'?"url('/assets/profiles/obelix.svg')":'none';
     for(const b of buttons){
