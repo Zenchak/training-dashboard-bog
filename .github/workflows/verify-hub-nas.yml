@@ -1,0 +1,53 @@
+name: Verifica Hub NAS (sola lettura)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'nas/public-index.html'
+      - 'nas/auto/index.html'
+      - 'nas/nginx.conf'
+      - 'nas/media-manager.html'
+      - '.github/workflows/verify-hub-nas.yml'
+permissions:
+  contents: read
+concurrency:
+  group: verify-hub-nas
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: [self-hosted, linux, x64, synology]
+    timeout-minutes: 8
+    steps:
+      - name: Attendi sincronizzazione periodica
+        run: sleep 85
+      - name: Controlla commit e servizi NAS senza modificarli
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=/volume1/docker/bogdan-sites
+          echo "Runner Synology: $(hostname)"
+          test -d "$root"
+          repo="$root/training-dashboard-bog"
+          if [ ! -d "$repo/.git" ]; then
+            repo="$(find /volume1/docker -maxdepth 5 -type d -name training-dashboard-bog -print -quit)"
+          fi
+          if [ -n "$repo" ] && [ -d "$repo/.git" ]; then
+            git -C "$repo" rev-parse --short HEAD
+            echo "Commit sorgente: $GITHUB_SHA"
+          else
+            echo "::warning::Repository montato non trovato nel percorso host; controllo HTTP comunque eseguito"
+          fi
+          for port in 8090 8081 8082 8083; do
+            code="$(curl --max-time 10 -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:$port/healthz" || true)"
+            echo "Porta $port /healthz HTTP $code"
+            if [ "$port" = 8090 ]; then
+              case "$code" in 200|204) ;; *) echo "::error::Hub healthz non raggiungibile"; exit 1;; esac
+            fi
+          done
+          for path in / /auto/ /gestione-icone/; do
+            code="$(curl --max-time 10 -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:8090$path" || true)"
+            echo "Hub $path HTTP $code (200/302/401/403 ammessi per accesso protetto)"
+            case "$code" in 200|301|302|303|307|308|401|403) ;; *) exit 1;; esac
+          done
+          echo "Verifica NAS conclusa senza modifiche ai servizi"
