@@ -5,6 +5,7 @@
 *{box-sizing:border-box}body{margin:0;font:15px system-ui,-apple-system,sans-serif;color:#132547;background:linear-gradient(140deg,#f7fcff,#edf7fc)}main{max-width:1000px;margin:auto;padding:16px}header{display:flex;align-items:center;gap:12px;margin:5px 0 18px}header img{width:60px;height:60px;object-fit:contain}h1{margin:0;font-size:26px}h2{font-size:20px;margin:0 0 10px}.sub{color:#7587a3;font-size:13px}a{color:#1475b4;text-decoration:none}header a{margin-left:auto;font-weight:700}.panel{background:#fff;border-radius:23px;padding:15px;box-shadow:0 7px 25px #315b8412;margin-bottom:17px}#map{height:390px;border-radius:17px;z-index:0;background:#e3f2f9}.toolbar{display:flex;gap:9px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}button{font:inherit;border:0;border-radius:12px;background:#168bc5;color:#fff;padding:10px 15px;cursor:pointer;font-weight:700;transition:transform .2s,box-shadow .2s}button:hover{transform:translateY(-2px);box-shadow:0 5px 14px #168bc53b}button:active{transform:scale(.97)}button.secondary{background:#edf4fa;color:#27618c}button.danger{background:#fff0f0;color:#b63d42}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}.wish{background:linear-gradient(140deg,#fff,#eef8fd);border:1px solid #e1edf5;border-radius:18px;padding:15px;min-width:0}.wish h3{margin:0 0 5px;font-size:17px}.wish p{color:#64758c;font-size:13px;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.wish .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.wish button{font-size:12px;padding:8px 10px}.empty{padding:25px;text-align:center;color:#78879a;border:1px dashed #b8d4e4;border-radius:16px}.hint{font-size:12px;color:#7a899c;margin-top:9px}dialog{border:0;border-radius:22px;max-width:min(95vw,460px);width:100%;padding:23px;box-shadow:0 20px 65px #18344c4d}dialog::backdrop{background:#172c4880}form{display:grid;gap:12px}label{font-weight:650;font-size:13px;display:grid;gap:5px}input,textarea,select{width:100%;font:inherit;padding:10px;border:1px solid #cbdbe7;border-radius:10px;background:#fff;color:#162a44}textarea{min-height:70px;resize:vertical}.form-actions{display:flex;gap:8px;justify-content:flex-end}#notice{color:#a03b3b;font-size:13px;min-height:1em}@media(max-width:600px){main{padding:12px}#map{height:310px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.wish{padding:11px}.wish h3{font-size:15px}.wish button{font-size:11px;padding:7px}.panel{padding:12px}}@media(max-width:360px){.cards{grid-template-columns:1fr}}
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:9px}.header-actions a,.header-actions button{margin:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 13px;border-radius:14px;background:#f0f5fb;color:#22608d;border:1px solid #e1eaf4;box-shadow:0 3px 10px #1b527016;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}.header-actions button:hover,.header-actions a:hover{background:#e5f0fa;box-shadow:0 5px 14px #1b52702b}.header-actions svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}@media(max-width:520px){.header-actions{gap:6px}.header-actions a,.header-actions button{padding:9px;min-height:39px;font-size:12px}.header-actions svg{width:17px;height:17px}header img{width:47px;height:47px}h1{font-size:22px}}
 .wish{overflow:hidden}.wish-photo{height:145px;margin:-15px -15px 13px;background:linear-gradient(130deg,#d9ebf5,#b9d8e9);overflow:hidden}.wish-photo img{width:100%;height:100%;object-fit:cover;display:block}.wish .detail{line-height:1.5}.wish .detail strong{color:#254d72}.wish .wiki-credit{font-size:11px}.wish .wiki-credit a{font-size:11px}@media(max-width:600px){.wish-photo{height:115px;margin:-11px -11px 10px}}
+.wish-photo{position:relative;height:165px;background:linear-gradient(145deg,#84b7c9 0%,#bedfd4 50%,#f2d2a6 100%)}.wish-photo img{width:100%;height:100%;object-fit:cover}.wish-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,38,60,.18),transparent 65%);pointer-events:none}.destination-summary{font-size:13px!important;line-height:1.55;color:#445e75!important;margin:10px 0!important}@media(max-width:600px){.wish-photo{height:125px}}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
 <section class="panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Aggiungi luogo</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><div class="hint">Tocca un segnaposto per vedere il luogo. La mappa usa OpenStreetMap.</div></section>
@@ -65,32 +66,39 @@ const destinationGuides=[
  {match:/thailandia|thailand/i,season:'Novembre–febbraio in molte zone; le piogge variano tra le coste.',sights:'Bangkok, Chiang Mai, Ayutthaya, Krabi, isole del sud.'}
 ];
 function guideFor(p){return destinationGuides.find(g=>g.match.test(p.place+' '+p.country))||null}
+function shortDescription(p,guide){
+ if(p.notes)return p.notes.slice(0,190);
+ if(guide)return 'Una destinazione da scoprire tra paesaggi, cultura ed esperienze memorabili. '+guide.sights.split(',').slice(0,2).join(' e ').trim()+'.';
+ return 'Un luogo da esplorare, tra panorami, cultura e nuove esperienze. Aggiungi le tue idee e i posti che vuoi visitare.';
+}
 async function decorateCard(card,p){
  const photo=card.querySelector('.wish-photo');
- const query=p.place+(p.country?', '+p.country:'');
- const key=query.toLowerCase();
+ const key=(p.place+' '+p.country).trim().toLowerCase();
  try{
-  let info=guideCache.get(key);
-  if(!info){
-   const endpoint='https://it.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(query)+'&gsrlimit=1&prop=pageimages%7Cextracts&piprop=thumbnail&pithumbsize=640&exintro=1&explaintext=1&exsentences=2&format=json&origin=*';
-   const response=await fetch(endpoint);if(!response.ok)throw Error('Wikipedia non disponibile');
-   const data=await response.json();const page=Object.values(data.query?.pages||{})[0];
-   info={img:page?.thumbnail?.source||'',description:(page?.extract||'').slice(0,270),title:page?.title||''};
-   guideCache.set(key,info);
+  let url=guideCache.get(key);
+  if(url===undefined){
+   const search=[p.place,p.country,'landscape travel'].filter(Boolean).join(' ');
+   const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=15&gsrsearch='+encodeURIComponent(search)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=850&format=json&origin=*';
+   const response=await fetch(endpoint);
+   if(!response.ok)throw Error('Foto non disponibile');
+   const data=await response.json();
+   const images=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|wikidata)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl && (i.width||0)>=500 && (i.height||0)>=300});
+   images.sort((a,b)=>{const ar=a.imageinfo[0].width/a.imageinfo[0].height,br=b.imageinfo[0].width/b.imageinfo[0].height;return Math.abs(ar-1.55)-Math.abs(br-1.55)});
+   url=images[0]?.imageinfo?.[0]?.thumburl||'';
+   guideCache.set(key,url);
   }
-  if(!card.isConnected)return;
-  if(info.img){const img=document.createElement('img');img.src=info.img;img.loading='lazy';img.alt='Foto di '+p.place;img.referrerPolicy='no-referrer';photo.replaceChildren(img)}
-  if(info.description){const desc=card.querySelector('.wiki-description');desc.textContent=info.description;desc.hidden=false}
-  if(info.title){const a=card.querySelector('.wiki-credit a');a.href='https://it.wikipedia.org/wiki/'+encodeURIComponent(info.title.replaceAll(' ','_'));a.textContent='Fonte e foto: Wikipedia';}
- }catch{photo.textContent='🌍';photo.style.display='grid';photo.style.placeItems='center';photo.style.fontSize='45px'}
+  if(!card.isConnected||!url)return;
+  const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Panorama di '+p.place;img.referrerPolicy='no-referrer';photo.replaceChildren(img);
+ }catch{ /* Mantieni lo sfondo grafico, senza bandiere o riquadri Wikipedia. */ }
 }
+
 function render(){
 markers.clearLayers();$('cards').replaceChildren();$('count').textContent='('+places.length+')';
 if(!places.length){$('cards').innerHTML='<div class="empty">Nessun luogo ancora. Aggiungi la prima destinazione!</div>';return}
 for(const p of places){
 const card=document.createElement('article');card.className='wish';
 const guide=guideFor(p);
-card.innerHTML='<div class="wish-photo" aria-hidden="true"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(p.country)+'</p><p class="wiki-description" hidden></p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p>'+escapeHtml(p.notes)+'</p><p class="wiki-credit"><a target="_blank" rel="noopener noreferrer"></a></p><p>● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">Mappa</button><button class="secondary" data-action="edit">Modifica</button><button class="danger" data-action="delete">Elimina</button></div>';
+card.innerHTML='<div class="wish-photo" aria-hidden="true"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(p.country)+'</p><p class="destination-summary">'+escapeHtml(shortDescription(p,guide))+'</p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p>● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">Mappa</button><button class="secondary" data-action="edit">Modifica</button><button class="danger" data-action="delete">Elimina</button></div>';
 card.querySelector('[data-action="edit"]').onclick=()=>openEditor(p);
 card.querySelector('[data-action="delete"]').onclick=async()=>{if(!serverReady)return alert('NAS non disponibile: eliminazione bloccata.');if(confirm('Eliminare '+p.place+'?')){const previous=places;places=places.filter(x=>x.id!==p.id);try{await sync();render()}catch(e){places=previous;alert(e.message)}}};
 card.querySelector('[data-action="locate"]').onclick=()=>{if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){map.setView([p.lat,p.lon],8);markers.eachLayer(m=>{if(m.options.wishId===p.id)m.openPopup()})}else alert('Posizione non trovata. Modifica la destinazione e riprova.')};
