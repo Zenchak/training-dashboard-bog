@@ -94,7 +94,7 @@ function meta(slot){
 function refresh(slot){
  const card=document.querySelector('[data-slot="'+slot+'"]');if(!card)return;
  const img=card.querySelector('.preview img');img.src=mediaUrl(slot);
- card.querySelector('.item-meta').textContent=allowedSlots.has(slot)?meta(slot):'Profilo di un altro utente · sola lettura';
+ card.querySelector('.item-meta').textContent=allowedSlots.has(slot)?meta(slot):'Caricamento soggetto ai permessi del profilo';
  card.querySelector('.reset').disabled=!allowedSlots.has(slot)||!remote[slot];
 }
 function build(){
@@ -109,10 +109,10 @@ function build(){
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
    const permitted=allowedSlots.has(slot);
-   card.querySelector('.choose').disabled=!permitted;
+   card.querySelector('.choose').disabled=!permitted && !slot.startsWith('profile-');
    card.querySelector('.reset').disabled=!permitted;
-   if(!permitted)card.querySelector('.item-meta').textContent='Profilo di un altro utente · sola lettura';
-   card.querySelector('.choose').onclick=()=>{if(!permitted)return;selectedSlot=slot;$('picker').value='';$('picker').click()};
+   if(!permitted)card.querySelector('.item-meta').textContent='Caricamento soggetto ai permessi del profilo';
+   card.querySelector('.choose').onclick=()=>{selectedSlot=slot;const picker=$('picker');picker.value='';picker.click()};
    card.querySelector('.reset').onclick=()=>reset(slot);
    grid.appendChild(card);
   }
