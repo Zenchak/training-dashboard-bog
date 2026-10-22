@@ -59,6 +59,7 @@ h1{margin:18px 0 7px;font-size:clamp(44px,7vw,66px);line-height:.92;letter-spaci
   border-radius:20px;padding:14px 18px;font:inherit;font-size:13px;font-weight:800;white-space:nowrap;
   transition:.16s;cursor:pointer;box-shadow:0 8px 22px rgba(47,59,90,.08);backdrop-filter:blur(14px)
 }
+.character-avatar{display:inline-block;width:31px;height:31px;flex:0 0 31px;background-position:center;background-size:contain;background-repeat:no-repeat;border-radius:50%}
 .switch:hover,.refresh:hover{transform:translateY(-1px);border-color:rgba(111,92,241,.35);box-shadow:0 11px 28px rgba(47,59,90,.11)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .card{
@@ -238,7 +239,9 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
   const cards=[...document.querySelectorAll('[data-visible-profile]')];
   function paint(){
     label.textContent=authenticatedUser||'Accedi';
-     avatar.textContent=authenticatedUser==='Bogdan'?'⚔️':authenticatedUser==='Camilla'?'🛡️':'👤';
+     avatar.textContent=authenticatedUser?'':'👤';
+     avatar.classList.toggle('character-avatar',Boolean(authenticatedUser));
+     avatar.style.backgroundImage=authenticatedUser==='Bogdan'?"url('/assets/profiles/asterix.svg')":authenticatedUser==='Camilla'?"url('/assets/profiles/obelix.svg')":'none';
     for(const b of buttons){
       const current=b.dataset.profile===authenticatedUser;
       b.classList.toggle('active',current);
