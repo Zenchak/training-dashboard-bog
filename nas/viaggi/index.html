@@ -52,6 +52,7 @@ header .sub{font-size:11px;margin-top:4px}
 .bottom-nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(min-width:700px){#map{height:330px}.wish-photo{height:180px}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.wish h3{font-size:18px}.wish .destination-summary,.wish .detail{font-size:12px!important}.wish .actions{margin:10px}.bottom-nav{max-width:1020px;margin:auto;border-radius:14px 14px 0 0}}
 @media(max-width:390px){main{padding:9px 9px 75px}header{height:57px}header img{width:40px;height:40px}h1{font-size:19px}.header-actions a,.header-actions button{width:44px;height:44px;min-height:44px}#map{height:230px}.cards{gap:8px}.wish-photo{height:94px}.wish h3{font-size:13px}.wish .detail{font-size:9px}.wish .actions{gap:3px;margin:5px}.wish button{font-size:9px!important}}
+.wish-photo{background:linear-gradient(135deg,#91c5e7,#e7d3ad)!important}.wish-photo img{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(1.13) contrast(1.05)}.wish-photo:after{background:linear-gradient(0deg,rgba(15,35,63,.13),transparent 60%)}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
 <section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Nuova meta</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
@@ -118,25 +119,47 @@ function shortDescription(p,guide){
  if(guide)return 'Una destinazione da scoprire tra paesaggi, cultura ed esperienze memorabili. '+guide.sights.split(',').slice(0,2).join(' e ').trim()+'.';
  return 'Un luogo da esplorare, tra panorami, cultura e nuove esperienze. Aggiungi le tue idee e i posti che vuoi visitare.';
 }
+// Preferisci fotografie paesaggistiche riconoscibili, evitando stemmi e immagini generiche.
+const scenicPhotos=[
+ {re:/giappone|japan|kyoto/i,term:'Mount Fuji Chureito Pagoda cherry blossom'},
+ {re:/giordania|jordan|petra/i,term:'Petra Treasury Jordan'},
+ {re:/uzbekistan|samarkand/i,term:'Registan Samarkand Uzbekistan'},
+ {re:/marocco|morocco/i,term:'Jemaa el Fnaa Marrakech sunset'},
+ {re:/vietnam|viet nam/i,term:'Ha Long Bay Vietnam'},
+ {re:/cina|china/i,term:'Great Wall of China landscape'},
+ {re:/egitto|egypt/i,term:'Pyramids of Giza Sphinx'},
+ {re:/turchia|turkey|istanbul/i,term:'Blue Mosque Istanbul sunset'},
+ {re:/tanzania|serengeti/i,term:'Serengeti Tanzania safari landscape'},
+ {re:/zanzibar/i,term:'Zanzibar turquoise beach palm'},
+ {re:/islanda|iceland/i,term:'Iceland waterfall landscape'},
+ {re:/norvegia|norway/i,term:'Lofoten Norway fjord'},
+ {re:/grecia|greece/i,term:'Santorini Greece sea'},
+ {re:/peru|perù/i,term:'Machu Picchu Peru'},
+ {re:/thailandia|thailand/i,term:'Thailand Phi Phi islands'}
+];
 async function decorateCard(card,p){
  const photo=card.querySelector('.wish-photo');
  const key=(p.place+' '+p.country).trim().toLowerCase();
+ const preset=scenicPhotos.find(x=>x.re.test(key));
+ const search=preset?.term||[p.place,p.country,'landscape panorama travel'].filter(Boolean).join(' ');
  try{
   let url=guideCache.get(key);
   if(url===undefined){
-   const search=[p.place,p.country,'landscape travel'].filter(Boolean).join(' ');
-   const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=15&gsrsearch='+encodeURIComponent(search)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=850&format=json&origin=*';
-   const response=await fetch(endpoint);
-   if(!response.ok)throw Error('Foto non disponibile');
+   const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=30&gsrsearch='+encodeURIComponent(search)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=900&format=json&origin=*';
+   const response=await fetch(endpoint);if(!response.ok)throw Error('Foto non disponibile');
    const data=await response.json();
-   const images=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|wikidata)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl && (i.width||0)>=500 && (i.height||0)>=300});
-   images.sort((a,b)=>{const ar=a.imageinfo[0].width/a.imageinfo[0].height,br=b.imageinfo[0].width/b.imageinfo[0].height;return Math.abs(ar-1.55)-Math.abs(br-1.55)});
-   url=images[0]?.imageinfo?.[0]?.thumburl||'';
+   const candidates=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|wikidata|diagram|drawing|painting|stamp|passport|currency)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl && i.width>=700 && i.height>=350 && i.width/i.height>1.15});
+   const tokens=search.toLowerCase().split(/\\s+/).filter(x=>x.length>3);
+   candidates.sort((a,b)=>{
+    const score=x=>{const t=x.title.toLowerCase(),i=x.imageinfo[0],ratio=i.width/i.height;return tokens.filter(w=>t.includes(w)).length*10-Math.abs(ratio-1.65)*3};
+    return score(b)-score(a);
+   });
+   url=candidates[0]?.imageinfo?.[0]?.thumburl||'';
    guideCache.set(key,url);
   }
   if(!card.isConnected||!url)return;
-  const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Panorama di '+p.place;img.referrerPolicy='no-referrer';photo.replaceChildren(img);
- }catch{ /* Mantieni lo sfondo grafico, senza bandiere o riquadri Wikipedia. */ }
+  const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Panorama di '+p.place;img.referrerPolicy='no-referrer';photo.prepend(img);
+ }catch{ /* Non mostrare bandiere o schede enciclopediche come ripiego. */ }
 }
 
 function render(){
