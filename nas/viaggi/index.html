@@ -1,1 +1,55 @@
-<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viaggi · Zenchak Hub</title><style>body{margin:0;background:linear-gradient(145deg,#f7fcff,#e9f6fa);font:16px system-ui;color:#14233e}main{max-width:640px;margin:10vh auto;padding:24px;text-align:center}img{width:110px;height:110px}h1{font-size:34px}p{color:#697991}a{color:#1479aa;text-decoration:none;font-weight:700}</style></head><body><main><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><h1>Viaggi</h1><p>Spazio condiviso per destinazioni, itinerari e prenotazioni. Pagina predisposta.</p><a href="/">← Torna alla Home</a></main></body></html>
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Viaggi · Zenchak Hub</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px system-ui,-apple-system,sans-serif;color:#132547;background:linear-gradient(140deg,#f7fcff,#edf7fc)}main{max-width:1000px;margin:auto;padding:16px}header{display:flex;align-items:center;gap:12px;margin:5px 0 18px}header img{width:60px;height:60px;object-fit:contain}h1{margin:0;font-size:26px}h2{font-size:20px;margin:0 0 10px}.sub{color:#7587a3;font-size:13px}a{color:#1475b4;text-decoration:none}header a{margin-left:auto;font-weight:700}.panel{background:#fff;border-radius:23px;padding:15px;box-shadow:0 7px 25px #315b8412;margin-bottom:17px}#map{height:390px;border-radius:17px;z-index:0;background:#e3f2f9}.toolbar{display:flex;gap:9px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}button{font:inherit;border:0;border-radius:12px;background:#168bc5;color:#fff;padding:10px 15px;cursor:pointer;font-weight:700;transition:transform .2s,box-shadow .2s}button:hover{transform:translateY(-2px);box-shadow:0 5px 14px #168bc53b}button:active{transform:scale(.97)}button.secondary{background:#edf4fa;color:#27618c}button.danger{background:#fff0f0;color:#b63d42}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:12px}.wish{background:linear-gradient(140deg,#fff,#eef8fd);border:1px solid #e1edf5;border-radius:18px;padding:15px;min-width:0}.wish h3{margin:0 0 5px;font-size:17px}.wish p{color:#64758c;font-size:13px;margin:6px 0;white-space:pre-wrap;overflow-wrap:anywhere}.wish .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.wish button{font-size:12px;padding:8px 10px}.empty{padding:25px;text-align:center;color:#78879a;border:1px dashed #b8d4e4;border-radius:16px}.hint{font-size:12px;color:#7a899c;margin-top:9px}dialog{border:0;border-radius:22px;max-width:min(95vw,460px);width:100%;padding:23px;box-shadow:0 20px 65px #18344c4d}dialog::backdrop{background:#172c4880}form{display:grid;gap:12px}label{font-weight:650;font-size:13px;display:grid;gap:5px}input,textarea,select{width:100%;font:inherit;padding:10px;border:1px solid #cbdbe7;border-radius:10px;background:#fff;color:#162a44}textarea{min-height:70px;resize:vertical}.form-actions{display:flex;gap:8px;justify-content:flex-end}#notice{color:#a03b3b;font-size:13px;min-height:1em}@media(max-width:600px){main{padding:12px}#map{height:310px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.wish{padding:11px}.wish h3{font-size:15px}.wish button{font-size:11px;padding:7px}.panel{padding:12px}}@media(max-width:360px){.cards{grid-template-columns:1fr}}
+</style></head><body><main>
+<header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><a href="/">⌂ Home</a></header>
+<section class="panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Aggiungi luogo</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><div class="hint">Tocca un segnaposto per vedere il luogo. La mappa usa OpenStreetMap.</div></section>
+<section class="panel"><div class="toolbar"><h2>Luoghi dei desideri <span id="count" class="sub"></span></h2><button class="secondary" id="addBottom" type="button">+ Nuovo luogo</button></div><div id="cards" class="cards"></div><p class="hint">Per ora le modifiche sono salvate su questo dispositivo e browser, non sincronizzate tra Bogdan e Camilla.</p></section>
+<dialog id="editor"><form id="wishForm"><h2 id="formTitle">Aggiungi luogo</h2><label>Destinazione *<input id="place" required maxlength="110" placeholder="Es. Kyoto, Giappone"></label><label>Paese o regione<input id="country" maxlength="100" placeholder="Es. Giappone"></label><label>Note<textarea id="notes" maxlength="1000" placeholder="Cosa vorremmo vedere?"></textarea></label><label>Stato<select id="status"><option value="desiderio">Da visitare</option><option value="programmato">In programma</option><option value="visitato">Visitato</option></select></label><div id="notice" role="status"></div><div class="form-actions"><button class="secondary" id="cancel" type="button">Annulla</button><button id="save" type="submit">Salva</button></div></form></dialog>
+</main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+(()=>{
+'use strict';
+const KEY='zenchak.viaggi.desideri.v1';
+const $=id=>document.getElementById(id);
+let places=[];try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(data))places=data.filter(p=>p&&typeof p.id==='string')}catch{}
+let editing=null;
+const map=L.map('map',{worldCopyJump:true}).setView([28,15],2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+const markers=L.layerGroup().addTo(map);
+function persist(){localStorage.setItem(KEY,JSON.stringify(places))}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+markers.clearLayers();$('cards').replaceChildren();$('count').textContent='('+places.length+')';
+if(!places.length){$('cards').innerHTML='<div class="empty">Nessun luogo ancora. Aggiungi la prima destinazione!</div>';return}
+for(const p of places){
+const card=document.createElement('article');card.className='wish';
+card.innerHTML='<h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(p.country)+'</p><p>'+escapeHtml(p.notes)+'</p><p>● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">Mappa</button><button class="secondary" data-action="edit">Modifica</button><button class="danger" data-action="delete">Elimina</button></div>';
+card.querySelector('[data-action="edit"]').onclick=()=>openEditor(p);
+card.querySelector('[data-action="delete"]').onclick=()=>{if(confirm('Eliminare '+p.place+'?')){places=places.filter(x=>x.id!==p.id);persist();render()}};
+card.querySelector('[data-action="locate"]').onclick=()=>{if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){map.setView([p.lat,p.lon],8);markers.eachLayer(m=>{if(m.options.wishId===p.id)m.openPopup()})}else alert('Posizione non trovata. Modifica la destinazione e riprova.')};
+$('cards').appendChild(card);
+if(Number.isFinite(p.lat)&&Number.isFinite(p.lon))L.marker([p.lat,p.lon],{wishId:p.id}).bindPopup('<strong>'+escapeHtml(p.place)+'</strong><div>'+escapeHtml(p.country)+'</div>').addTo(markers);
+}
+}
+function openEditor(p){editing=p?.id||null;$('formTitle').textContent=p?'Modifica luogo':'Aggiungi luogo';$('place').value=p?.place||'';$('country').value=p?.country||'';$('notes').value=p?.notes||'';$('status').value=p?.status||'desiderio';$('notice').textContent='';$('editor').showModal()}
+$('addTop').onclick=()=>openEditor();$('addBottom').onclick=()=>openEditor();$('cancel').onclick=()=>$('editor').close();
+$('wishForm').onsubmit=async e=>{
+e.preventDefault();const name=$('place').value.trim(),country=$('country').value.trim();if(!name)return;
+const btn=$('save');btn.disabled=true;$('notice').textContent='Cerco la destinazione sulla mappa…';
+try{
+const old=places.find(p=>p.id===editing);
+let lat=old?.lat,lon=old?.lon;
+if(!old||old.place!==name||old.country!==country){
+lat=null;lon=null;
+try{const q=encodeURIComponent([name,country].filter(Boolean).join(', '));const response=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+q,{headers:{'Accept-Language':'it'}});if(response.ok){const data=await response.json();if(data[0]){lat=Number(data[0].lat);lon=Number(data[0].lon)}}}catch{}
+}
+const item={id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2),place:name,country,notes:$('notes').value.trim(),status:$('status').value,lat,lon};
+if(old)places=places.map(p=>p.id===editing?item:p);else places.push(item);
+persist();render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.setView([lat,lon],5);
+}catch(err){$('notice').textContent='Impossibile salvare: '+err.message}finally{btn.disabled=false}
+};
+render();setTimeout(()=>map.invalidateSize(),200);
+})();
+</script></body></html>
