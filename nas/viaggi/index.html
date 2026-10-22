@@ -6,7 +6,7 @@
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><a href="/">⌂ Home</a></header>
 <section class="panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Aggiungi luogo</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><div class="hint">Tocca un segnaposto per vedere il luogo. La mappa usa OpenStreetMap.</div></section>
-<section class="panel"><div class="toolbar"><h2>Luoghi dei desideri <span id="count" class="sub"></span></h2><button class="secondary" id="addBottom" type="button">+ Nuovo luogo</button></div><div id="cards" class="cards"></div><p class="hint">Per ora le modifiche sono salvate su questo dispositivo e browser, non sincronizzate tra Bogdan e Camilla.</p></section>
+<section class="panel"><div class="toolbar"><h2>Luoghi dei desideri <span id="count" class="sub"></span></h2><button class="secondary" id="addBottom" type="button">+ Nuovo luogo</button></div><div id="cards" class="cards"></div><p class="hint">I luoghi sono condivisi tra Bogdan e Camilla tramite il NAS. Se il NAS non è disponibile, le modifiche non vengono inviate.</p></section>
 <dialog id="editor"><form id="wishForm"><h2 id="formTitle">Aggiungi luogo</h2><label>Destinazione *<input id="place" required maxlength="110" placeholder="Es. Kyoto, Giappone"></label><label>Paese o regione<input id="country" maxlength="100" placeholder="Es. Giappone"></label><label>Note<textarea id="notes" maxlength="1000" placeholder="Cosa vorremmo vedere?"></textarea></label><label>Stato<select id="status"><option value="desiderio">Da visitare</option><option value="programmato">In programma</option><option value="visitato">Visitato</option></select></label><div id="notice" role="status"></div><div class="form-actions"><button class="secondary" id="cancel" type="button">Annulla</button><button id="save" type="submit">Salva</button></div></form></dialog>
 </main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 (()=>{
@@ -15,10 +15,38 @@ const KEY='zenchak.viaggi.desideri.v1';
 const $=id=>document.getElementById(id);
 let places=[];try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(data))places=data.filter(p=>p&&typeof p.id==='string')}catch{}
 let editing=null;
+let serverReady=false;
+let saving=false;
 const map=L.map('map',{worldCopyJump:true}).setView([28,15],2);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
 const markers=L.layerGroup().addTo(map);
 function persist(){localStorage.setItem(KEY,JSON.stringify(places))}
+async function sync(){
+ if(!serverReady)throw Error('Archivio NAS non disponibile. Nessuna modifica sincronizzata.');
+ const response=await fetch('/api/travel-wishlist',{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({items:places})});
+ if(!response.ok)throw Error('Salvataggio sul NAS fallito ('+response.status+')');
+ persist();
+}
+async function initShared(){
+ try{
+  const response=await fetch('/api/travel-wishlist',{credentials:'same-origin',cache:'no-store'});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const result=await response.json();
+  if(!Array.isArray(result.items))throw Error('Risposta non valida');
+  const remote=result.items;
+  const local=places;
+  const missing=local.filter(p=>!remote.some(q=>q.id===p.id));
+  places=remote.concat(missing);
+  serverReady=true;
+  if(missing.length)await sync();else persist();
+  render();
+ }catch(err){
+  serverReady=false;
+  const hint=document.querySelector('section:last-of-type .hint');
+  if(hint)hint.textContent='NAS non raggiungibile: i dati locali restano visibili, ma la sincronizzazione non è disponibile. Riprova ricaricando la pagina.';
+  render();
+ }
+}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function render(){
 markers.clearLayers();$('cards').replaceChildren();$('count').textContent='('+places.length+')';
@@ -27,7 +55,7 @@ for(const p of places){
 const card=document.createElement('article');card.className='wish';
 card.innerHTML='<h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(p.country)+'</p><p>'+escapeHtml(p.notes)+'</p><p>● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">Mappa</button><button class="secondary" data-action="edit">Modifica</button><button class="danger" data-action="delete">Elimina</button></div>';
 card.querySelector('[data-action="edit"]').onclick=()=>openEditor(p);
-card.querySelector('[data-action="delete"]').onclick=()=>{if(confirm('Eliminare '+p.place+'?')){places=places.filter(x=>x.id!==p.id);persist();render()}};
+card.querySelector('[data-action="delete"]').onclick=async()=>{if(!serverReady)return alert('NAS non disponibile: eliminazione bloccata.');if(confirm('Eliminare '+p.place+'?')){const previous=places;places=places.filter(x=>x.id!==p.id);try{await sync();render()}catch(e){places=previous;alert(e.message)}}};
 card.querySelector('[data-action="locate"]').onclick=()=>{if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){map.setView([p.lat,p.lon],8);markers.eachLayer(m=>{if(m.options.wishId===p.id)m.openPopup()})}else alert('Posizione non trovata. Modifica la destinazione e riprova.')};
 $('cards').appendChild(card);
 if(Number.isFinite(p.lat)&&Number.isFinite(p.lon))L.marker([p.lat,p.lon],{wishId:p.id}).bindPopup('<strong>'+escapeHtml(p.place)+'</strong><div>'+escapeHtml(p.country)+'</div>').addTo(markers);
@@ -36,7 +64,7 @@ if(Number.isFinite(p.lat)&&Number.isFinite(p.lon))L.marker([p.lat,p.lon],{wishId
 function openEditor(p){editing=p?.id||null;$('formTitle').textContent=p?'Modifica luogo':'Aggiungi luogo';$('place').value=p?.place||'';$('country').value=p?.country||'';$('notes').value=p?.notes||'';$('status').value=p?.status||'desiderio';$('notice').textContent='';$('editor').showModal()}
 $('addTop').onclick=()=>openEditor();$('addBottom').onclick=()=>openEditor();$('cancel').onclick=()=>$('editor').close();
 $('wishForm').onsubmit=async e=>{
-e.preventDefault();const name=$('place').value.trim(),country=$('country').value.trim();if(!name)return;
+e.preventDefault();const name=$('place').value.trim(),country=$('country').value.trim();if(!name)return;if(!serverReady){$('notice').textContent='NAS non disponibile: impossibile salvare.';return;}
 const btn=$('save');btn.disabled=true;$('notice').textContent='Cerco la destinazione sulla mappa…';
 try{
 const old=places.find(p=>p.id===editing);
@@ -46,10 +74,10 @@ lat=null;lon=null;
 try{const q=encodeURIComponent([name,country].filter(Boolean).join(', '));const response=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+q,{headers:{'Accept-Language':'it'}});if(response.ok){const data=await response.json();if(data[0]){lat=Number(data[0].lat);lon=Number(data[0].lon)}}}catch{}
 }
 const item={id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2),place:name,country,notes:$('notes').value.trim(),status:$('status').value,lat,lon};
-if(old)places=places.map(p=>p.id===editing?item:p);else places.push(item);
-persist();render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.setView([lat,lon],5);
+const previous=places;if(old)places=places.map(p=>p.id===editing?item:p);else places.push(item);
+try{await sync()}catch(err){places=previous;throw err}render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.setView([lat,lon],5);
 }catch(err){$('notice').textContent='Impossibile salvare: '+err.message}finally{btn.disabled=false}
 };
-render();setTimeout(()=>map.invalidateSize(),200);
+render();initShared();setTimeout(()=>map.invalidateSize(),200);
 })();
 </script></body></html>
