@@ -76,13 +76,13 @@ body{background:#f8faff;color:var(--navy)}
 .add-vehicle{display:block;width:100%;border:1px dashed #bad3ff;border-radius:15px;background:transparent;padding:16px;margin-top:14px;color:#1e4a9e;font-weight:800;cursor:pointer}
 .section{margin-top:15px}
 @media(max-width:720px){.wrap{padding:16px 12px 60px}.hero{padding-bottom:20px}.hero h1{font-size:28px}.grid{grid-template-columns:1fr;gap:12px}.car-summary{min-height:320px;padding:15px}.car-picture .car-silhouette{font-size:112px}.car-summary .car-picture{height:112px}.detail-section .admin-grid{grid-template-columns:1fr}.hero .actions .btn{padding:10px}}
-.car-picture img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}.vehicle-visual img{max-width:100%;width:380px;height:100%;object-fit:contain;mix-blend-mode:multiply}.car-summary .car-picture{height:150px}.vehicle-visual{height:230px}@media(max-width:720px){.car-summary .car-picture{height:135px}.vehicle-visual{height:205px}}
+.car-picture img{width:100%;height:100%;object-fit:contain;mix-blend-mode:normal}.vehicle-visual img{max-width:100%;width:380px;height:100%;object-fit:contain;mix-blend-mode:normal}.car-summary .car-picture{height:150px}.vehicle-visual{height:230px}@media(max-width:720px){.car-summary .car-picture{height:135px}.vehicle-visual{height:205px}}
 /* Fotografie auto: contenimento integrale senza tagli o zoom */
 .car-summary{overflow:visible}
 .car-summary .car-picture{height:170px;min-height:170px;overflow:visible;display:flex;align-items:center;justify-content:center;margin:8px 0 12px}
-.car-summary .car-picture img{display:block;width:100%;max-width:100%;height:100%;object-fit:contain;object-position:center;mix-blend-mode:multiply}
+.car-summary .car-picture img{display:block;width:100%;max-width:100%;height:100%;object-fit:contain;object-position:center;mix-blend-mode:normal}
 .vehicle-visual{height:250px;overflow:visible;display:flex;align-items:center;justify-content:center}
-.vehicle-visual img{display:block;width:100%;max-width:430px;height:100%;object-fit:contain;object-position:center;mix-blend-mode:multiply}
+.vehicle-visual img{display:block;width:100%;max-width:430px;height:100%;object-fit:contain;object-position:center;mix-blend-mode:normal}
 @media(max-width:720px){.car-summary .car-picture{height:155px;min-height:155px}.vehicle-visual{height:225px}}
 
 /* Schede auto compatte: nome e descrizione affiancati */
@@ -96,6 +96,9 @@ body{background:#f8faff;color:var(--navy)}
 .car-summary .quick-grid{margin:9px 0}
 .car-summary .detail-btn{padding:11px}
 @media(max-width:720px){.car-summary{min-height:0;padding:15px}.car-heading{grid-template-columns:minmax(95px,.8fr) minmax(0,1.6fr);gap:9px}.car-heading h2{font-size:21px}.car-summary .car-picture{height:135px;min-height:135px;margin:2px 0 5px}}
+/* Le fotografie WebP sono trasparenti: niente rettangoli o blending grigio. */
+.car-summary .car-picture,.vehicle-visual{background:transparent!important}
+.car-summary .car-picture img,.vehicle-visual img{background:transparent!important;mix-blend-mode:normal!important;filter:none!important}
 </style>
 <script defer src="/media-client.js"></script>
 </head>
@@ -164,7 +167,7 @@ function carPhoto(c){
  const slot=c.id==='kia-rio'?'auto-kia':'auto-fiat';
  const fallback=c.id==='kia-rio'?'/assets/car/kia_rio-49e17eecf29c.webp':'/assets/car/fiat_punto-75d185809de8.webp';
  const src=window.ZenchakMedia?.src(slot,null);
- return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="lazy" decoding="async">';
+ return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="eager" decoding="async">';
 }
 function quickCard(icon,label,value){return '<div class="quick">'+icons[icon]+'<small>'+label+'</small><strong>'+value+'</strong></div>'}
 function statusText(c){return c.statusTone==='neutral'?'Da controllare':'In gestione'}
