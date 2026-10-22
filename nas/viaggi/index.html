@@ -6,10 +6,57 @@
 .header-actions{margin-left:auto;display:flex;align-items:center;gap:9px}.header-actions a,.header-actions button{margin:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 13px;border-radius:14px;background:#f0f5fb;color:#22608d;border:1px solid #e1eaf4;box-shadow:0 3px 10px #1b527016;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap}.header-actions button:hover,.header-actions a:hover{background:#e5f0fa;box-shadow:0 5px 14px #1b52702b}.header-actions svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}@media(max-width:520px){.header-actions{gap:6px}.header-actions a,.header-actions button{padding:9px;min-height:39px;font-size:12px}.header-actions svg{width:17px;height:17px}header img{width:47px;height:47px}h1{font-size:22px}}
 .wish{overflow:hidden}.wish-photo{height:145px;margin:-15px -15px 13px;background:linear-gradient(130deg,#d9ebf5,#b9d8e9);overflow:hidden}.wish-photo img{width:100%;height:100%;object-fit:cover;display:block}.wish .detail{line-height:1.5}.wish .detail strong{color:#254d72}.wish .wiki-credit{font-size:11px}.wish .wiki-credit a{font-size:11px}@media(max-width:600px){.wish-photo{height:115px;margin:-11px -11px 10px}}
 .wish-photo{position:relative;height:165px;background:linear-gradient(145deg,#84b7c9 0%,#bedfd4 50%,#f2d2a6 100%)}.wish-photo img{width:100%;height:100%;object-fit:cover}.wish-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,38,60,.18),transparent 65%);pointer-events:none}.destination-summary{font-size:13px!important;line-height:1.55;color:#445e75!important;margin:10px 0!important}@media(max-width:600px){.wish-photo{height:125px}}
+
+/* Layout mobile come riferimento Viaggi */
+body{background:#f1f8fd;color:#10234b;font-family:system-ui,-apple-system,sans-serif}
+main{max-width:1020px;padding:12px 13px 82px}
+header{height:65px;margin:0 0 10px;gap:9px}
+header img{width:47px;height:47px}
+h1{font-size:23px;line-height:1.12;font-weight:800}
+header .sub{font-size:11px;margin-top:4px}
+.header-actions{gap:8px}
+.header-actions a,.header-actions button{width:49px;height:48px;min-height:48px;display:flex;flex-direction:column;gap:2px;padding:5px 2px;border:0;border-radius:14px;background:#eaf5ff;color:#2076cb;box-shadow:0 3px 12px #477fb01b;font-size:10px}
+.header-actions svg{width:20px;height:20px}
+.panel{padding:9px;background:#fff;border:1px solid #e5f0f7;border-radius:17px;box-shadow:0 3px 15px #285b8512;margin-bottom:12px}
+.map-panel{position:relative;padding:6px 6px 9px}
+.map-panel .toolbar{position:absolute;top:9px;right:9px;z-index:500;margin:0}
+.map-panel .toolbar h2{display:none}
+.map-panel .toolbar button{border-radius:11px;padding:8px 13px;background:#1587e9;color:#fff;font-size:12px;box-shadow:0 3px 9px #1771b950}
+#map{height:255px;border-radius:12px}
+.map-panel .hint{margin:6px 5px 0;font-size:10px;color:#7b8da1}
+.map-interactive{position:absolute;bottom:36px;right:14px;z-index:500;background:#fff;color:#3274b2;padding:6px 9px;border-radius:9px;font-size:10px;text-decoration:none;box-shadow:0 2px 8px #163e6030}
+.wishlist-panel{background:transparent;box-shadow:none;border:0;padding:0}
+.wishlist-panel .toolbar{margin:0 0 8px}
+.wishlist-panel .toolbar h2{font-size:19px;font-weight:800;color:#10234b}
+#count{display:inline-flex;align-items:center;justify-content:center;background:#d9edff;color:#3682c3;border-radius:99px;padding:3px 7px;font-size:11px}
+.wishlist-panel .toolbar #addBottom{display:none}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.wish{padding:0;background:#fff;border:1px solid #e3eef7;border-radius:13px;box-shadow:0 3px 9px #1d4f7516;overflow:hidden}
+.wish-photo{height:116px;margin:0 0 7px;background:linear-gradient(135deg,#7cb7dc,#d4e9eb)}
+.wish h3{font-size:14px;line-height:1.1;margin:0 9px 3px;font-weight:800}
+.wish .destination-summary{font-size:10px!important;line-height:1.25!important;color:#6e7f98!important;margin:0 9px 5px!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:25px}
+.wish .country-line{display:none}
+.wish .detail{font-size:10px;line-height:1.25;margin:3px 9px;color:#55708e;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wish .detail strong{color:#3c83cb}
+.wish .status-line{display:none}
+.wish .actions{margin:7px 7px 7px;display:grid;grid-template-columns:1fr 1fr auto;gap:5px}
+.wish button{font-size:10px!important;border-radius:8px;padding:6px 4px!important;white-space:nowrap}
+.wish button.secondary{background:#eaf4ff;color:#2583d2}
+.wish button.danger{background:#ffeff2;color:#e76b7d;width:27px}
+.wish .wish-photo .favorite{position:absolute;top:6px;right:6px;z-index:2;background:#ffffffd9;border:0;border-radius:50%;width:24px;height:24px;padding:2px!important;font-size:15px!important;color:#9aabc0;box-shadow:0 1px 5px #173e6430}
+.wish .wish-photo .favorite.active{color:#f04e78}
+.wish-photo:after{pointer-events:none}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:800;display:flex;justify-content:space-around;align-items:center;padding:5px 10px calc(5px + env(safe-area-inset-bottom));background:#ffffffed;border-top:1px solid #dceaf5;box-shadow:0 -3px 18px #164c6b12}
+.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:62px;padding:6px 9px;border-radius:12px;color:#8498b1;text-decoration:none;font-size:10px;font-weight:650}
+.bottom-nav a.current{color:#2288df;background:#eaf5ff}
+.bottom-nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(min-width:700px){#map{height:330px}.wish-photo{height:180px}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.wish h3{font-size:18px}.wish .destination-summary,.wish .detail{font-size:12px!important}.wish .actions{margin:10px}.bottom-nav{max-width:1020px;margin:auto;border-radius:14px 14px 0 0}}
+@media(max-width:390px){main{padding:9px 9px 75px}header{height:57px}header img{width:40px;height:40px}h1{font-size:19px}.header-actions a,.header-actions button{width:44px;height:44px;min-height:44px}#map{height:230px}.cards{gap:8px}.wish-photo{height:94px}.wish h3{font-size:13px}.wish .detail{font-size:9px}.wish .actions{gap:3px;margin:5px}.wish button{font-size:9px!important}}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
-<section class="panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Aggiungi luogo</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><div class="hint">Tocca un segnaposto per vedere il luogo. La mappa usa OpenStreetMap.</div></section>
-<section class="panel"><div class="toolbar"><h2>Luoghi dei desideri <span id="count" class="sub"></span></h2><button class="secondary" id="addBottom" type="button">+ Nuovo luogo</button></div><div id="cards" class="cards"></div><p class="hint">I luoghi sono condivisi tra Bogdan e Camilla tramite il NAS. Se il NAS non è disponibile, le modifiche non vengono inviate.</p></section>
+<section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Nuova meta</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
+<section class="panel wishlist-panel"><div class="toolbar"><h2>Luoghi dei desideri <span id="count" class="sub"></span></h2><button class="secondary" id="addBottom" type="button">+ Nuovo luogo</button></div><div id="cards" class="cards"></div><p class="hint">I luoghi sono condivisi tra Bogdan e Camilla tramite il NAS. Se il NAS non è disponibile, le modifiche non vengono inviate.</p></section>
+<nav class="bottom-nav" aria-label="Navigazione principale"><a href="/"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-8h6v8"/></svg>Home</a><a href="/viaggi/" class="current"><svg viewBox="0 0 24 24"><path d="M3 7h18v14H3zM8 7V4h8v3M3 12h18"/></svg>Viaggi</a><a href="#cards"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg>Desideri</a><a href="/gestione-icone/"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M19 5l-2 2M7 17l-2 2"/></svg>Gestione</a></nav>
 <dialog id="editor"><form id="wishForm"><h2 id="formTitle">Aggiungi luogo</h2><label>Destinazione *<input id="place" required maxlength="110" placeholder="Es. Kyoto, Giappone"></label><label>Paese o regione<input id="country" maxlength="100" placeholder="Es. Giappone"></label><label>Note<textarea id="notes" maxlength="1000" placeholder="Cosa vorremmo vedere?"></textarea></label><label>Periodo migliore per visitare<input id="bestTime" maxlength="250" placeholder="Es. maggio–giugno, settembre"></label><label>Posti più belli da vedere<textarea id="highlights" maxlength="500" placeholder="Es. centro storico, parchi, spiagge…"></textarea></label><label>Stato<select id="status"><option value="desiderio">Da visitare</option><option value="programmato">In programma</option><option value="visitato">Visitato</option></select></label><div id="notice" role="status"></div><div class="form-actions"><button class="secondary" id="cancel" type="button">Annulla</button><button id="save" type="submit">Salva</button></div></form></dialog>
 </main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
 (()=>{
@@ -98,7 +145,12 @@ if(!places.length){$('cards').innerHTML='<div class="empty">Nessun luogo ancora.
 for(const p of places){
 const card=document.createElement('article');card.className='wish';
 const guide=guideFor(p);
-card.innerHTML='<div class="wish-photo" aria-hidden="true"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(p.country)+'</p><p class="destination-summary">'+escapeHtml(shortDescription(p,guide))+'</p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p>● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">Mappa</button><button class="secondary" data-action="edit">Modifica</button><button class="danger" data-action="delete">Elimina</button></div>';
+card.innerHTML='<div class="wish-photo"><button type="button" class="favorite" aria-label="Preferito" title="Preferito">♡</button></div><h3>'+escapeHtml(p.place)+'</h3><p class="country-line">'+escapeHtml(p.country)+'</p><p class="destination-summary">'+escapeHtml(shortDescription(p,guide))+'</p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p class="status-line">● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">▧ Mappa</button><button class="secondary" data-action="edit">✎ Modifica</button><button class="danger" data-action="delete" aria-label="Elimina">▤</button></div>';
+const fav=card.querySelector('.favorite');
+const favKey='zenchak.travel.favorites';
+let favorites=[];try{favorites=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{}
+fav.classList.toggle('active',favorites.includes(p.id));fav.textContent=favorites.includes(p.id)?'♥':'♡';
+fav.onclick=()=>{let list=[];try{list=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{};list=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(favKey,JSON.stringify(list));fav.classList.toggle('active',list.includes(p.id));fav.textContent=list.includes(p.id)?'♥':'♡'};
 card.querySelector('[data-action="edit"]').onclick=()=>openEditor(p);
 card.querySelector('[data-action="delete"]').onclick=async()=>{if(!serverReady)return alert('NAS non disponibile: eliminazione bloccata.');if(confirm('Eliminare '+p.place+'?')){const previous=places;places=places.filter(x=>x.id!==p.id);try{await sync();render()}catch(e){places=previous;alert(e.message)}}};
 card.querySelector('[data-action="locate"]').onclick=()=>{if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){map.setView([p.lat,p.lon],8);markers.eachLayer(m=>{if(m.options.wishId===p.id)m.openPopup()})}else alert('Posizione non trovata. Modifica la destinazione e riprova.')};
