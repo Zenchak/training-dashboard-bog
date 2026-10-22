@@ -270,6 +270,23 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
 .grid .card.auto{--tile:#fff0e8;--ink:#f36d30}
 .grid .card.gare{--tile:#fff0f5;--ink:#e24675}
 @media(max-width:420px){.grid{gap:15px!important}.grid .card{grid-template-columns:100px minmax(0,1fr) 34px!important;column-gap:9px!important;min-height:156px!important;padding:14px 12px!important;border-radius:24px!important}.grid .card-icon{width:100px!important;height:110px!important}.grid .card-icon img{width:104px!important;height:104px!important;max-width:104px!important;max-height:104px!important}.grid .card:before{width:122px!important;height:122px!important;left:10px!important}.grid .card .title{font-size:21px!important}.grid .card .desc{font-size:11px!important}.grid .card .arrow{width:36px!important;height:36px!important;right:12px!important;bottom:14px!important}}
+
+/* Refinement: schede compatte, colori coerenti con le icone e immagini senza riquadri */
+.grid{gap:12px!important}
+.grid .card{grid-template-columns:96px minmax(0,1fr) 38px!important;grid-template-rows:1fr auto auto 1fr!important;column-gap:12px!important;min-height:120px!important;height:120px!important;padding:10px 14px!important;border-radius:22px!important;box-shadow:0 5px 15px rgba(35,42,70,.07)!important}
+.grid .card:before{width:98px!important;height:98px!important;left:12px!important;top:10px!important;background:color-mix(in srgb,var(--ink) 6%,white)!important}
+.grid .card:after{width:120px!important;height:75px!important;bottom:-48px!important}
+.grid .card-icon{grid-column:1!important;grid-row:1/5!important;width:96px!important;height:96px!important;border-radius:50%!important;overflow:hidden!important;background:transparent!important}
+.grid .card-icon img{width:96px!important;height:96px!important;max-width:96px!important;max-height:96px!important;border-radius:50%!important;object-fit:cover!important;mix-blend-mode:multiply!important;filter:none!important}
+.grid .card .title{grid-column:2/4!important;grid-row:2!important;font-size:20px!important;line-height:1.1!important}
+.grid .card .desc{grid-column:2/4!important;grid-row:3!important;font-size:11.5px!important;margin:4px 0 0!important}
+.grid .card .card-chevron{position:absolute;right:13px;bottom:12px;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:color-mix(in srgb,var(--ink) 13%,white);color:var(--ink);font-size:27px;font-weight:400;line-height:1}
+.grid .card.training{--tile:#f2eaff;--ink:#793bff}
+.grid .card.casa{--tile:#fff2df;--ink:#ff971b}
+.grid .card.finanze{--tile:#fff3d9;--ink:#eea400}
+.grid .card.auto{--tile:#e9f4ff;--ink:#237de8}
+.grid .card.gare{--tile:#ffedf3;--ink:#dc3d75}
+@media(max-width:420px){.grid{gap:11px!important}.grid .card{grid-template-columns:82px minmax(0,1fr) 30px!important;column-gap:10px!important;min-height:108px!important;height:108px!important;padding:9px 11px!important;border-radius:21px!important}.grid .card:before{width:88px!important;height:88px!important;left:8px!important;top:9px!important}.grid .card-icon{width:82px!important;height:82px!important}.grid .card-icon img{width:82px!important;height:82px!important;max-width:82px!important;max-height:82px!important}.grid .card .title{font-size:19px!important}.grid .card .desc{font-size:10.5px!important;padding-right:22px!important}.grid .card .card-chevron{width:30px;height:30px;right:10px;bottom:10px;font-size:24px}}
 </style>
 <script defer src="/media-client.js"></script>
 </head>
@@ -286,11 +303,11 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
     </div>
   </div>
   <div class="grid">
-<a class="card training" data-visible-profile="Bogdan" href="/training/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-allenamenti" data-default-src="/assets/home/allenamenti-09da96285aa7.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Allenamenti</div><div class="desc">Diario, statistiche e obiettivi</div></a>
-<a class="card casa" data-visible-profile="all" href="/casa/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-casa" data-default-src="/assets/home/ricerca_casa-eea474075f66.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Ricerca Casa</div><div class="desc">Annunci, visite e documenti</div></a>
-<a class="card finanze" data-visible-profile="Bogdan" href="/finanze/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-finanze" data-default-src="/assets/home/finanze-c9cfc3c35ee3.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Finanze</div><div class="desc">Budget, spese e investimenti</div></a>
-<a class="card auto" data-visible-profile="all" href="/auto/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-auto" data-default-src="/assets/home/auto_e_veicoli-9d594a2c8304.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Auto e Veicoli</div><div class="desc">Gestione, scadenze e costi</div></a>
-<a class="card gare" data-visible-profile="Bogdan" href="/gare/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-gare" data-default-src="/assets/home/mappa_gare-6ade0780c5a8.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Mappa Gare</div><div class="desc">Calendario, percorsi e risultati</div></a>
+<a class="card training" data-visible-profile="Bogdan" href="/training/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-allenamenti" data-default-src="/assets/home/allenamenti-09da96285aa7.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Allenamenti</div><div class="desc">Diario, statistiche e obiettivi</div><span class="card-chevron" aria-hidden="true">›</span></a>
+<a class="card casa" data-visible-profile="all" href="/casa/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-casa" data-default-src="/assets/home/ricerca_casa-eea474075f66.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Ricerca Casa</div><div class="desc">Annunci, visite e documenti</div><span class="card-chevron" aria-hidden="true">›</span></a>
+<a class="card finanze" data-visible-profile="Bogdan" href="/finanze/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-finanze" data-default-src="/assets/home/finanze-c9cfc3c35ee3.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Finanze</div><div class="desc">Budget, spese e investimenti</div><span class="card-chevron" aria-hidden="true">›</span></a>
+<a class="card auto" data-visible-profile="all" href="/auto/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-auto" data-default-src="/assets/home/auto_e_veicoli-9d594a2c8304.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Auto e Veicoli</div><div class="desc">Gestione, scadenze e costi</div><span class="card-chevron" aria-hidden="true">›</span></a>
+<a class="card gare" data-visible-profile="Bogdan" href="/gare/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-gare" data-default-src="/assets/home/mappa_gare-6ade0780c5a8.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Mappa Gare</div><div class="desc">Calendario, percorsi e risultati</div><span class="card-chevron" aria-hidden="true">›</span></a>
 </div>
   <div class="foot"><span>HTTPS tramite Tailscale Funnel · accesso ricordato 30 giorni</span><a href="/gestione-icone/">🖼️ Gestisci icone</a><a href="/passkey-test/">🧪 Face ID</a><a href="/auth/logout">Esci</a></div>
 </main>
