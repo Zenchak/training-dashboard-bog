@@ -162,7 +162,7 @@ const icons={
 };
 function carPhoto(c){
  const slot=c.id==='kia-rio'?'auto-kia':'auto-fiat';
- const fallback=c.id==='kia-rio'?'kia_rio.png?v=847d763b':'fiat_punto.png?v=ee141e6e';
+ const fallback=c.id==='kia-rio'?'/assets/car/kia_rio-49e17eecf29c.webp':'/assets/car/fiat_punto-75d185809de8.webp';
  const src=window.ZenchakMedia?.src(slot,null);
  return '<img data-media-slot="'+slot+'" data-default-src="'+fallback+'"'+(src?' src="'+src+'"':'')+' alt="'+c.name+'" loading="lazy" decoding="async">';
 }
