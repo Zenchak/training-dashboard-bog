@@ -197,7 +197,7 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
     </div>
     <div class="hero-actions">
       <button class="refresh" id="hubRefresh" type="button" aria-label="Aggiorna Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.4 6"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button>
-      <button class="switch" id="profileButton" type="button" aria-label="Gestisci accesso profilo">👤 <span id="profileName">Profilo</span></button>
+      <button class="switch" id="profileButton" type="button" aria-label="Gestisci accesso profilo"><span id="profileAvatar" aria-hidden="true">👤</span> <span id="profileName">Profilo</span></button>
     </div>
   </div>
   <div class="grid">
@@ -233,10 +233,12 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
   let authenticatedUser='';
   const dlg=document.getElementById('profileDialog');
   const label=document.getElementById('profileName');
+   const avatar=document.getElementById('profileAvatar');
   const buttons=[...document.querySelectorAll('[data-profile]')];
   const cards=[...document.querySelectorAll('[data-visible-profile]')];
   function paint(){
     label.textContent=authenticatedUser||'Accedi';
+     avatar.textContent=authenticatedUser==='Bogdan'?'⚔️':authenticatedUser==='Camilla'?'🛡️':'👤';
     for(const b of buttons){
       const current=b.dataset.profile===authenticatedUser;
       b.classList.toggle('active',current);
