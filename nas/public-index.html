@@ -333,6 +333,14 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
 #profileName{font-size:16px!important;max-width:125px!important}
 .hero-actions .refresh{align-self:center!important;justify-self:center!important}
 @media(max-width:390px){.hero-actions .switch{height:53px!important;min-height:53px!important;padding:5px 11px 5px 6px!important;gap:7px!important}#profileAvatar{width:41px!important;height:41px!important;flex-basis:41px!important;font-size:22px!important}#profileName{font-size:13px!important}}
+
+/* Avatar personalizzati anche nella finestra di scelta profilo */
+.profile-entry{display:flex;align-items:center;gap:12px;text-align:left}
+.profile-entry>span:last-child{min-width:0}
+.profile-character{display:block;flex:0 0 48px;width:48px;height:48px;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:cover}
+.profile-character[data-character="Bogdan"]{background-image:url('/assets/profiles/asterix.webp')}
+.profile-character[data-character="Camilla"]{background-image:url('/assets/profiles/obelix.webp')}
+.profile-entry small{display:block}
 </style>
 <script defer src="/media-client.js"></script>
 </head>
@@ -363,8 +371,8 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
     <h2>👤 Profili personali</h2>
     <p>Il tuo profilo è collegato alla sessione autenticata. Per passare all’altro account devi inserire le sue credenziali.</p>
     <div class="profiles">
-      <button class="profile" type="button" data-profile="Bogdan">👨 Bogdan<small>Allenamenti, Finanze e Gare · richiede password</small></button>
-      <button class="profile" type="button" data-profile="Camilla">👩 Camilla<small>Auto e Cerco Casa · richiede password</small></button>
+      <button class="profile" type="button" data-profile="Bogdan"><span class="profile-entry"><span class="profile-character" data-character="Bogdan" aria-hidden="true"></span><span>Bogdan<small>Allenamenti, Finanze e Gare · richiede password</small></span></span></button>
+      <button class="profile" type="button" data-profile="Camilla"><span class="profile-entry"><span class="profile-character" data-character="Camilla" aria-hidden="true"></span><span>Camilla<small>Casa, Auto e Viaggi condivisi · richiede password</small></span></span></button>
     </div>
     <button class="close" id="closeProfile" type="button">Chiudi</button>
   </div>
@@ -385,6 +393,7 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
    const avatar=document.getElementById('profileAvatar');
   const buttons=[...document.querySelectorAll('[data-profile]')];
   const cards=[...document.querySelectorAll('[data-visible-profile]')];
+  const profileCharacters=[...document.querySelectorAll('.profile-character')];
   function paint(){
     label.textContent=authenticatedUser||'Accedi';
      avatar.textContent=authenticatedUser?'':'👤';
@@ -421,6 +430,7 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
         const mediaResponse=await fetch('/api/media/',{credentials:'same-origin',cache:'no-store'});
         if(mediaResponse.ok){
           const media=await mediaResponse.json();
+          for(const character of profileCharacters){const slotName=character.dataset.character==='Bogdan'?'profile-bogdan':'profile-camilla';if(media.items && media.items[slotName] && media.items[slotName].url){character.style.backgroundImage='url("'+media.items[slotName].url.replace(/"/g,'')+'")'}}
           const slot=authenticatedUser==='Bogdan'?'profile-bogdan':'profile-camilla';
           if(media.items && media.items[slot] && media.items[slot].url){
             avatar.textContent='';
