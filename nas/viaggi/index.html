@@ -169,7 +169,7 @@ async function decorateCard(card,p){
    const response=await fetch(endpoint);if(!response.ok)throw Error('Foto non disponibile');
    const data=await response.json();
    const candidates=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|wikidata|diagram|drawing|painting|stamp|passport|currency)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl && i.width>=700 && i.height>=350 && i.width/i.height>1.15});
-   const tokens=search.toLowerCase().split(/\\s+/).filter(x=>x.length>3);
+   const tokens=search.toLowerCase().split(/\s+/).filter(x=>x.length>3);
    candidates.sort((a,b)=>{
     const score=x=>{const t=x.title.toLowerCase(),i=x.imageinfo[0],ratio=i.width/i.height;return tokens.filter(w=>t.includes(w)).length*10-Math.abs(ratio-1.65)*3};
     return score(b)-score(a);
@@ -235,7 +235,10 @@ try{const q=encodeURIComponent([name,country].filter(Boolean).join(', '));const 
 }
 const item={id:editing||String(Date.now())+'-'+Math.random().toString(36).slice(2),place:name,country,notes:$('notes').value.trim(),bestTime:$('bestTime').value.trim(),highlights:$('highlights').value.trim(),status:$('status').value,lat,lon};
 const previous=places;if(old)places=places.map(p=>p.id===editing?item:p);else places.push(item);
-try{await sync()}catch(err){places=previous;throw err}render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.setView([lat,lon],5);
+try{await sync()}catch(err){places=previous;throw err}
+// Al salvataggio aggiorna la foto della località, anche se era già in cache.
+guideCache.delete(([name,country].filter(Boolean).join(' ')).trim().toLowerCase());
+render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.setView([lat,lon],5);
 }catch(err){$('notice').textContent='Impossibile salvare: '+err.message}finally{btn.disabled=false}
 };
 render();initShared();setTimeout(()=>map.invalidateSize(),200);
