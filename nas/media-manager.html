@@ -85,7 +85,7 @@ function message(text){
  const box=$('message');box.textContent=text;clearTimeout(messageTimer);
  messageTimer=setTimeout(()=>box.textContent='',5000);
 }
-function mediaUrl(slot){return remote[slot]?.url || allSlots.get(slot).url}
+function mediaUrl(slot){const url=remote[slot]?.url || allSlots.get(slot).url;return url+(url.includes('?')?'&':'?')+'v='+encodeURIComponent(remote[slot]?.updatedAt||remote[slot]?.updated_at||Date.now())}
 function meta(slot){
  const item=remote[slot];
  if(!item)return 'Originale · nessuna personalizzazione';
