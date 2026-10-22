@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           git config user.name "zenchak-hub-bot"
           git config user.email "zenchak-hub-bot@users.noreply.github.com"
-          git add -A nas/assets/home nas/assets/car nas/public-index.html nas/auto/index.html
+          git add -A nas/assets/home nas/assets/car nas/public-index.html nas/auto/index.html nas/media-manager.html
           if ! git diff --cached --quiet; then
             git commit -m "Ottimizza icone Home e foto Auto in WebP con cache versionata [skip ci]"
             git push origin HEAD:main

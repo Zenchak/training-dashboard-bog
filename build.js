@@ -20,6 +20,8 @@ if (smallPhotos.length !== 2) throw new Error('Unexpected equipment photo count:
 const noosaHQ = 'https://www.sneakers4u.nl/img/images/2023/04/11/ASICS-Noosa-Tri-13-Hazard-Green-Digital-Aqua-1011B021-300.png';
 const hokaHQ = 'https://www.bfgcdn.com/1500_1500_90/023-2201-0511/hoka-mafate-x-trailrunningschuhe.jpg';
 html = html.replaceAll(smallPhotos[0], noosaHQ).replaceAll(smallPhotos[1], hokaHQ);
+ // Remote product photos may be large; don't delay dashboard icons or charts.
+html = html.replace(/(<img class="equipment-real-photo"[^>]*?)loading="eager"/g,'$1loading="lazy"');
 
 // Do not show an approximation mark on the Noosa main card. The historical
 // estimation metadata and the underlying calculation remain unchanged.

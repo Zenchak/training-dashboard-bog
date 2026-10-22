@@ -2597,6 +2597,11 @@ document.getElementById("trainingRefresh")?.addEventListener("click",function(){
 });
 </script>
 
-<script>window.addEventListener("zenchak-media-loaded",()=>{if(typeof renderAll==="function")renderAll()});</script>
+<script>window.addEventListener("zenchak-media-loaded",()=>{
+  const saved=window.ZenchakMedia?.items?.()||{};
+  // Avoid expensive second full render unless a custom sport icon changed.
+  if(['sport-running','sport-bike','sport-swim','sport-trail','sport-walk','sport-gym'].some(slot=>saved[slot]))
+    if(typeof renderAll==="function")renderAll();
+});</script>
 </body>
 </html>

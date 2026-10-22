@@ -145,6 +145,25 @@ def update_cars(mapping: dict[str, str]) -> None:
     file.write_text(src, encoding="utf-8")
 
 
+def update_manager(home_mapping: dict[str, str],
+                   car_mapping: dict[str, str]) -> None:
+    """Keep the mobile editor previews as lightweight as the Hub itself."""
+    file = ROOT / "nas/media-manager.html"
+    src = file.read_text(encoding="utf-8")
+    slots = {slot: "/assets/home/" + fname
+             for slot, fname in home_mapping.items()}
+    slots.update({
+        "auto-kia": "/assets/car/" + car_mapping["kia_rio"],
+        "auto-fiat": "/assets/car/" + car_mapping["fiat_punto"],
+    })
+    for slot, url in slots.items():
+        pattern = r"(\['" + re.escape(slot) + r"',\s*'[^']+',\s*')[^']+('\])"
+        src, count = re.subn(pattern, lambda m: m[1] + url + m[2], src)
+        if count != 1:
+            raise RuntimeError(f"Expected 1 media-manager preview for {slot}, got {count}")
+    file.write_text(src, encoding="utf-8")
+
+
 def main() -> None:
     home_dir = ROOT / "nas/assets/home"
     car_dir = ROOT / "nas/assets/car"
@@ -159,6 +178,7 @@ def main() -> None:
     }
     update_home(home_mapping)
     update_cars(car_mapping)
+    update_manager(home_mapping, car_mapping)
 
 
 if __name__ == "__main__":
