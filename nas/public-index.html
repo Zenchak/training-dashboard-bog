@@ -301,6 +301,10 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
 .hero-actions .refresh svg{transition:transform .35s ease}
 .hero-actions .refresh:hover svg{transform:rotate(45deg)}
 @media(prefers-reduced-motion:reduce){.grid .card,.hero button,.hero-actions .refresh svg{transition:none!important;animation:none!important}.grid .card:hover,.grid .card:active,.hero button:hover,.hero button:active{transform:none!important}}
+
+/* Icone Home: un po' più piccole per evitare il taglio nel cerchio */
+.grid .card-icon img{width:82px!important;height:82px!important;max-width:82px!important;max-height:82px!important;object-fit:contain!important;border-radius:0!important}
+@media(max-width:420px){.grid .card-icon img{width:70px!important;height:70px!important;max-width:70px!important;max-height:70px!important}}
 </style>
 <script defer src="/media-client.js"></script>
 </head>
