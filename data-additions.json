@@ -21,5 +21,21 @@
     "bodyBatteryNetImpact": -23,
     "altitudeMinM": 239,
     "altitudeMaxM": 386
+  },
+  {
+    "date": "2026-10-22",
+    "type": "Corsa",
+    "km": 12.54,
+    "duration": "1:06:42",
+    "dplus": null,
+    "location": "Bergamo",
+    "kcal": null,
+    "kcalSource": "Non verificata dal FIT",
+    "startTime": "19:00 circa",
+    "equipmentId": "run-noosa13",
+    "equipmentAttribution": "Attribuzione da storico corse su strada, da confermare per questa uscita.",
+    "garminId": "24817234051",
+    "hrAvg": 142,
+    "note": "Allenamento qualità 3×2 km per mezza maratona, FIT Garmin 24817234051_ACTIVITY.fit. 12,54 km, tempo in movimento 1:06:42, passo medio 5:19/km, FC media 142 bpm. Ripetute indicative ricavate dall'analisi del FIT: km 4–5 ~4:38/km (FC ~147), km 7–8 ~4:48/km (FC ~146), km 10–11 ~5:03/km (FC ~145). Riscaldamento e recuperi programmati a 6:00/km; obiettivo ripetute 4:50/km. Utente riferisce di stare benissimo dopo la seduta, senza dolore alla rotula sinistra. Dislivello e calorie non ancora verificati."
   }
 ]
