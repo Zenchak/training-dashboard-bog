@@ -34,6 +34,9 @@ function load(){
  return pending;
 }
 window.ZenchakMedia={src,apply,load,items:()=>items};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});
-else load();
+// Paint lightweight, cached WebP fallbacks immediately rather than waiting for
+// the media manifest API. A personal image replaces only its own slot after load.
+function boot(){apply(document);load()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+else boot();
 })();
