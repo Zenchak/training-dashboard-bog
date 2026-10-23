@@ -17,7 +17,7 @@ html = html.replace(removeRepeatedTitle, '');
 // copies (static HTML + dynamic EQUIPMENT_PHOTOS object) with fuller-size photos.
 const smallPhotos = [...new Set([...html.matchAll(/data:image\/webp;base64,[A-Za-z0-9+/=]+/g)].map(m=>m[0]))];
 if (smallPhotos.length !== 2) throw new Error('Unexpected equipment photo count: '+smallPhotos.length);
-const noosaHQ = 'https://www.asics.com/it/it-it/noosa-tri-14/p/1011B368-300.html';
+const noosaHQ = 'https://res.cloudinary.com/ekoweb/image/upload/s--63uo51rk--/f_auto%2Ch_600%2Cq_auto%3Aeco%2Cw_600/v1/products/9-101055/views/9-101055__1011b368-300_01';
 const hokaHQ = 'https://www.bfgcdn.com/1500_1500_90/023-2201-0511/hoka-mafate-x-trailrunningschuhe.jpg';
 html = html.replaceAll(smallPhotos[0], noosaHQ).replaceAll(smallPhotos[1], hokaHQ);
  // Remote product photos may be large; don't delay dashboard icons or charts.
