@@ -71,6 +71,14 @@ const groups=[
     ['auto-kia','Kia Rio','/assets/car/kia_rio-49e17eecf29c.webp'],
     ['auto-fiat','Fiat Punto','/assets/car/fiat_punto-75d185809de8.webp']
   ]},
+  {title:'Attrezzatura sportiva',items:[
+    ['equipment-run-noosa13','ASICS Noosa Tri 14','https://res.cloudinary.com/ekoweb/image/upload/s--63uo51rk--/f_auto%2Ch_600%2Cq_auto%3Aeco%2Cw_600/v1/products/9-101055/views/9-101055__1011b368-300_01'],
+    ['equipment-trail-hoka','HOKA Mafate X','https://www.bfgcdn.com/1500_1500_90/023-2201-0511/hoka-mafate-x-trailrunningschuhe.jpg'],
+    ['equipment-bike-vr','Van Rysel AF Discover','/training/assets/icons/bici_arancione.svg'],
+    ['equipment-run-stormer2','Scarpe running precedenti · Stormer 2','/training/assets/icons/running_viola.svg'],
+    ['equipment-trail-tnf','Scarpe trail The North Face','/training/assets/icons/trail_running_verde.svg'],
+    ['equipment-bike-rental-ebike','Bici elettrica a noleggio','/training/assets/icons/bici_arancione.svg']
+  ]},
   {title:'Sport · Allenamenti',items:[
     ['sport-running','Corsa','/training/assets/icons/running_viola.svg'],
     ['sport-bike','Bici','/training/assets/icons/bici_arancione.svg'],
@@ -106,7 +114,7 @@ function build(){
   title.textContent=group.title;grid.className='grid';
   for(const [slot,name] of group.items){
    // Mostra sempre i profili; il backend decide chi puo modificarli.
-   if(!allowedSlots.has(slot) && !slot.startsWith('profile-') && slot!=='home-viaggi' && slot!=='home-logo')continue;
+   if(!allowedSlots.has(slot) && !slot.startsWith('profile-') && !slot.startsWith('equipment-') && slot!=='home-viaggi' && slot!=='home-logo')continue;
    const card=document.createElement('article');card.className='media-card';card.dataset.slot=slot;
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
@@ -140,7 +148,7 @@ async function convert(file,slot){
  try{
   const img=new Image();img.decoding='async';
   await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('Immagine non leggibile'));img.src=url});
-  const max=slot.startsWith('auto-')?1080:slot.startsWith('profile-')?512:320;
+  const max=slot.startsWith('auto-')||slot.startsWith('equipment-')?1080:slot.startsWith('profile-')?512:320;
   const ratio=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
   const canvas=document.createElement('canvas');
   canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));
