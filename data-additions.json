@@ -37,5 +37,22 @@
     "garminId": "24817234051",
     "hrAvg": 142,
     "note": "Allenamento qualità 3×2 km per mezza maratona, FIT Garmin 24817234051_ACTIVITY.fit. 12,54 km, tempo in movimento 1:06:42, passo medio 5:19/km, FC media 142 bpm. Ripetute indicative ricavate dall'analisi del FIT: km 4–5 ~4:38/km (FC ~147), km 7–8 ~4:48/km (FC ~146), km 10–11 ~5:03/km (FC ~145). Riscaldamento e recuperi programmati a 6:00/km; obiettivo ripetute 4:50/km. Utente riferisce di stare benissimo dopo la seduta, senza dolore alla rotula sinistra. Dislivello e calorie non ancora verificati."
+  },
+  {
+    "date": "2026-10-24",
+    "type": "Trekking",
+    "km": 12.47,
+    "duration": "3:22:10",
+    "dplus": 971,
+    "location": "Onore (BG)",
+    "kcal": 1281,
+    "kcalSource": "Garmin FIT, total_calories (calorie della sessione; separazione attive/riposo non disponibile)",
+    "startTime": "10:21",
+    "equipmentId": "trail-hoka",
+    "equipmentAttribution": "Conferma diretta dell'utente 24/10/2026: trekking effettuato con HOKA Mafate X.",
+    "garminId": "24835854764",
+    "hrAvg": 105,
+    "hrMax": 160,
+    "note": "Trekking in zona Onore (BG) del 24/10/2026, da Garmin FIT 24835854764_ACTIVITY.fit. Inizio 10:21 ora italiana. Distanza FIT 12,46863 km, tempo timer 3:22:09.625, tempo trascorso comprese soste 4:54:15.379, D+971 m e D-1045 m. Frequenza cardiaca media 105 bpm, massima 160 bpm. Calorie della sessione nel FIT 1.281 (campo total_calories, non equivale necessariamente alle sole attive). Differenza tra tempo timer e trascorso circa 1h32m, dovuta alle pause. Scarpe HOKA Mafate X confermate direttamente dall'utente."
   }
 ]
