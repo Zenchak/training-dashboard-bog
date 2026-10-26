@@ -54,5 +54,24 @@
     "hrAvg": 105,
     "hrMax": 160,
     "note": "Trekking in zona Onore (BG) del 24/10/2026, da Garmin FIT 24835854764_ACTIVITY.fit. Inizio 10:21 ora italiana. Distanza FIT 12,46863 km, tempo timer 3:22:09.625, tempo trascorso comprese soste 4:54:15.379, D+971 m e D-1045 m. Frequenza cardiaca media 105 bpm, massima 160 bpm. Calorie della sessione nel FIT 1.281 (campo total_calories, non equivale necessariamente alle sole attive). Differenza tra tempo timer e trascorso circa 1h32m, dovuta alle pause. Scarpe HOKA Mafate X confermate direttamente dall'utente."
+  },
+  {
+    "date": "2026-10-26",
+    "type": "Corsa",
+    "km": 12.02,
+    "duration": "1:05:58",
+    "dplus": 39,
+    "location": "Bergamo",
+    "kcal": 899,
+    "kcalSource": "Garmin FIT - total_calories, non necessariamente calorie attive",
+    "startTime": "19:24",
+    "equipmentId": "run-noosa13",
+    "equipmentAttribution": "Conferma diretta utente 26/10/2026: ASICS Noosa Tri 14 (ID storico run-noosa13) utilizzate per tutti i 12,02 km.",
+    "garminId": "24861210976",
+    "hrAvg": 143,
+    "hrMax": 163,
+    "avgPowerW": 350,
+    "averageCadenceSpm": 164,
+    "note": "FIT Garmin 24861210976_ACTIVITY.fit; corsa progressiva del 26/10/2026, inizio ore 19:24 ora italiana. Totale 12,01769 km, tempo 1:05:57.62 (nessuna pausa), passo medio 5:29/km, FC media 143 bpm e max 163, dislivello D+39 / D-40 m, 899 kcal totali secondo campo total_calories FIT (non confondere con attive), potenza media 350 W e cadenza media ~164 spm. Obiettivo Garmin: 2 km 6:05/km, 4 km 5:40/km, 3 km 5:20/km, 2 km 5:05/km, 1 km 6:05/km. Esecuzione sui lap da 1 km: 1–2 6:01/km; 3–6 ~5:35/km; 7–9 ~5:18/km; 10–11 ~4:55/km; km 12 5:43/km. Ultimi 2 km veloci sotto FC soglia stimata 170 bpm; buon controllo, ma defaticamento finale più rapido del previsto. Scarpe ASICS Noosa Tri 14 confermate dall'utente."
   }
 ]
