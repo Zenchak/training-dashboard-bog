@@ -32,6 +32,7 @@ body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));
 .health-page-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 4px 0}.health-title{min-width:0}.health-title .tag{margin:0 0 3px}.health-title h1{font-size:clamp(25px,5vw,32px);line-height:1.1;letter-spacing:-.04em;margin:0}.health-page-heading .health-top-actions{gap:7px}header{padding-top:4px!important}@media(max-width:680px){.health-page-heading{gap:6px}.health-page-heading .health-top-actions{gap:5px}.health-page-heading .health-icon-action,.health-page-heading .refresh{width:35px;height:35px;font-size:20px}.health-title h1{font-size:26px}.health-title .tag{font-size:9px}}
 #health-chart{min-height:0!important}#health-chart svg{height:auto!important}#health-status{display:none!important}#health-range-note{margin-top:7px!important;line-height:1.4!important}@media(max-width:680px){#health-range-note{margin-top:9px!important}}
 .health-summary-heading{font-size:15px;color:#203154;margin:18px 0 7px;font-weight:750}#health-kpis{margin-top:5px}.health-quicklinks{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:9px 0 12px}.health-quicklinks a{aspect-ratio:1/1;min-height:0;padding:10px 5px;align-items:center;justify-content:center;text-align:center;gap:5px;font-size:clamp(10px,2.7vw,13px);line-height:1.15;overflow-wrap:anywhere}.health-quicklinks span{font-size:clamp(20px,5vw,27px)}header{display:none}.health-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px!important}.health-choices button{width:100%;min-width:0;min-height:43px;white-space:normal;overflow-wrap:break-word;text-align:center;font-size:clamp(10px,2.7vw,12px)!important;padding:7px 4px!important;line-height:1.2}.health-choices .expand-choice{grid-column:auto}@media(max-width:420px){.health-choices{grid-template-columns:repeat(3,minmax(0,1fr))}.health-quicklinks a{font-size:10px}}
+.health-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(38px,auto));gap:6px!important}.health-choices button{min-height:38px!important;max-height:54px;line-height:1.12!important;padding:5px 3px!important;font-size:clamp(9px,2.45vw,12px)!important;overflow-wrap:anywhere;word-break:normal}.health-choices .extra-choice[hidden]{display:none!important}.health-choices .expand-choice{grid-column:auto!important}@media(max-width:420px){.health-choices{grid-template-columns:repeat(4,minmax(0,1fr))!important}}#health-kpis,.health-summary-heading{display:none!important}
 </style>
 </head>
 <body>
@@ -42,7 +43,7 @@ body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));
 
 </header>
 <div class="health-quicklinks"><a href="#health-history"><span>🩸</span>Analisi</a><a href="#vaccinations"><span>💉</span>Vaccinazioni</a><a href="#visits"><span>💙</span>Visite</a><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener"><span>📄</span>Documenti</a></div><div class="layout">
-<section class="panel full" id="health-history"><h2>Andamento dei valori</h2><p id="health-status">Caricamento storico analisi…</p><div class="health-plot-layout"><div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div><div id="health-chart" class="placeholder"></div></div><p id="health-range-note" class="note"></p><h3 class="health-summary-heading">Andamento parametri</h3><div id="health-kpis" class="categories"></div></section>
+<section class="panel full" id="health-history"><h2>Andamento dei valori</h2><p id="health-status">Caricamento storico analisi…</p><div class="health-plot-layout"><div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div><div id="health-chart" class="placeholder"></div></div><p id="health-range-note" class="note"></p></section>
 <section class="panel full" id="visits"><h2>Visite e accertamenti</h2><div class="categories">
 <div class="category">❤️ Elettrocardiogrammi · 2020 e 2022<small>Entrambi descritti nei referti come nei limiti della norma. Documenti e tracciati originali disponibili su Drive.</small></div>
 <div class="category">🩺 Endocrinologia · novembre 2020<small>TSH 1,49 mUI/L; esame clinico senza segni di tireopatia. Nessuna terapia consigliata.</small></div>
@@ -71,7 +72,7 @@ body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));
 'use strict';
 document.getElementById('health-refresh').addEventListener('click',()=>location.reload());
 (async()=>{
- const status=document.getElementById('health-status'),kpis=document.getElementById('health-kpis'),choices=document.getElementById('health-choices'),chart=document.getElementById('health-chart'),note=document.getElementById('health-range-note');
+ const status=document.getElementById('health-status'),choices=document.getElementById('health-choices'),chart=document.getElementById('health-chart'),note=document.getElementById('health-range-note');
  const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  try{
   const response=await fetch('/salute/history.json',{credentials:'same-origin',cache:'no-store'});
@@ -139,11 +140,11 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
    const reference=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'.':'Intervallo di riferimento non disponibile.';
    note.textContent=(info||'Il significato dei valori dipende dal parametro e dal referto.')+' '+reference+' Valori indicativi da fonti cliniche generali, non limiti del laboratorio; possono variare per metodo, età e situazione clinica.';
 
-   kpis.replaceChildren(...[['Ultimo valore',vals.at(-1)+' '+(item.unit||'')],['Minimo',min+' '+(item.unit||'')],['Massimo',max+' '+(item.unit||'')],['Rilevazioni',String(points.length)]].map(([name,val])=>{const d=document.createElement('div');d.className='category';d.textContent=name;const sm=document.createElement('small');sm.textContent=val;d.append(sm);return d}));
+
   }
   const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];let expanded=false;const ordered=[...series.keys()].sort((a,b)=>{const rank=i=>{const label=(series[i].label||'').toLowerCase();const p=priority.findIndex(x=>label.includes(x.toLowerCase()));return p<0?99:p};return rank(a)-rank(b)});ordered.forEach((i,pos)=>{const s=series[i],b=document.createElement('button');b.type='button';b.textContent=s.label||s.key||('Parametro '+(i+1));b.className=pos>=priority.length?'extra-choice':'';if(pos>=priority.length)b.hidden=true;b.dataset.seriesIndex=String(i);b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{active=i;render()});choices.append(b)});const more=document.createElement('button');more.type='button';more.className='expand-choice';more.textContent='+ Altro';more.setAttribute('aria-expanded','false');more.addEventListener('click',()=>{expanded=!expanded;choices.querySelectorAll('.extra-choice').forEach(b=>b.hidden=!expanded);more.textContent=expanded?'− Meno':'+ Altro';more.setAttribute('aria-expanded',String(expanded))});if(series.length>priority.length)choices.append(more);
   render();
- }catch(e){status.textContent='Storico analisi non disponibile';chart.textContent=e.message;kpis.replaceChildren()}
+ }catch(e){status.textContent='Storico analisi non disponibile';chart.textContent=e.message}
 })();
 </script>
 </body></html>
