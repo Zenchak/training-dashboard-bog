@@ -13,8 +13,6 @@ body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.42 -apple-system
 button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #5c9dff;outline-offset:2px}
 main{width:min(1060px,calc(100% - 24px));margin:8px auto 55px}
 .topbar{display:flex;align-items:center;gap:11px;margin:0 0 12px;padding:3px 2px;min-height:48px}
-.brand{display:flex;flex-direction:column;line-height:.84;text-decoration:none;font-weight:950;letter-spacing:-.07em;font-size:13px;color:#123b96;min-width:72px}
-.brand strong{font-size:31px;line-height:1.12;color:#137af9;letter-spacing:-.065em;background:linear-gradient(#1460ff,#25d5f7);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .heart{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#fff0f3;color:#ff3f6c;font-size:23px}
 .page-name{flex:1;min-width:0}.page-name h1{font-size:20px;line-height:1.1;margin:0 0 2px;font-weight:850;letter-spacing:-.035em}.page-name p{color:var(--muted);font-size:11px;margin:0}
 .refresh{flex:none;width:37px;height:37px;border:0;border-radius:50%;background:white;color:#365cc7;font-size:25px;box-shadow:0 2px 12px #6179a41c;cursor:pointer}
@@ -40,26 +38,17 @@ h2{font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:820;letter-spacing:
 .metric-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .metric-bubble{width:36px;height:36px;display:grid;place-items:center;background:#ffeff3;border-radius:50%;font-size:21px;flex:none}
 .metric-title{flex:1;min-width:90px}.metric-title h3{font-size:16px;line-height:1.1;margin:0;font-weight:820}.metric-title p{font-size:11px}
-.range-controls{display:flex;align-items:center;gap:1px;border-radius:12px;background:#f3f6fc;padding:3px}.range-controls button{border:1px solid transparent;padding:7px 9px;color:#6a7fa4;background:transparent;border-radius:10px;font-size:10px;cursor:pointer}.range-controls button[aria-pressed=true]{background:#fff;border-color:#91bbff;color:#086ef0;box-shadow:0 1px 4px #7998c82a;font-weight:800}
-.metric-menu{position:relative}.metric-menu>button{background:#f3f6fc;border:0;border-radius:50%;width:31px;height:31px;color:#59729e;font-weight:800;font-size:18px;cursor:pointer}
-.metric-popover{position:absolute;right:0;top:36px;z-index:3;min-width:160px;border:1px solid var(--line);border-radius:12px;background:white;padding:5px;box-shadow:0 10px 25px #334f8a29}.metric-popover[hidden]{display:none}.metric-popover a,.metric-popover button{display:block;width:100%;padding:9px 7px;border:0;border-radius:8px;text-align:left;background:white;color:var(--ink);font-size:11px;text-decoration:none;cursor:pointer}.metric-popover :is(a,button):hover{background:#f3f7ff}
 #health-chart{width:100%;overflow:hidden;margin:11px 0 2px}#health-chart svg{display:block;width:100%;height:auto}#health-chart svg text{font-family:inherit}
 .chart-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:4px 0 13px;color:#7183a2;font-size:10px}.chart-legend span{display:inline-flex;align-items:center;gap:4px}.legend-band{width:17px;height:9px;border-radius:3px;background:#dff7e9}.legend-line{width:16px;height:3px;background:#227dfa;border-radius:3px}.legend-dot{width:7px;height:7px;border-radius:50%;background:#ed3f56}
-.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{position:relative;border:1px solid #e8eef9;border-radius:12px;background:#fbfcff;padding:11px;min-height:91px}.stat .stat-label{font-weight:800;font-size:11px;color:#1e345f}.stat .stat-value{font-size:22px;font-weight:850;line-height:1.2;margin-top:3px;letter-spacing:-.04em}.stat .stat-value small{font-size:11px;color:#697fa3;font-weight:500;letter-spacing:0}.stat .stat-sub{font-size:10px;margin-top:5px;color:#7286a7}.stat .stat-icon{position:absolute;right:9px;bottom:12px;font-size:17px;color:#1678ff;background:#eaf3ff;border-radius:50%;height:28px;width:28px;display:grid;place-items:center}.stat .stat-value.low{color:#1773ef}.stat .stat-value.high{color:#ea3a55}.stat .stat-value.ok{color:#008d50}.stat .stat-delta{position:absolute;right:9px;bottom:9px;font-size:10px;color:#008d53;background:#e4faee;padding:5px;border-radius:12px}
-.interpretation{display:flex;gap:8px;align-items:flex-start;margin-top:10px;border:1px solid #ddecff;background:#f0f7ff;border-radius:12px;padding:11px}.interpretation .paper{display:grid;place-items:center;border-radius:50%;height:31px;min-width:31px;background:#dfefff;color:#2379ec;font-size:17px}.interpretation strong{display:block;font-size:11px}.interpretation p{font-size:10px;margin-top:2px;color:#61779c}.interpretation summary{cursor:pointer;list-style:none}.interpretation summary::-webkit-details-marker{display:none}.interpretation summary::after{content:" ›";color:#2575e5;font-weight:800}.interpretation .details-note{padding-top:7px;color:#61779c;font-size:10px}
-.recent-header{display:flex;align-items:center;justify-content:space-between;margin:14px 0 7px}.recent-header h3{margin:0;font-size:15px;letter-spacing:-.02em}.recent-header button{border:0;background:#f3f6fd;color:#234a91;font-size:10px;border-radius:16px;padding:7px 10px;cursor:pointer}
-.readings{border:1px solid #e8eef8;border-radius:12px;overflow:hidden}.reading{display:grid;grid-template-columns:1.1fr .9fr 1fr;align-items:center;gap:7px;padding:9px 10px;border-bottom:1px solid #e7ecf5;font-size:11px}.reading:last-child{border-bottom:0}.reading b{font-size:12px}.reading .reading-value{white-space:nowrap}.reading .reading-value small{font-size:9px;color:#7285a3}.pill{justify-self:end;border-radius:13px;padding:4px 7px;font-size:9px;font-weight:750;background:#eff3fa;color:#536581;white-space:nowrap}.pill.ok{background:#e2f9e9;color:#038450}.pill.high{background:#ffeaed;color:#c62247}.pill.low{background:#eaf1ff;color:#1863cb}
-#health-range-note{color:#7385a3;font-size:10px;margin-top:8px}
 .categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.category{border:1px solid #e9eef7;border-radius:12px;background:#fbfcff;padding:12px;font-size:12px;font-weight:750;min-width:0}.category small{display:block;font-weight:400;color:#6d7e9e;margin-top:5px;font-size:10px;line-height:1.5}.note{font-size:11px;line-height:1.5;color:#7283a1;margin-top:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.button{background:#226ee6;color:white;padding:10px 12px;border-radius:11px;text-decoration:none;font-size:11px;font-weight:750}.button.secondary{background:#eef4ff;color:#205abb}
-@media(max-width:700px){main{width:calc(100% - 14px);margin-top:6px}.layout{grid-template-columns:1fr;gap:10px}.panel{padding:12px;border-radius:17px}.panel.full{grid-column:auto}.quick{padding:9px 6px;min-height:81px}.quick .qicon{font-size:18px;width:26px;height:26px}.quick strong{font-size:10px}.quick small{font-size:8.5px}.section-heading h2{font-size:16px}.metric-panel{padding:9px}.metric-title h3{font-size:14px}.range-controls button{font-size:9px;padding:6px 7px}.health-choices button{font-size:10px;padding:5px 3px}.stat{padding:9px;min-height:83px}.stat .stat-value{font-size:20px}.reading{padding:8px 7px;font-size:10px}.reading b{font-size:11px}.pill{padding:3px 5px;font-size:8px}}
-@media(max-width:370px){.topbar{gap:7px}.brand{min-width:60px;font-size:11px}.brand strong{font-size:27px}.heart{width:32px;height:32px}.page-name h1{font-size:18px}.page-name p{font-size:10px}.refresh{width:33px;height:33px}.quicklinks{gap:5px}.quick{padding:8px 5px}.health-choices{gap:5px}.health-choices button{font-size:9px}.metric-head{gap:5px}.metric-title{min-width:75px}.range-controls button{padding:5px 6px}}
+@media(max-width:700px){main{width:calc(100% - 14px);margin-top:6px}.layout{grid-template-columns:1fr;gap:10px}.panel{padding:12px;border-radius:17px}.panel.full{grid-column:auto}.quick{padding:9px 6px;min-height:81px}.quick .qicon{font-size:18px;width:26px;height:26px}.quick strong{font-size:10px}.quick small{font-size:8.5px}.section-heading h2{font-size:16px}.metric-panel{padding:9px}.metric-title h3{font-size:14px}.health-choices button{font-size:10px;padding:5px 3px}}
+@media(max-width:370px){.topbar{gap:7px}.heart{width:32px;height:32px}.page-name h1{font-size:18px}.page-name p{font-size:10px}.refresh{width:33px;height:33px}.quicklinks{gap:5px}.quick{padding:8px 5px}.health-choices{gap:5px}.health-choices button{font-size:9px}.metric-head{gap:5px}.metric-title{min-width:75px}}
 
 </style>
 </head>
 <body>
 <main>
 <div class="topbar">
-<a class="brand" href="/" aria-label="Zenchak Hub, torna alla Home"><span>Zenchak</span><strong>Hub</strong></a>
 <span class="heart" aria-hidden="true">♥</span>
 <div class="page-name"><h1>Salute</h1><p>Analisi, parametri nel tempo e referti</p></div>
 <button type="button" id="health-refresh" class="refresh" title="Aggiorna" aria-label="Aggiorna Salute">↻</button>
@@ -73,31 +62,17 @@ h2{font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:820;letter-spacing:
 <div class="layout">
 <section class="panel full" id="health-history">
 <div class="section-heading"><span class="secicon">↗</span><div><h2>Andamento dei valori</h2><p>Seleziona un parametro per vedere l’andamento nel tempo</p></div></div>
-<div id="health-status" role="status">Caricamento storico analisi…</div>
 <div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div>
 <div class="metric-panel">
  <div class="metric-head">
   <span class="metric-bubble" id="metric-icon" aria-hidden="true">🩸</span>
   <div class="metric-title"><h3 id="metric-name">Glicemia</h3><p id="metric-unit">mg/dL</p></div>
-  <div class="range-controls" role="group" aria-label="Intervallo di tempo">
-    <button type="button" data-span="1" aria-pressed="false">1 anno</button>
-    <button type="button" data-span="3" aria-pressed="false">3 anni</button>
-    <button type="button" data-span="all" aria-pressed="true">Tutto</button>
-  </div>
-  <div class="metric-menu"><button id="metric-more" type="button" aria-label="Altre azioni" aria-expanded="false">•••</button>
-  <div class="metric-popover" id="metric-popover" hidden>
-  <button id="download-csv" type="button">Esporta valori CSV</button>
-  <a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Apri referti su Drive</a>
-  </div></div>
+
  </div>
  <div id="health-chart"></div>
  <div class="chart-legend"><span><i class="legend-band"></i> Fascia indicativa</span><span><i class="legend-line"></i> Valore</span><span><i class="legend-dot"></i> Fuori fascia</span></div>
- <div id="health-kpis" class="stat-grid"></div>
- <div class="interpretation"><div class="paper" aria-hidden="true">▤</div><details><summary><strong>Interpretazione</strong><p id="medical-summary"></p></summary><p class="details-note" id="medical-explanation"></p></details></div>
- <div class="recent-header"><h3>Ultimi valori</h3><button type="button" id="toggle-readings" aria-expanded="false">Vedi tutti ›</button></div>
- <div id="health-readings" class="readings"></div>
+
 </div>
-<p id="health-range-note" class="note"></p>
 </section>
 <section class="panel full" id="visits"><h2>Visite e accertamenti</h2><div class="categories">
 <div class="category">❤️ Elettrocardiogrammi · 2020 e 2022<small>Entrambi descritti nei referti come nei limiti della norma. Documenti e tracciati originali disponibili su Drive.</small></div>
@@ -129,33 +104,6 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:2}).format(Number(v));
-const csvQuote=t=>'"'+String(t).replace(/"/g,'""')+'"';
-const explanations={
-'Glicemia':'Concentrazione di glucosio nel sangue a digiuno. Valori elevati possono richiedere ulteriori accertamenti.',
-'Colesterolo totale':'Somma del colesterolo circolante. La valutazione del rischio considera soprattutto LDL, HDL e altri fattori.',
-'Colesterolo HDL':'Colesterolo HDL: valori bassi sono associati a maggior rischio cardiovascolare; non esiste un massimo protettivo universale.',
-'Trigliceridi':'Grassi nel sangue, influenzati da alimentazione, alcol, metabolismo e condizioni del prelievo.',
-'ALT / GPT':'Enzima epatico; può aumentare anche dopo attività muscolare intensa. L’intervallo dipende dal laboratorio.',
-'AST / GOT':'Enzima presente in fegato e muscoli. Va interpretato insieme ad ALT, altri esami e allenamenti.',
-'Gamma GT':'Enzima utile nella valutazione epatica e biliare; il valore può risentire di alcol e farmaci.',
-'Creatinina':'Indicatore utilizzato per stimare la filtrazione renale; risente anche della massa muscolare.',
-'eGFR':'Stima della filtrazione renale. Un valore tra 60 e 89, isolatamente, non diagnostica malattia renale.',
-'Emoglobina':'Proteina dei globuli rossi che trasporta ossigeno.',
-'Ematocrito':'Percentuale del volume sanguigno occupata dai globuli rossi; risente anche dell’idratazione.',
-'Leucociti':'Globuli bianchi coinvolti nelle difese immunitarie.',
-'Eritrociti sangue':'Numero dei globuli rossi presenti nel sangue.',
-'MCV':'Volume medio dei globuli rossi, utile nell’inquadramento delle anemie.',
-'Piastrine':'Cellule coinvolte nella coagulazione del sangue.',
-'VES':'Indice aspecifico di infiammazione; va interpretato con sintomi e altri esami.',
-'INR':'Indice del tempo di coagulazione; i limiti cambiano in caso di terapia anticoagulante.',
-'aPTT':'Tempo di coagulazione della via intrinseca; intervalli variabili per metodo e laboratorio.',
-'Urea':'Prodotto del metabolismo proteico eliminato dai reni; risente anche di dieta e idratazione.',
-'Densità urine':'Concentrazione delle urine, influenzata soprattutto dall’idratazione.',
-'pH urine':'Misura l’acidità o alcalinità delle urine; varia con dieta e condizioni del campione.',
-'Eritrociti urine':'Globuli rossi nelle urine; i limiti dipendono dal metodo di conteggio.',
-'Leucociti urine':'Globuli bianchi nelle urine; l’interpretazione dipende dal metodo e dai sintomi.',
-'Batteri urine':'Conteggio dei batteri nelle urine; la presenza può riflettere anche contaminazione del campione.'
-};
 const indicative={
 'Glicemia':[70,99],'Colesterolo totale':[0,200],'Colesterolo HDL':[40,90],
 'Trigliceridi':[0,150],'ALT / GPT':[4,36],'AST / GOT':[8,33],
@@ -166,70 +114,42 @@ const indicative={
 'Urea':[15,45],'Densità urine':[1.005,1.030],'pH urine':[4.5,8]
 };
 const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];
-let allReadings=false,yearsShown='all',active=0,expanded=false,series=[];
+let active=0,expanded=false,series=[];
 const choiceBox=$('health-choices'),chart=$('health-chart');
 function cleanValues(item){return (item.values||[]).filter(p=>Number.isFinite(Number(p.value))&&Number.isFinite(Number(p.year))).sort((a,b)=>Number(a.year)-Number(b.year))}
-function statusFor(value,range){if(!range)return ['Dato registrato',''];if(value>range[1])return ['Sopra fascia','high'];if(value<range[0])return ['Sotto fascia','low'];return ['Nella fascia','ok']}
-function kpi(label,value,unit,sub,style,icon,delta){const stat=document.createElement('div');stat.className='stat';stat.innerHTML='<div class="stat-label">'+esc(label)+'</div><div class="stat-value '+esc(style||'')+'">'+esc(value)+' <small>'+esc(unit)+'</small></div><div class="stat-sub">'+esc(sub||'')+'</div>'+(delta?'<span class="stat-delta">'+esc(delta)+'</span>':'<span class="stat-icon">'+esc(icon||'')+'</span>');return stat}
 function draw(){
-const item=series[active];if(!item)return;
-const points=cleanValues(item),values=points.map(p=>Number(p.value));if(!points.length){chart.textContent='Nessun dato disponibile';return}
-const last=points.at(-1),previous=points.at(-2),range=indicative[item.label]||null,[status,style]=statusFor(Number(last.value),range);
-choiceBox.querySelectorAll('[data-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.index)===active)));
-$('metric-name').textContent=item.label;$('metric-unit').textContent=item.unit||'Valore';$('metric-icon').textContent=/colesterolo|trigliceridi/i.test(item.label)?'💧':/urine/i.test(item.label)?'🧪':/apt|inr/i.test(item.label)?'🩸':'🩸';
-const yearEnd=Number(last.year),startYear=yearsShown==='all'?Number(points[0].year):yearEnd-Number(yearsShown)+1;
-let visible=points.filter(p=>Number(p.year)>=startYear);if(!visible.length)visible=[last];
-const vals=visible.map(p=>Number(p.value)),ext=range?[...vals,...range]:vals;let lo=Math.min(...ext),hi=Math.max(...ext);let pad=(hi-lo||1)*.17;lo-=pad;hi+=pad;
-const W=520,H=280,L=43,R=13,T=28,B=246,plotB=220;
-const px=year=>L+(W-L-R)*(yearsShown==='all'?(Number(year)-Number(points[0].year))/(Math.max(1,yearEnd-Number(points[0].year))):((Number(year)-startYear+.5)/Math.max(1,yearsShown==='all'?1:Number(yearsShown))));
-const py=value=>plotB-(Number(value)-lo)/(hi-lo)*(plotB-T);
-let svg='';
-if(range){const top=py(range[1]),bottom=py(range[0]);svg+='<rect x="'+L+'" y="'+top.toFixed(1)+'" width="'+(W-L-R)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>';}
-for(let n=0;n<=4;n++){const value=lo+(hi-lo)*n/4,y=py(value);svg+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(y+3)+'" font-size="10" text-anchor="end" fill="#7185aa">'+num(Number(value.toFixed(1)))+'</text>'}
-let minX=yearsShown==='all'?Number(points[0].year):startYear;
-for(let y=minX;y<=yearEnd;y++){const x=px(y);svg+='<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+plotB+'" stroke="#eef2fa"/>';if(yearEnd-minX<=10||(y-minX)%2===0)svg+='<text x="'+x+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+y+'</text>'}
-if(range){[range[0],range[1]].forEach(v=>{const y=py(v);svg+='<text x="'+(L+4)+'" y="'+(y-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
-const coords=visible.map(p=>({x:px(p.year),y:py(p.value),p}));
-if(coords.length>1)svg+='<polyline fill="none" stroke="#237cff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="'+coords.map(p=>p.x+','+p.y).join(' ')+'"/>';
-for(const c of coords){const outside=range&&(Number(c.p.value)<range[0]||Number(c.p.value)>range[1]);const color=outside?'#f03a56':'#237cff';svg+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+(outside?5:4)+'" fill="'+(outside?'#f03a56':'white')+'" stroke="'+color+'" stroke-width="2"><title>'+esc(c.p.year+': '+c.p.value+' '+(item.unit||''))+'</title></circle><text x="'+c.x+'" y="'+Math.max(12,c.y-11)+'" text-anchor="middle" font-size="11" fill="'+(outside?'#da2450':'#203763')+'" font-weight="760">'+esc(c.p.value)+'</text>'}
-svg+='<text x="3" y="13" font-size="10" fill="#6c82a8">'+esc(item.unit||'')+'</text>';
-chart.innerHTML='<svg role="img" aria-label="Storico '+esc(item.label)+' dal '+minX+' al '+yearEnd+'" viewBox="0 0 '+W+' '+H+'">'+svg+'</svg>';
-const mean=values.reduce((a,b)=>a+b,0)/values.length;
-const lowest=Math.min(...values),highest=Math.max(...values),minimum=points.find(p=>Number(p.value)===lowest),maximum=points.find(p=>Number(p.value)===highest);
-let delta='';if(previous&&Number(previous.value)!==0){const percentage=(Number(last.value)/Number(previous.value)-1)*100;delta=(percentage>0?'↑ ':'↓ ')+Math.abs(percentage).toFixed(0)+'% vs precedente'}
-$('health-kpis').replaceChildren(
- kpi('Ultimo valore',num(last.value),item.unit||'',last.year,style,'◉',delta),
- kpi('Valore medio',num(Number(mean.toFixed(2))),item.unit||'',points[0].year+'–'+last.year,'','▥'),
- kpi('Valore minimo',num(lowest),item.unit||'',minimum.year,'low','↓'),
- kpi('Valore massimo',num(highest),item.unit||'',maximum.year,'high','↑')
-);
-let summary='';
-const out=points.filter(p=>range&&(p.value<range[0]||p.value>range[1]));
-if(!range)summary='Per questo parametro lo storico non contiene un intervallo di riferimento verificato.';
-else if(style==='ok')summary='L’ultimo valore ('+num(last.value)+' '+(item.unit||'')+') è nella fascia indicativa.'+(out.length?' '+out.length+' rilevazione/i storica/e fuori fascia.':'');
-else summary='L’ultimo valore è '+status.toLowerCase()+' rispetto alla fascia indicativa.';
-$('medical-summary').textContent=summary;
-$('medical-explanation').textContent=(explanations[item.label]||'Valore da interpretare insieme al referto e al contesto clinico.')+' Gli intervalli sono indicativi, non equivalgono ai limiti specifici dei tuoi referti e non costituiscono una diagnosi.';
-$('health-range-note').textContent=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'. I limiti dei laboratori possono differire.':'Per questo parametro non è rappresentata una fascia verde: serve un intervallo verificato.';
-const shown=allReadings?points.slice().reverse():points.slice().reverse().slice(0,3);
-$('health-readings').innerHTML=shown.map(p=>{const [text,type]=statusFor(Number(p.value),range);return '<div class="reading"><b>'+esc(p.year)+'</b><span class="reading-value">'+esc(num(p.value))+' <small>'+esc(item.unit||'')+'</small></span><span class="pill '+type+'">'+esc(text)+'</span></div>'}).join('');
-$('toggle-readings').textContent=allReadings?'Mostra meno ↑':'Vedi tutti ›';$('toggle-readings').setAttribute('aria-expanded',String(allReadings));
+ const item=series[active];if(!item)return;
+ const points=cleanValues(item);if(!points.length){chart.textContent='Nessun dato disponibile';return}
+ const range=indicative[item.label]||null;
+ choiceBox.querySelectorAll('[data-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.index)===active)));
+ $('metric-name').textContent=item.label;$('metric-unit').textContent=item.unit||'Valore';
+ $('metric-icon').textContent=/urine/i.test(item.label)?'🧪':/colesterolo|trigliceridi/i.test(item.label)?'💧':'🩸';
+ const vals=points.map(p=>Number(p.value)),ext=range?[...vals,...range]:vals;
+ let lo=Math.min(...ext),hi=Math.max(...ext);const pad=(hi-lo||1)*.17;lo-=pad;hi+=pad;
+ const W=520,H=280,L=44,R=13,T=28,B=220;
+ const firstYear=Number(points[0].year),lastYear=Number(points.at(-1).year);
+ const x=year=>L+(W-L-R)*(Number(year)-firstYear)/Math.max(1,lastYear-firstYear);
+ const y=value=>B-(Number(value)-lo)/(hi-lo)*(B-T);
+ let svg='';
+ if(range){const top=y(range[1]),bottom=y(range[0]);svg+='<rect x="'+L+'" y="'+top.toFixed(1)+'" width="'+(W-L-R)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>'}
+ for(let n=0;n<=4;n++){const v=lo+(hi-lo)*n/4,yy=y(v);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(yy+3)+'" text-anchor="end" font-size="10" fill="#7185aa">'+num(Number(v.toFixed(1)))+'</text>'}
+ for(let year=firstYear;year<=lastYear;year++){const xx=x(year);svg+='<line x1="'+xx+'" y1="'+T+'" x2="'+xx+'" y2="'+B+'" stroke="#eef2fa"/>';if(lastYear-firstYear<=10||(year-firstYear)%2===0)svg+='<text x="'+xx+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+year+'</text>'}
+ if(range){[range[0],range[1]].forEach(v=>{svg+='<text x="'+(L+4)+'" y="'+(y(v)-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
+ const coords=points.map(p=>({x:x(p.year),y:y(p.value),p}));
+ if(coords.length>1)svg+='<polyline fill="none" stroke="#237cff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="'+coords.map(p=>p.x+','+p.y).join(' ')+'"/>';
+ for(const c of coords){const outside=range&&(Number(c.p.value)<range[0]||Number(c.p.value)>range[1]);const color=outside?'#f03a56':'#237cff';svg+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+(outside?5:4)+'" fill="'+(outside?'#f03a56':'white')+'" stroke="'+color+'" stroke-width="2"><title>'+esc(c.p.year+': '+c.p.value+' '+(item.unit||''))+'</title></circle><text x="'+c.x+'" y="'+Math.max(12,c.y-11)+'" text-anchor="middle" font-size="11" fill="'+(outside?'#da2450':'#203763')+'" font-weight="760">'+esc(c.p.value)+'</text>'}
+ svg+='<text x="3" y="13" font-size="10" fill="#6c82a8">'+esc(item.unit||'')+'</text>';
+ chart.innerHTML='<svg role="img" aria-label="Storico '+esc(item.label)+' dal '+firstYear+' al '+lastYear+'" viewBox="0 0 '+W+' '+H+'">'+svg+'</svg>';
 }
-function addChoice(index,extra){const item=series[index],b=document.createElement('button');b.type='button';b.dataset.index=String(index);b.textContent=item.label;b.setAttribute('aria-pressed','false');if(extra){b.classList.add('extra-choice');b.hidden=!expanded}b.addEventListener('click',()=>{active=index;allReadings=false;draw()});choiceBox.append(b)}
+function addChoice(i,extra){const item=series[i],b=document.createElement('button');b.type='button';b.dataset.index=String(i);b.textContent=item.label;b.setAttribute('aria-pressed','false');if(extra){b.classList.add('extra-choice');b.hidden=!expanded}b.addEventListener('click',()=>{active=i;draw()});choiceBox.append(b)}
 try{
-const response=await fetch('/salute/history.json',{credentials:'same-origin',cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
-const payload=await response.json();series=Array.isArray(payload.series)?payload.series:[];if(!series.length)throw Error('Nessun dato');
-$('health-status').textContent=series.length+' parametri disponibili · storico aggiornato al '+(payload.updated||'ultimo import');
-const order=[];for(const name of priority){const i=series.findIndex(s=>s.label===name);if(i>=0)order.push(i)}
-const extras=series.map((_,i)=>i).filter(i=>!order.includes(i));order.forEach(i=>addChoice(i,false));
-const more=document.createElement('button');more.type='button';more.className='expand-choice';more.textContent='+ Altro';more.setAttribute('aria-expanded','false');more.addEventListener('click',()=>{expanded=!expanded;choiceBox.querySelectorAll('.extra-choice').forEach(b=>b.hidden=!expanded);more.textContent=expanded?'− Meno':'+ Altro';more.setAttribute('aria-expanded',String(expanded))});choiceBox.append(more);extras.forEach(i=>addChoice(i,true));
-active=order[0]??0;
-$('toggle-readings').addEventListener('click',()=>{allReadings=!allReadings;draw()});
-document.querySelectorAll('[data-span]').forEach(b=>b.addEventListener('click',()=>{yearsShown=b.dataset.span;document.querySelectorAll('[data-span]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw()}));
-$('metric-more').addEventListener('click',()=>{const opened=$('metric-popover').hidden;$('metric-popover').hidden=!opened;$('metric-more').setAttribute('aria-expanded',String(opened))});
-$('download-csv').addEventListener('click',()=>{const item=series[active];const rows=[['Anno','Valore','Unità'],...cleanValues(item).map(p=>[p.year,p.value,item.unit||''])].map(r=>r.map(csvQuote).join(';')).join('\r\n');const blob=new Blob(['\uFEFF'+rows],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='salute-'+item.label.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.csv';a.click();URL.revokeObjectURL(url);$('metric-popover').hidden=true});
-draw();
-}catch(err){$('health-status').textContent='Storico non disponibile: '+err.message;chart.textContent='Non riesco a caricare i dati dal NAS.'}
+ const response=await fetch('/salute/history.json',{credentials:'same-origin',cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+ const payload=await response.json();series=Array.isArray(payload.series)?payload.series:[];if(!series.length)throw Error('Nessun dato');
+ const order=[];for(const name of priority){const i=series.findIndex(s=>s.label===name);if(i>=0)order.push(i)}
+ const extras=series.map((_,i)=>i).filter(i=>!order.includes(i));order.forEach(i=>addChoice(i,false));
+ if(extras.length){const more=document.createElement('button');more.type='button';more.className='expand-choice';more.textContent='+ Altro';more.setAttribute('aria-expanded','false');more.addEventListener('click',()=>{expanded=!expanded;choiceBox.querySelectorAll('.extra-choice').forEach(b=>b.hidden=!expanded);more.textContent=expanded?'− Meno':'+ Altro';more.setAttribute('aria-expanded',String(expanded))});choiceBox.append(more);extras.forEach(i=>addChoice(i,true))}
+ active=order[0]??0;draw();
+}catch(err){chart.textContent='Storico non disponibile: '+err.message}
 })();
 </script>
 </body></html>
