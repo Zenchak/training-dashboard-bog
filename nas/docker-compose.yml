@@ -88,6 +88,7 @@ services:
     volumes:
       - sites_data:/sites:ro
       - ./finance-data:/private-finance:ro
+      - ./health-data:/private-health:ro
       - ./htpasswd_bogdan:/etc/nginx/.htpasswd_bogdan:ro
       - ./htpasswd_casa:/etc/nginx/.htpasswd_casa:ro
     command:
