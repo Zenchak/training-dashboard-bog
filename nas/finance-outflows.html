@@ -7,9 +7,20 @@
 <style>
 :root{--bg:#f4f7fb;--panel:#fff;--line:#e6ebf2;--text:#1f2937;--muted:#7b8797;--accent:#e98b2a;--green:#0f9f6e;--shadow:0 12px 32px rgba(31,41,55,.08)}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:linear-gradient(180deg,#fffaf5,#f4f7fb)}
-.wrap{width:min(1180px,100%);margin:auto;padding:22px}.top,.panel,.kpi{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
-.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;padding:24px;border-radius:24px}.brand{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:850;color:var(--accent)}
-h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-height:1}.sub,.muted{color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.wrap{width:min(1180px,100%);margin:auto;padding:22px}.panel,.kpi{background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
+.finance-tabs{display:grid;grid-template-columns:.8fr 1.2fr;gap:14px}
+.finance-tab{display:flex;flex-direction:column;justify-content:center;min-height:156px;padding:22px 24px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow);text-decoration:none;color:var(--text);transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease}
+.finance-tab:active{transform:scale(.985)}
+.finance-tab.active{border-color:#f2d1aa;background:linear-gradient(180deg,#fff,#fff9f2)}
+.finance-tab.inactive{border-color:#bfe5d7;background:linear-gradient(180deg,#fff,#f7fcfa)}
+.finance-tab.inactive:hover{transform:translateY(-1px);box-shadow:0 16px 36px rgba(31,41,55,.11)}
+.finance-tab .tab-kicker{font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:850;color:var(--accent)}
+.finance-tab.inactive .tab-kicker{color:var(--green)}
+.finance-tab .tab-title{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1}
+.finance-tab.inactive .tab-title{font-size:clamp(30px,5vw,44px)}
+.finance-tab .tab-sub{color:var(--muted);font-size:12px;line-height:1.45}
+.finance-tab .tab-go{margin-top:14px;font-size:12px;font-weight:850;color:var(--green)}
+.sub,.muted{color:var(--muted);font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}
 .btn{text-decoration:none;color:#546273;background:#fff;border:1px solid #dde5df;border-radius:12px;padding:10px 12px;font-weight:800;font-size:12px}.btn.active{background:#fff5e9;color:#a85c12;border-color:#f2c995}
 .status{margin-top:14px;padding:12px 14px;border:1px solid #f1ddc4;border-radius:14px;background:#fff8ef;color:#76522b;font-size:12px}.status.err{border-color:#f1d1c7;background:#fff7f4;color:#9a3f25}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}.kpi{padding:16px;border-radius:18px}.lab{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}.val{margin-top:8px;font-size:24px;font-weight:900;letter-spacing:-.03em}.val.orange{color:#b76516}.val.green{color:#087c56}
@@ -18,10 +29,22 @@ h1{margin:8px 0 6px;font-size:clamp(34px,6vw,52px);letter-spacing:-.04em;line-he
 .categories{display:grid;gap:9px}.cat-row{display:grid;grid-template-columns:minmax(100px,1fr) 2fr auto;align-items:center;gap:9px;font-size:11px}.cat-name{font-weight:750}.cat-track{height:8px;border-radius:99px;background:#f0f2f4;overflow:hidden}.cat-fill{height:100%;border-radius:99px;background:#e99b48}.cat-amt{font-weight:850;text-align:right}
 .tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:760px;font-size:11px}th,td{padding:10px 12px;border-bottom:1px solid #edf0f3;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3){text-align:left}th{color:#667386;background:#faf9f7;font-size:10px;text-transform:uppercase;letter-spacing:.05em}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.filters select{min-height:38px;padding:7px 10px;border:1px solid #dfe5eb;border-radius:10px;background:#fff;color:var(--text);font:inherit;font-size:11px;font-weight:700}.refund{color:#087c56;font-weight:800}.partial-note{margin-top:10px;padding:10px 12px;border-radius:11px;background:#faf6f0;color:#806b52;font-size:10px;line-height:1.45}
-@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:560px){.wrap{padding:12px}.top{flex-direction:column;align-items:flex-start;padding:17px}.val{font-size:20px}.actions{width:100%}.actions .btn{flex:1;text-align:center}}
+@media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:560px){.wrap{padding:12px}.finance-tabs{grid-template-columns:1fr 1fr;gap:9px}.finance-tab{min-height:132px;padding:16px 14px;border-radius:18px}.finance-tab .tab-title,.finance-tab.inactive .tab-title{font-size:clamp(24px,8vw,34px)}.finance-tab .tab-sub{font-size:10px}.finance-tab .tab-go{margin-top:9px;font-size:10px}.val{font-size:20px}}
 </style></head>
 <body><main class="wrap">
-<section class="top"><div><div class="brand">Finanze · Uscite</div><h1>Uscite</h1><div class="sub">Solo conto personale e carta personale. Il conto cointestato non viene usato come fonte delle spese.</div></div><div class="actions"><a class="btn" href="/finanze/">← Finanze</a><a class="btn" href="/finanze/entrate/">Entrate</a><a class="btn active" href="/finanze/uscite/">Uscite</a></div></section>
+<section class="finance-tabs" aria-label="Sezioni Finanze">
+  <a class="finance-tab inactive" href="/finanze/entrate/">
+    <div class="tab-kicker">Finanze · Entrate</div>
+    <div class="tab-title">Entrate</div>
+    <div class="tab-sub">Stipendio, previdenza, fisco e pensione</div>
+    <div class="tab-go">← Apri Entrate</div>
+  </a>
+  <div class="finance-tab active" aria-current="page">
+    <div class="tab-kicker">Finanze · Uscite</div>
+    <div class="tab-title">Uscite</div>
+    <div class="tab-sub">Solo conto personale e carta personale. Il conto cointestato resta separato.</div>
+  </div>
+</section>
 <div id="status" class="status">Caricamento dati dal NAS…</div>
 <section class="kpis">
 <div class="kpi"><div class="lab">Spese personali · 12 mesi</div><div id="total" class="val orange">—</div><div id="period" class="muted">—</div></div>
