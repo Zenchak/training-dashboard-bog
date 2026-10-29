@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Salute · Zenchak Hub</title>
-<style>body{font:15px system-ui;background:#f5f7fb;color:#202938;margin:0}.wrap{max-width:1000px;margin:auto;padding:20px}.panel{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:20px;margin:14px 0}h1{margin:0}.muted{color:#687587}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.metric{border:1px solid #e5eaf2;border-radius:12px;padding:14px}.metric b{font-size:24px}select{padding:10px;border-radius:9px}svg{width:100%;height:180px}a{color:#5f4ce5}</style></head>
+<style>body{font:15px system-ui;background:#f5f7fb;color:#202938;margin:0}.wrap{max-width:1000px;margin:auto;padding:20px}.panel{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:20px;margin:14px 0}h1{margin:0}.muted{color:#687587}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.metric{border:1px solid #e5eaf2;border-radius:12px;padding:14px}.metric b{font-size:24px}select{padding:10px;border-radius:9px}.chart-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:12px}.choices{display:flex;flex-direction:column;gap:5px;max-height:420px;overflow:auto}.choices button{padding:9px;border:1px solid #dce3ee;border-radius:8px;background:white;text-align:left}.choices button[aria-pressed="true"]{background:#eae6ff;border-color:#6f5cf1}svg{width:100%;height:auto}@media(max-width:650px){.chart-layout{grid-template-columns:1fr}.choices{flex-direction:row;overflow-x:auto}.choices button{flex-shrink:0}}a{color:#5f4ce5}</style></head>
 <body><main class="wrap"><header><h1>♡ Salute</h1><p class="muted">Storico analisi e indicatori personali · accesso riservato</p></header>
 <section class="panel" id="status" role="status">Caricamento dati dal servizio privato…</section>
-<section class="panel" hidden id="dashboard"><div class="grid" id="metrics"></div><h2>Andamento storico</h2><label for="parameter">Parametro</label> <select id="parameter"></select><p class="muted">La fascia verde indica i limiti di riferimento presenti nel referto.</p><svg id="chart" role="img" aria-label="Grafico storico"></svg><p id="chart-note" class="muted"></p><h2>Storico risultati</h2><div id="history"></div></section>
+<section class="panel" hidden id="dashboard"><div class="grid" id="metrics"></div><h2>Andamento storico</h2><div class="chart-layout"><div id="buttons" class="choices" aria-label="Parametri"></div><svg id="chart" role="img" aria-label="Grafico storico"></svg></div><p class="muted">La fascia verde indica i limiti di riferimento presenti nel referto.</p><p id="chart-note" class="muted"></p><h2>Storico risultati</h2><div id="history"></div></section>
 <section class="panel"><h2>Documenti</h2><p>I referti originali restano nella cartella privata Google Drive. Non vengono copiati nel repository pubblico.</p><p><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" rel="noopener noreferrer">Apri cartella Salute su Drive</a></p></section></main>
 <script>
 'use strict';
@@ -17,10 +17,16 @@ function render(name){
  const data=rows.filter(x=>x.parameter===name).sort((a,b)=>a.date.localeCompare(b.date));
  const values=data.map(x=>x.value),min=Math.min(...values),max=Math.max(...values),last=data.at(-1),first=data[0];
  document.getElementById('metrics').innerHTML=[['Ultimo valore',last.value+' '+(last.unit||'')],['Minimo',min],['Massimo',max],['Variazione',Number((last.value-first.value).toFixed(2))]].map(([k,v])=>'<div class="metric"><span class="muted">'+escape(k)+'</span><br><b>'+escape(v)+'</b></div>').join('');
- const svg=document.getElementById('chart');svg.setAttribute('viewBox','0 0 700 180');
- const lo=Math.min(min,0),hi=Math.max(max,lo+1),x=i=>35+(data.length===1?315:i*630/(data.length-1)),y=v=>145-(v-lo)/(hi-lo)*115;
- const pts=data.map((d,i)=>x(i)+','+y(d.value)).join(' ');
- svg.innerHTML='<line x1="35" y1="145" x2="665" y2="145" stroke="#b9c4d1"/><polyline points="'+pts+'" fill="none" stroke="#6f5cf1" stroke-width="3"/>'+data.map((d,i)=>'<circle cx="'+x(i)+'" cy="'+y(d.value)+'" r="4" fill="#6f5cf1"/>').join('');
+ const svg=document.getElementById('chart');svg.setAttribute('viewBox','0 0 700 290');
+ const valid=data.filter(d=>d.low!=null&&d.high!=null&&d.low!==''&&d.high!==''&&Number.isFinite(+d.low)&&Number.isFinite(+d.high)&&+d.low<=+d.high);
+ const all=[...values,...valid.flatMap(d=>[+d.low,+d.high])],floor=Math.min(...all),ceil=Math.max(...all),pad=(ceil-floor||1)*.15,lo=floor-pad,hi=ceil+pad;
+ const times=data.map(d=>Date.parse(d.date)),t0=Math.min(...times),t1=Math.max(...times),x=t=>45+(t1===t0?.5:(t-t0)/(t1-t0))*620,y=v=>240-(v-lo)/(hi-lo)*205;
+ let markup='';
+ for(let i=0;i<5;i++){let v=lo+(hi-lo)*i/4,yy=y(v);markup+='<line x1="45" y1="'+yy+'" x2="665" y2="'+yy+'" stroke="#e3e8f0"/><text x="40" y="'+(yy+4)+'" font-size="11" text-anchor="end">'+v.toFixed(1)+'</text>'}
+ valid.forEach(d=>{let i=data.indexOf(d),xx=x(times[i]),l=i?(x(times[i-1])+xx)/2:45,r=i<data.length-1?(xx+x(times[i+1]))/2:665;markup+='<rect x="'+l+'" y="'+y(+d.high)+'" width="'+Math.max(0,r-l)+'" height="'+Math.max(0,y(+d.low)-y(+d.high))+'" fill="#a7dfb9" opacity=".65"/>'});
+ markup+='<polyline points="'+data.map((d,i)=>x(times[i])+','+y(d.value)).join(' ')+'" fill="none" stroke="#6f5cf1" stroke-width="3"/>';
+ data.forEach((d,i)=>{markup+='<circle cx="'+x(times[i])+'" cy="'+y(d.value)+'" r="4" fill="#6f5cf1"><title>'+escape(d.date+': '+d.value+' '+(d.unit||''))+'</title></circle><text x="'+x(times[i])+'" y="267" font-size="11" text-anchor="middle">'+escape(d.date.slice(0,4))+'</text>'});
+ svg.innerHTML=markup;
  document.getElementById('chart-note').textContent=data.length+' misurazioni · '+data[0].date+' – '+last.date+' · '+(last.unit||'');
  document.getElementById('history').innerHTML='<div style="overflow-x:auto"><table style="width:100%;text-align:left"><thead><tr><th>Data</th><th>Valore</th><th>Unità</th><th>Intervallo referto</th></tr></thead><tbody>'+data.map(d=>'<tr><td>'+escape(d.date)+'</td><td>'+escape(d.value)+'</td><td>'+escape(d.unit||'')+'</td><td>'+escape(d.low??'—')+' – '+escape(d.high??'—')+'</td></tr>').join('')+'</tbody></table></div>';
 }
@@ -33,9 +39,10 @@ function render(name){
   if(!Array.isArray(obj.measurements))throw Error('Formato dati non valido');
   rows=obj.measurements.filter(x=>typeof x.parameter==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)&&Number.isFinite(x.value));
   if(!rows.length){status.textContent='Nessuna misurazione disponibile.';return}
-  const sel=document.getElementById('parameter');
-  [...new Set(rows.map(x=>x.parameter))].sort().forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.append(o)});
-  sel.addEventListener('change',()=>render(sel.value));render(sel.value);dash.hidden=false;status.hidden=true;
+  const box=document.getElementById('buttons'),names=[...new Set(rows.map(x=>x.parameter))].sort();
+  function choose(n){box.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.textContent===n)));render(n)}
+  names.forEach(n=>{let b=document.createElement('button');b.textContent=n;b.type='button';b.addEventListener('click',()=>choose(n));box.append(b)});
+  choose(names[0]);dash.hidden=false;status.hidden=true;
  }catch(e){status.textContent='La pagina è pronta, ma il servizio privato sul NAS non è ancora configurato.'}
 })();
 </script></body></html>
