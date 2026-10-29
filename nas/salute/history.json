@@ -1,0 +1,434 @@
+{
+  "updated": "2026-10-29",
+  "source": "Referti Habilita 2018–2024 e 26/10/2026; solo valori numerici, senza identificativi personali",
+  "series": [
+    {
+      "label": "Glicemia",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2018,
+          "value": 76
+        },
+        {
+          "year": 2019,
+          "value": 79
+        },
+        {
+          "year": 2020,
+          "value": 103
+        },
+        {
+          "year": 2022,
+          "value": 95
+        },
+        {
+          "year": 2024,
+          "value": 98
+        },
+        {
+          "year": 2026,
+          "value": 90
+        }
+      ]
+    },
+    {
+      "label": "Colesterolo totale",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2018,
+          "value": 158
+        },
+        {
+          "year": 2019,
+          "value": 145
+        },
+        {
+          "year": 2020,
+          "value": 178
+        },
+        {
+          "year": 2022,
+          "value": 177
+        },
+        {
+          "year": 2024,
+          "value": 167
+        },
+        {
+          "year": 2026,
+          "value": 166
+        }
+      ]
+    },
+    {
+      "label": "Colesterolo HDL",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2018,
+          "value": 48
+        },
+        {
+          "year": 2019,
+          "value": 40
+        },
+        {
+          "year": 2020,
+          "value": 48
+        },
+        {
+          "year": 2024,
+          "value": 50
+        },
+        {
+          "year": 2026,
+          "value": 55
+        }
+      ]
+    },
+    {
+      "label": "Trigliceridi",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2018,
+          "value": 89
+        },
+        {
+          "year": 2019,
+          "value": 87
+        },
+        {
+          "year": 2020,
+          "value": 75
+        },
+        {
+          "year": 2022,
+          "value": 194
+        },
+        {
+          "year": 2024,
+          "value": 97
+        },
+        {
+          "year": 2026,
+          "value": 127
+        }
+      ]
+    },
+    {
+      "label": "ALT / GPT",
+      "unit": "U/L",
+      "values": [
+        {
+          "year": 2018,
+          "value": 41
+        },
+        {
+          "year": 2019,
+          "value": 32
+        },
+        {
+          "year": 2020,
+          "value": 64
+        },
+        {
+          "year": 2022,
+          "value": 57
+        },
+        {
+          "year": 2024,
+          "value": 35
+        },
+        {
+          "year": 2026,
+          "value": 36
+        }
+      ]
+    },
+    {
+      "label": "AST / GOT",
+      "unit": "U/L",
+      "values": [
+        {
+          "year": 2020,
+          "value": 33
+        },
+        {
+          "year": 2022,
+          "value": 37
+        },
+        {
+          "year": 2024,
+          "value": 30
+        },
+        {
+          "year": 2026,
+          "value": 31
+        }
+      ]
+    },
+    {
+      "label": "Gamma GT",
+      "unit": "U/L",
+      "values": [
+        {
+          "year": 2020,
+          "value": 36
+        },
+        {
+          "year": 2022,
+          "value": 33
+        },
+        {
+          "year": 2024,
+          "value": 20
+        },
+        {
+          "year": 2026,
+          "value": 20
+        }
+      ]
+    },
+    {
+      "label": "Creatinina",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 1.06
+        },
+        {
+          "year": 2026,
+          "value": 1.06
+        }
+      ]
+    },
+    {
+      "label": "eGFR",
+      "unit": "mL/min/1,73m²",
+      "values": [
+        {
+          "year": 2024,
+          "value": 80
+        },
+        {
+          "year": 2026,
+          "value": 79
+        }
+      ]
+    },
+    {
+      "label": "Emoglobina",
+      "unit": "g/dL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 15.4
+        },
+        {
+          "year": 2026,
+          "value": 16.2
+        }
+      ]
+    },
+    {
+      "label": "Ematocrito",
+      "unit": "%",
+      "values": [
+        {
+          "year": 2024,
+          "value": 46
+        },
+        {
+          "year": 2026,
+          "value": 49
+        }
+      ]
+    },
+    {
+      "label": "Leucociti",
+      "unit": "10^9/L",
+      "values": [
+        {
+          "year": 2024,
+          "value": 5.9
+        },
+        {
+          "year": 2026,
+          "value": 6.52
+        }
+      ]
+    },
+    {
+      "label": "Eritrociti sangue",
+      "unit": "10^12/L",
+      "values": [
+        {
+          "year": 2024,
+          "value": 5.12
+        },
+        {
+          "year": 2026,
+          "value": 5.35
+        }
+      ]
+    },
+    {
+      "label": "MCV",
+      "unit": "fL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 89.7
+        },
+        {
+          "year": 2026,
+          "value": 91.6
+        }
+      ]
+    },
+    {
+      "label": "Piastrine",
+      "unit": "10^9/L",
+      "values": [
+        {
+          "year": 2024,
+          "value": 215
+        },
+        {
+          "year": 2026,
+          "value": 242
+        }
+      ]
+    },
+    {
+      "label": "VES",
+      "unit": "mm/h",
+      "values": [
+        {
+          "year": 2024,
+          "value": 3
+        },
+        {
+          "year": 2026,
+          "value": 2
+        }
+      ]
+    },
+    {
+      "label": "INR",
+      "unit": "rapporto",
+      "values": [
+        {
+          "year": 2024,
+          "value": 1.09
+        },
+        {
+          "year": 2026,
+          "value": 1.08
+        }
+      ]
+    },
+    {
+      "label": "aPTT",
+      "unit": "secondi",
+      "values": [
+        {
+          "year": 2024,
+          "value": 31.8
+        },
+        {
+          "year": 2026,
+          "value": 29.8
+        }
+      ]
+    },
+    {
+      "label": "Urea",
+      "unit": "mg/dL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 29
+        },
+        {
+          "year": 2026,
+          "value": 32
+        }
+      ]
+    },
+    {
+      "label": "Densità urine",
+      "unit": "",
+      "values": [
+        {
+          "year": 2024,
+          "value": 1.017
+        },
+        {
+          "year": 2026,
+          "value": 1.016
+        }
+      ]
+    },
+    {
+      "label": "pH urine",
+      "unit": "",
+      "values": [
+        {
+          "year": 2024,
+          "value": 6.5
+        },
+        {
+          "year": 2026,
+          "value": 7
+        }
+      ]
+    },
+    {
+      "label": "Eritrociti urine",
+      "unit": "cellule/µL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 9
+        },
+        {
+          "year": 2026,
+          "value": 6
+        }
+      ]
+    },
+    {
+      "label": "Leucociti urine",
+      "unit": "cellule/µL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 2
+        },
+        {
+          "year": 2026,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "label": "Batteri urine",
+      "unit": "/µL",
+      "values": [
+        {
+          "year": 2024,
+          "value": 28
+        },
+        {
+          "year": 2026,
+          "value": 0
+        }
+      ]
+    }
+  ]
+}
