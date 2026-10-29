@@ -88,7 +88,7 @@ const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale'
    for(let i=0;i<5;i++){const v=lower+(upper-lower)*i/4,yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#edf1f9"/><text x="'+(left-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="12" fill="#657791">'+Number(v.toFixed(1))+'</text>'}
    markup+='<polyline points="'+points.map(p=>x(Number(p.year))+','+y(Number(p.value))).join(' ')+'" fill="none" stroke="#4d91e6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>';
    points.forEach(p=>{const xx=x(Number(p.year)),yy=y(Number(p.value));markup+='<circle cx="'+xx+'" cy="'+yy+'" r="5" fill="#fff" stroke="#4d91e6" stroke-width="3"><title>'+esc(p.year+': '+p.value+' '+(item.unit||''))+'</title></circle><text x="'+xx+'" y="'+(yy-12)+'" font-size="13" font-weight="600" text-anchor="middle" fill="#344d78">'+esc(p.value)+'</text><text x="'+xx+'" y="405" font-size="12" text-anchor="middle" fill="#657791">'+esc(p.year)+'</text>'});
-   markup+='<text x="'+(w-right)+'" y="425" text-anchor="end" font-size="12" fill="#657791">Anni · Valori in '+esc(item.unit||'unità non indicata')+'</text>';
+   markup+='<text x="'+left+'" y="19" text-anchor="start" font-size="12" fill="#657791">'+esc(item.unit||'Unità non indicata')+'</text>';
    chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Andamento '+esc(item.label)+' per anno">'+markup+'</svg>';
    const info=explanations[item.label]||null;
    const reference=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'.':'Intervallo di riferimento non disponibile.';
