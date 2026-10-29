@@ -31,16 +31,17 @@ body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));
 .health-top-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}.health-icon-action{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#fff;color:#527be4;text-decoration:none;font-size:23px;font-weight:750;box-shadow:0 3px 16px #5369a51b}.health-icon-action:active{transform:scale(.95)}@media(max-width:680px){.health-top-actions{gap:6px}.health-icon-action,.health-top-actions .refresh{width:38px;height:38px;font-size:21px}nav .tag{display:none}}
 .health-page-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 4px 0}.health-title{min-width:0}.health-title .tag{margin:0 0 3px}.health-title h1{font-size:clamp(25px,5vw,32px);line-height:1.1;letter-spacing:-.04em;margin:0}.health-page-heading .health-top-actions{gap:7px}header{padding-top:4px!important}@media(max-width:680px){.health-page-heading{gap:6px}.health-page-heading .health-top-actions{gap:5px}.health-page-heading .health-icon-action,.health-page-heading .refresh{width:35px;height:35px;font-size:20px}.health-title h1{font-size:26px}.health-title .tag{font-size:9px}}
 #health-chart{min-height:0!important}#health-chart svg{height:auto!important}#health-status{display:none!important}#health-range-note{margin-top:7px!important;line-height:1.4!important}@media(max-width:680px){#health-range-note{margin-top:9px!important}}
-.health-summary-heading{font-size:15px;color:#203154;margin:18px 0 7px;font-weight:750}#health-kpis{margin-top:5px}</style>
+.health-summary-heading{font-size:15px;color:#203154;margin:18px 0 7px;font-weight:750}#health-kpis{margin-top:5px}.health-quicklinks{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:9px 0 12px}.health-quicklinks a{aspect-ratio:1/1;min-height:0;padding:10px 5px;align-items:center;justify-content:center;text-align:center;gap:5px;font-size:clamp(10px,2.7vw,13px);line-height:1.15;overflow-wrap:anywhere}.health-quicklinks span{font-size:clamp(20px,5vw,27px)}header{display:none}.health-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px!important}.health-choices button{width:100%;min-width:0;min-height:43px;white-space:normal;overflow-wrap:break-word;text-align:center;font-size:clamp(10px,2.7vw,12px)!important;padding:7px 4px!important;line-height:1.2}.health-choices .expand-choice{grid-column:auto}@media(max-width:420px){.health-choices{grid-template-columns:repeat(3,minmax(0,1fr))}.health-quicklinks a{font-size:10px}}
+</style>
 </head>
 <body>
 <main>
 <div class="health-page-heading"><div class="health-title"><div class="tag">Archivio personale</div><h1>Salute</h1></div><div class="health-top-actions"><a class="health-icon-action" href="/" aria-label="Torna alla Home dell'Hub" title="Home">⌂</a><a class="health-icon-action" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer" aria-label="Apri cartella Salute su Google Drive" title="Apri Drive"><svg width="23" height="23" viewBox="0 0 87.3 78" aria-hidden="true" focusable="false"><path fill="#00875A" d="M29.1 0h19.4L19.4 50.4H0z"/><path fill="#0066DA" d="M19.4 50.4h58.2L67.9 67.2H9.7z"/><path fill="#FFBA00" d="M48.5 0 87.3 67.2H67.9L29.1 0z"/><path fill="#00AC47" d="M0 50.4 9.7 67.2l9.7-16.8z"/><path fill="#EA4335" d="M77.6 50.4 87.3 67.2H67.9z"/></svg></a><a class="health-icon-action" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer" aria-label="Carica nuovi referti" title="Carica referti">⇧</a><button class="refresh" id="health-refresh" type="button" aria-label="Aggiorna pagina Salute" title="Aggiorna pagina">↻</button></div></div>
 <header>
-<p>Analisi cliniche, parametri nel tempo, visite e referti in un unico spazio.</p>
+
 
 </header>
-<div class="health-quicklinks"><a href="#health-history"><span>🩸</span>Analisi<small>Sangue e urine</small></a><a href="#vaccinations"><span>💉</span>Vaccinazioni<small>Libretto e storico</small></a><a href="#visits"><span>💙</span>Visite<small>Referti e accertamenti</small></a><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener"><span>📄</span>Documenti<small>Cartella Salute</small></a></div><div class="layout">
+<div class="health-quicklinks"><a href="#health-history"><span>🩸</span>Analisi</a><a href="#vaccinations"><span>💉</span>Vaccinazioni</a><a href="#visits"><span>💙</span>Visite</a><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener"><span>📄</span>Documenti</a></div><div class="layout">
 <section class="panel full" id="health-history"><h2>Andamento dei valori</h2><p id="health-status">Caricamento storico analisi…</p><div class="health-plot-layout"><div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div><div id="health-chart" class="placeholder"></div></div><p id="health-range-note" class="note"></p><h3 class="health-summary-heading">Andamento parametri</h3><div id="health-kpis" class="categories"></div></section>
 <section class="panel full" id="visits"><h2>Visite e accertamenti</h2><div class="categories">
 <div class="category">❤️ Elettrocardiogrammi · 2020 e 2022<small>Entrambi descritti nei referti come nei limiti della norma. Documenti e tracciati originali disponibili su Drive.</small></div>
@@ -80,13 +81,42 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
   status.textContent='Storico disponibile: '+series.length+' parametri · origine: storico analisi Hub';
   // Indicative adult reference/decision intervals; never presented as laboratory-specific ranges.
   const explanations={
-'Glicemia':['Misura lo zucchero nel sangue.','Bassa: possibile ipoglicemia.','Alta: possibile alterazione della regolazione glicemica.'],
-'Trigliceridi':['Misurano i grassi circolanti nel sangue.','Bassi: spesso senza significato clinico isolato.','Alti: associati a rischio metabolico; se molto elevati, pancreatite.'],
-'Colesterolo totale':['Misura il colesterolo complessivo nel sangue.','Basso: da valutare nel contesto clinico.','Alto: può aumentare il rischio cardiovascolare.'],
-'HDL':['Colesterolo coinvolto nel trasporto inverso dei lipidi.','Basso: associato a maggiore rischio cardiovascolare.','Alto: non garantisce protezione aggiuntiva.'],
-'LDL':['Colesterolo associato al rischio aterosclerotico.','Basso: generalmente favorevole.','Alto: aumenta il rischio cardiovascolare.']
+'Glicemia':'Concentrazione di glucosio nel sangue a digiuno. Valori elevati possono richiedere ulteriori accertamenti.',
+'Colesterolo totale':'Somma del colesterolo circolante. La valutazione del rischio considera soprattutto LDL, HDL e altri fattori.',
+'Colesterolo HDL':'Colesterolo HDL: valori bassi sono associati a maggior rischio cardiovascolare; non esiste un massimo protettivo universale.',
+'Trigliceridi':'Grassi nel sangue, influenzati da alimentazione, alcol, metabolismo e condizioni del prelievo.',
+'ALT / GPT':'Enzima epatico; può aumentare anche dopo attività muscolare intensa. L’intervallo dipende dal laboratorio.',
+'AST / GOT':'Enzima presente in fegato e muscoli. Va interpretato insieme ad ALT, altri esami e allenamenti.',
+'Gamma GT':'Enzima utile nella valutazione epatica e biliare; il valore può risentire di alcol e farmaci.',
+'Creatinina':'Indicatore utilizzato per stimare la filtrazione renale; risente anche della massa muscolare.',
+'eGFR':'Stima della filtrazione renale. Un valore tra 60 e 89, isolatamente, non diagnostica malattia renale.',
+'Emoglobina':'Proteina dei globuli rossi che trasporta ossigeno.',
+'Ematocrito':'Percentuale del volume sanguigno occupata dai globuli rossi; risente anche dell’idratazione.',
+'Leucociti':'Globuli bianchi coinvolti nelle difese immunitarie.',
+'Eritrociti sangue':'Numero dei globuli rossi presenti nel sangue.',
+'MCV':'Volume medio dei globuli rossi, utile nell’inquadramento delle anemie.',
+'Piastrine':'Cellule coinvolte nella coagulazione del sangue.',
+'VES':'Indice aspecifico di infiammazione; va interpretato con sintomi e altri esami.',
+'INR':'Indice del tempo di coagulazione; i limiti cambiano in caso di terapia anticoagulante.',
+'aPTT':'Tempo di coagulazione della via intrinseca; intervalli variabili per metodo e laboratorio.',
+'Urea':'Prodotto del metabolismo proteico eliminato dai reni; risente anche di dieta e idratazione.',
+'Densità urine':'Concentrazione delle urine, influenzata soprattutto dall’idratazione.',
+'pH urine':'Misura l’acidità o alcalinità delle urine; varia con dieta e condizioni del campione.',
+'Eritrociti urine':'Globuli rossi nelle urine; i limiti dipendono dal metodo di conteggio.',
+'Leucociti urine':'Globuli bianchi nelle urine; l’interpretazione dipende dal metodo e dai sintomi.',
+'Batteri urine':'Conteggio dei batteri nelle urine; la presenza può riflettere anche contaminazione del campione.'
 };
-const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale':[0,200]};
+  // Fasce indicative da fonti cliniche generali, non intervalli specifici del laboratorio.
+  // Per gli analiti con cut-off dipendenti dal metodo non mostriamo una fascia arbitraria.
+  const indicative={
+'Glicemia':[70,99],'Colesterolo totale':[0,200],'Colesterolo HDL':[40,90],
+'Trigliceridi':[0,150],'ALT / GPT':[4,36],'AST / GOT':[8,33],
+'Gamma GT':[8,61],'Creatinina':[0.7,1.3],'eGFR':[60,120],
+'Emoglobina':[13,17],'Ematocrito':[40,52],'Leucociti':[4,10],
+'Eritrociti sangue':[4.5,5.9],'MCV':[80,100],'Piastrine':[150,400],
+'VES':[0,15],'INR':[0.9,1.2],'aPTT':[20,40],
+'Urea':[15,45],'Densità urine':[1.005,1.030],'pH urine':[4.5,8]
+};
   let active=0;
   function render(){
    const item=series[active],points=(item.values||[]).filter(p=>Number.isFinite(Number(p.value))&&Number.isFinite(Number(p.year))).sort((a,b)=>Number(a.year)-Number(b.year));
@@ -99,7 +129,7 @@ const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale'
    const plotStart=left+24;const x=year=>plotStart+(maxYear===minYear?.5:(year-minYear)/(maxYear-minYear))*(w-plotStart-right);
    const y=value=>bottom-(value-lower)/(upper-lower)*(bottom-top);
    let markup='';
-   if(range){const bandTop=y(range[1]),bandBottom=y(range[0]);markup+='<rect x="'+left+'" y="'+bandTop+'" width="'+(w-left-right)+'" height="'+(bandBottom-bandTop)+'" fill="#d9f3e8" opacity=".65"/>'}
+   if(range){const bandTop=y(range[1]),bandBottom=y(range[0]);markup+='<rect x="'+left+'" y="'+bandTop+'" width="'+(w-left-right)+'" height="'+(bandBottom-bandTop)+'" fill="#d9f3e8" opacity=".65"/>';[range[0],range[1]].forEach(v=>{const yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#47ad82" stroke-dasharray="5 4" opacity=".75"/><rect x="'+(left+2)+'" y="'+(yy-18)+'" width="65" height="22" rx="6" fill="#e6f7ed"/><text x="'+(left+34)+'" y="'+(yy-3)+'" text-anchor="middle" font-size="17" font-weight="800" fill="#26764f">'+v+'</text>'})}
    for(let i=0;i<5;i++){const v=lower+(upper-lower)*i/4,yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#edf1f9"/><text x="'+(left-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="24" font-weight="700" fill="#526587">'+Number(v.toFixed(1))+'</text>'}
    markup+='<line x1="'+left+'" y1="'+y(Number(points[0].value))+'" x2="'+x(Number(points[0].year))+'" y2="'+y(Number(points[0].value))+'" stroke="#4d91e6" stroke-width="2" stroke-dasharray="4 5" opacity=".55"/>';markup+='<polyline points="'+points.map(p=>x(Number(p.year))+','+y(Number(p.value))).join(' ')+'" fill="none" stroke="#4d91e6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>';
    points.forEach((p,index)=>{const xx=x(Number(p.year)),yy=y(Number(p.value));const valueText=esc(p.value);const labelY=yy-23;markup+='<circle cx="'+xx+'" cy="'+yy+'" r="5" fill="#fff" stroke="#4d91e6" stroke-width="3"><title>'+esc(p.year+': '+p.value+' '+(item.unit||''))+'</title></circle>';markup+='<rect x="'+(xx-29)+'" y="'+(labelY-24)+'" width="58" height="29" rx="7" fill="#ffffff" fill-opacity=".95"/><text x="'+xx+'" y="'+labelY+'" font-size="27" font-weight="750" text-anchor="middle" fill="#344d78">'+valueText+'</text>';markup+='<text x="'+xx+'" y="363" font-size="24" font-weight="700" text-anchor="middle" fill="#526587">'+esc(p.year)+'</text>'});
@@ -107,7 +137,7 @@ const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale'
    chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Andamento '+esc(item.label)+' per anno">'+markup+'</svg>';
    const info=explanations[item.label]||null;
    const reference=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'.':'Intervallo di riferimento non disponibile.';
-   note.textContent=(info?info.join(' '):'Il significato dei valori bassi o alti dipende dal parametro e dal referto.')+' '+reference+' I limiti possono variare per laboratorio e situazione clinica.';
+   note.textContent=(info||'Il significato dei valori dipende dal parametro e dal referto.')+' '+reference+' Valori indicativi da fonti cliniche generali, non limiti del laboratorio; possono variare per metodo, età e situazione clinica.';
 
    kpis.replaceChildren(...[['Ultimo valore',vals.at(-1)+' '+(item.unit||'')],['Minimo',min+' '+(item.unit||'')],['Massimo',max+' '+(item.unit||'')],['Rilevazioni',String(points.length)]].map(([name,val])=>{const d=document.createElement('div');d.className='category';d.textContent=name;const sm=document.createElement('small');sm.textContent=val;d.append(sm);return d}));
   }
