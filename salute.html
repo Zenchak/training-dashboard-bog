@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Salute · Zenchak Hub</title>
+<style>body{font:15px system-ui;background:#f5f7fb;color:#202938;margin:0}.wrap{max-width:1000px;margin:auto;padding:20px}.panel{background:white;border:1px solid #e5eaf2;border-radius:16px;padding:20px;margin:14px 0}h1{margin:0}.muted{color:#687587}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.metric{border:1px solid #e5eaf2;border-radius:12px;padding:14px}.metric b{font-size:24px}select{padding:10px;border-radius:9px}svg{width:100%;height:180px}a{color:#5f4ce5}</style></head>
+<body><main class="wrap"><header><h1>♡ Salute</h1><p class="muted">Storico analisi e indicatori personali · accesso riservato</p></header>
+<section class="panel" id="status" role="status">Caricamento dati dal servizio privato…</section>
+<section class="panel" hidden id="dashboard"><div class="grid" id="metrics"></div><h2>Andamento storico</h2><label for="parameter">Parametro</label> <select id="parameter"></select><svg id="chart" role="img" aria-label="Grafico storico"></svg><p id="chart-note" class="muted"></p><h2>Storico risultati</h2><div id="history"></div></section>
+<section class="panel"><h2>Documenti</h2><p>I referti originali restano nella cartella privata Google Drive. Non vengono copiati nel repository pubblico.</p><p><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" rel="noopener noreferrer">Apri cartella Salute su Drive</a></p></section></main>
+<script>
+'use strict';
+// Contract for NAS: GET /api/salute/results -> authenticated JSON {measurements:[{date,parameter,value,unit,low?,high?}]}
+// The NAS MUST verify the authenticated user server-side and return 403 for unauthorized accounts.
+// Never embed health values or authentication tokens in this public repository.
+const status=document.getElementById('status'),dash=document.getElementById('dashboard');
+const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let rows=[];
+function render(name){
+ const data=rows.filter(x=>x.parameter===name).sort((a,b)=>a.date.localeCompare(b.date));
+ const values=data.map(x=>x.value),min=Math.min(...values),max=Math.max(...values),last=data.at(-1),first=data[0];
+ document.getElementById('metrics').innerHTML=[['Ultimo valore',last.value+' '+(last.unit||'')],['Minimo',min],['Massimo',max],['Variazione',Number((last.value-first.value).toFixed(2))]].map(([k,v])=>'<div class="metric"><span class="muted">'+escape(k)+'</span><br><b>'+escape(v)+'</b></div>').join('');
+ const svg=document.getElementById('chart');svg.setAttribute('viewBox','0 0 700 180');
+ const lo=Math.min(min,0),hi=Math.max(max,lo+1),x=i=>35+(data.length===1?315:i*630/(data.length-1)),y=v=>145-(v-lo)/(hi-lo)*115;
+ const pts=data.map((d,i)=>x(i)+','+y(d.value)).join(' ');
+ svg.innerHTML='<line x1="35" y1="145" x2="665" y2="145" stroke="#b9c4d1"/><polyline points="'+pts+'" fill="none" stroke="#6f5cf1" stroke-width="3"/>'+data.map((d,i)=>'<circle cx="'+x(i)+'" cy="'+y(d.value)+'" r="4" fill="#6f5cf1"/>').join('');
+ document.getElementById('chart-note').textContent=data.length+' misurazioni · '+data[0].date+' – '+last.date+' · '+(last.unit||'');
+ document.getElementById('history').innerHTML='<div style="overflow-x:auto"><table style="width:100%;text-align:left"><thead><tr><th>Data</th><th>Valore</th><th>Unità</th><th>Intervallo referto</th></tr></thead><tbody>'+data.map(d=>'<tr><td>'+escape(d.date)+'</td><td>'+escape(d.value)+'</td><td>'+escape(d.unit||'')+'</td><td>'+escape(d.low??'—')+' – '+escape(d.high??'—')+'</td></tr>').join('')+'</tbody></table></div>';
+}
+(async()=>{
+ try{
+  const r=await fetch('/api/salute/results',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}});
+  if(r.status===401||r.status===403){status.textContent='Accesso non autorizzato. Effettua l’accesso con il tuo profilo.';return}
+  if(!r.ok)throw Error('Servizio dati non disponibile');
+  const obj=await r.json();
+  if(!Array.isArray(obj.measurements))throw Error('Formato dati non valido');
+  rows=obj.measurements.filter(x=>typeof x.parameter==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(x.date)&&Number.isFinite(x.value));
+  if(!rows.length){status.textContent='Nessuna misurazione disponibile.';return}
+  const sel=document.getElementById('parameter');
+  [...new Set(rows.map(x=>x.parameter))].sort().forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=n;sel.append(o)});
+  sel.addEventListener('change',()=>render(sel.value));render(sel.value);dash.hidden=false;status.hidden=true;
+ }catch(e){status.textContent='La pagina è pronta, ma il servizio privato sul NAS non è ancora configurato.'}
+})();
+</script></body></html>
