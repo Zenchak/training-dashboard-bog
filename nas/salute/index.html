@@ -128,7 +128,8 @@ function draw(){
  let lo=Math.min(...ext),hi=Math.max(...ext);const pad=(hi-lo||1)*.17;lo-=pad;hi+=pad;
  const W=520,H=280,L=44,R=13,T=28,B=220;
  const firstYear=Number(points[0].year),lastYear=Number(points.at(-1).year);
- const x=year=>L+(W-L-R)*(Number(year)-firstYear)/Math.max(1,lastYear-firstYear);
+ const sidePadding=30; // Margine interno per evitare che le etichette dei valori estremi tocchino i bordi.
+ const x=year=>L+sidePadding+(W-L-R-2*sidePadding)*(Number(year)-firstYear)/Math.max(1,lastYear-firstYear);
  const y=value=>B-(Number(value)-lo)/(hi-lo)*(B-T);
  let svg='';
  if(range){const top=y(range[1]),bottom=y(range[0]);svg+='<rect x="'+L+'" y="'+top.toFixed(1)+'" width="'+(W-L-R)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>'}
