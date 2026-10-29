@@ -121,7 +121,7 @@ function build(){
   title.textContent=group.title;grid.className='grid';
   for(const [slot,name] of group.items){
    // Mostra sempre i profili; il backend decide chi puo modificarli.
-   if(!allowedSlots.has(slot) && !slot.startsWith('profile-') && !slot.startsWith('equipment-') && slot!=='home-viaggi' && slot!=='home-logo')continue;
+   // Elenca sempre gli slot configurati, anche se il server non li include ancora in data.slots.
    const card=document.createElement('article');card.className='media-card';card.dataset.slot=slot;
    card.innerHTML='<div class="preview"><img alt=""></div><div class="item-main"><div class="item-name"></div><div class="item-meta"></div><div class="item-actions"><button class="choose" type="button">Carica / cambia</button><button class="reset" type="button">Ripristina</button></div></div>';
    card.querySelector('.item-name').textContent=name;card.querySelector('img').alt=name;
