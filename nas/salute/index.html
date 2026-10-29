@@ -22,7 +22,7 @@ h2{font-size:19px;margin:0 0 12px}p{margin:0;color:var(--muted)}.tag{font-size:1
 .category small{display:block;font-weight:400;color:var(--muted);margin-top:4px}
 .note{font-size:12px;line-height:1.6;color:#64758c;margin-top:13px}
 @media(max-width:680px){main{margin-top:15px}.layout{grid-template-columns:1fr}.panel.full{grid-column:auto}header,.panel{padding:17px}.categories{grid-template-columns:1fr}}
-</style>
+#metric{padding:10px;border:1px solid var(--border);border-radius:10px;background:white}#health-chart{overflow:auto}#health-chart svg{width:100%;height:auto;max-height:300px}#health-table{overflow:auto;margin-top:15px}#health-table table{border-collapse:collapse;width:100%;font-size:13px}#health-table th,#health-table td{padding:8px;border-bottom:1px solid var(--border);text-align:left}</style>
 </head>
 <body>
 <main>
@@ -33,7 +33,7 @@ h2{font-size:19px;margin:0 0 12px}p{margin:0;color:var(--muted)}.tag{font-size:1
 <div class="actions"><a class="button" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Apri cartella Salute su Drive ↗</a><a class="button secondary" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Carica nuovi referti ↗</a></div>
 </header>
 <div class="layout">
-<section class="panel full"><h2>Andamento dei valori</h2><p>Qui compariranno i grafici dello storico dopo l'estrazione e la verifica dei risultati dei referti.</p><div class="placeholder">Nessun valore clinico importato nell'Hub. I grafici verranno attivati quando i dati saranno stati analizzati e convalidati; non vengono mostrati valori inventati o stimati.</div></section>
+<section class="panel full"><h2>Andamento dei valori</h2><p id="health-status">Caricamento dati privati dal NAS…</p><div id="health-kpis" class="categories"></div><div class="actions"><label for="metric">Parametro: </label><select id="metric" aria-label="Parametro clinico"></select></div><div id="health-chart" class="placeholder"></div><div id="health-table"></div><p class="note">I dati clinici sono letti esclusivamente dal NAS, dopo verifica del profilo Bogdan. Non sono inclusi nel repository GitHub pubblico.</p></section>
 <section class="panel"><h2>Archivio analisi</h2><p>Organizzazione prevista per tipologia di documento.</p>
 <div class="categories"><div class="category">🩸 Sangue<small>Emocromo, glicemia, lipidi, ferro e altri esami</small></div><div class="category">🧪 Urine<small>Esame urine e altri test</small></div><div class="category">❤️ Cardiologia<small>ECG, visite e accertamenti</small></div><div class="category">📋 AVIS e visite<small>Donazioni, certificati e referti</small></div></div></section>
 <section class="panel"><h2>Vaccinazioni</h2><p>Libretto vaccinale e storico delle vaccinazioni, da importare quando sarà disponibile il documento ufficiale.</p>
@@ -44,4 +44,29 @@ h2{font-size:19px;margin:0 0 12px}p{margin:0;color:var(--muted)}.tag{font-size:1
 <p class="note">I documenti originali restano su Google Drive. Nessun referto o dato sanitario viene inserito automaticamente nel codice pubblico dell'Hub. L'importazione e i grafici richiedono una successiva integrazione privata.</p></section>
 </div>
 </main>
+<script>
+(async function(){
+const status=document.getElementById('health-status'),kpis=document.getElementById('health-kpis'),metric=document.getElementById('metric'),chart=document.getElementById('health-chart'),table=document.getElementById('health-table');
+try{
+const response=await fetch('/salute-private/data.json',{credentials:'same-origin',cache:'no-store'});
+if(!response.ok)throw Error('Archivio NAS non ancora configurato (HTTP '+response.status+')');
+const payload=await response.json();
+const series=Array.isArray(payload.series)?payload.series:[];
+if(!series.length)throw Error('Nessun valore clinico nel file privato del NAS');
+status.textContent='Storico disponibile: '+series.length+' parametri · origine: archivio privato NAS';
+metric.replaceChildren(...series.map((s,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=s.label||s.key;return o}));
+const escape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+const item=series[Number(metric.value)||0],points=(item.values||[]).filter(x=>Number.isFinite(Number(x.value))).sort((a,b)=>String(a.year).localeCompare(String(b.year)));
+if(!points.length){chart.textContent='Nessun dato disponibile';return}
+const vals=points.map(p=>Number(p.value)),min=Math.min(...vals),max=Math.max(...vals),range=Math.max(1,max-min),w=740,h=235,left=45,right=18,top=22,bottom=42;
+const xy=points.map((p,i)=>({x:left+(w-left-right)*(points.length===1?.5:i/(points.length-1)),y:top+(h-top-bottom)*(1-(Number(p.value)-min)/range),p}));
+chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Grafico '+escape(item.label)+'"><path d="'+xy.map((p,i)=>(i?'L':'M')+p.x.toFixed(1)+' '+p.y.toFixed(1)).join(' ')+'" fill="none" stroke="#198e85" stroke-width="3"/>'+xy.map(p=>'<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="#198e85"/><text x="'+p.x+'" y="'+(p.y-11)+'" text-anchor="middle" font-size="12" fill="#15233d">'+escape(p.p.value)+'</text><text x="'+p.x+'" y="'+(h-12)+'" text-anchor="middle" font-size="12" fill="#657791">'+escape(p.p.year)+'</text>').join('')+'</svg>';
+table.innerHTML='<table><thead><tr><th>Anno</th><th>Valore</th><th>Unità</th></tr></thead><tbody>'+points.map(p=>'<tr><td>'+escape(p.year)+'</td><td>'+escape(p.value)+'</td><td>'+escape(item.unit||'')+'</td></tr>').join('')+'</tbody></table>';
+kpis.replaceChildren(...[ ['Ultimo valore',vals.at(-1)+' '+(item.unit||'')],['Minimo',min+' '+(item.unit||'')],['Massimo',max+' '+(item.unit||'')],['Rilevazioni',String(points.length)] ].map(([name,val])=>{const d=document.createElement('div');d.className='category';d.textContent=name;const sm=document.createElement('small');sm.textContent=val;d.append(sm);return d}));
+}
+metric.addEventListener('change',render);render();
+}catch(e){status.textContent='Dati privati non ancora disponibili';chart.textContent=e.message;kpis.replaceChildren();}
+})();
+</script>
 </body></html>
