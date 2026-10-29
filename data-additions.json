@@ -73,5 +73,25 @@
     "avgPowerW": 350,
     "averageCadenceSpm": 164,
     "note": "FIT Garmin 24861210976_ACTIVITY.fit; corsa progressiva del 26/10/2026, inizio ore 19:24 ora italiana. Totale 12,01769 km, tempo 1:05:57.62 (nessuna pausa), passo medio 5:29/km, FC media 143 bpm e max 163, dislivello D+39 / D-40 m, 899 kcal totali secondo campo total_calories FIT (non confondere con attive), potenza media 350 W e cadenza media ~164 spm. Obiettivo Garmin: 2 km 6:05/km, 4 km 5:40/km, 3 km 5:20/km, 2 km 5:05/km, 1 km 6:05/km. Esecuzione sui lap da 1 km: 1–2 6:01/km; 3–6 ~5:35/km; 7–9 ~5:18/km; 10–11 ~4:55/km; km 12 5:43/km. Ultimi 2 km veloci sotto FC soglia stimata 170 bpm; buon controllo, ma defaticamento finale più rapido del previsto. Scarpe ASICS Noosa Tri 14 confermate dall'utente."
+  },
+  {
+    "date": "2026-10-29",
+    "type": "Bici",
+    "km": 27.13,
+    "duration": "0:56:59",
+    "dplus": 100,
+    "location": "Bergamo",
+    "kcal": 689,
+    "kcalSource": "Garmin FIT session.total_calories (calorie totali, non necessariamente attive)",
+    "startTime": "18:17",
+    "equipmentId": "bike-vr",
+    "equipmentAttribution": "Van Rysel AF Discover: attribuzione secondo regola storica confermata dall'utente (tutte le uscite bici tranne quelle contrassegnate E BIKE); modello non specificato nel FIT.",
+    "garminId": "24896415000",
+    "hrAvg": 142,
+    "hrMax": 182,
+    "avgCadenceRpm": 83,
+    "maxCadenceRpm": 114,
+    "averageSpeedKmh": 28.57,
+    "note": "FIT Garmin 24896415000_ACTIVITY.fit del 29/10/2026, ciclismo (sport=cycling), partenza 18:17 ora Italia (17:17 UTC). Distanza 27,12796 km in tempo attivo 56:58,850, trascorso 57:29,847; velocità media 28,57 km/h, max 41,18 km/h; D+ 100 m, D- 98 m. FC media 142 bpm, massima 182 bpm. Cadenza 83 rpm media, 114 rpm max, 4.682 pedalate/cicli registrati. Calorie totali Garmin 689 (campo total_calories). Split: 0–5 km 9:10 (32,7 km/h, FC 144), 5–10 km 9:00 (33,3, FC 148), 10–15 km 10:16 (29,2, FC 145), 15–20 km 11:43 (25,6, FC 140), 20–25 km 11:53 (25,3, FC 139), ultimi 2,13 km 4:56 (25,9, FC 135). Nessun dato potenza leggibile. Bici Van Rysel AF Discover attribuita da regola storica; da correggere se eccezione e-bike."
   }
 ]
