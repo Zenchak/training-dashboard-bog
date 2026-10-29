@@ -64,7 +64,14 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
   if(!series.length)throw Error('Nessun parametro nello storico');
   status.textContent='Storico disponibile: '+series.length+' parametri · origine: storico analisi Hub';
   // Indicative adult reference/decision intervals; never presented as laboratory-specific ranges.
-  const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale':[0,200]};
+  const explanations={
+'Glicemia':['Misura lo zucchero nel sangue.','Bassa: possibile ipoglicemia.','Alta: possibile alterazione della regolazione glicemica.'],
+'Trigliceridi':['Misurano i grassi circolanti nel sangue.','Bassi: spesso senza significato clinico isolato.','Alti: associati a rischio metabolico; se molto elevati, pancreatite.'],
+'Colesterolo totale':['Misura il colesterolo complessivo nel sangue.','Basso: da valutare nel contesto clinico.','Alto: può aumentare il rischio cardiovascolare.'],
+'HDL':['Colesterolo coinvolto nel trasporto inverso dei lipidi.','Basso: associato a maggiore rischio cardiovascolare.','Alto: non garantisce protezione aggiuntiva.'],
+'LDL':['Colesterolo associato al rischio aterosclerotico.','Basso: generalmente favorevole.','Alto: aumenta il rischio cardiovascolare.']
+};
+const indicative={'Glicemia':[70,99],'Trigliceridi':[0,150],'Colesterolo totale':[0,200]};
   let active=0;
   function render(){
    const item=series[active],points=(item.values||[]).filter(p=>Number.isFinite(Number(p.value))&&Number.isFinite(Number(p.year))).sort((a,b)=>Number(a.year)-Number(b.year));
@@ -81,8 +88,11 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
    for(let i=0;i<5;i++){const v=lower+(upper-lower)*i/4,yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#edf1f9"/><text x="'+(left-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="12" fill="#657791">'+Number(v.toFixed(1))+'</text>'}
    markup+='<polyline points="'+points.map(p=>x(Number(p.year))+','+y(Number(p.value))).join(' ')+'" fill="none" stroke="#4d91e6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>';
    points.forEach(p=>{const xx=x(Number(p.year)),yy=y(Number(p.value));markup+='<circle cx="'+xx+'" cy="'+yy+'" r="5" fill="#fff" stroke="#4d91e6" stroke-width="3"><title>'+esc(p.year+': '+p.value+' '+(item.unit||''))+'</title></circle><text x="'+xx+'" y="'+(yy-12)+'" font-size="13" font-weight="600" text-anchor="middle" fill="#344d78">'+esc(p.value)+'</text><text x="'+xx+'" y="405" font-size="12" text-anchor="middle" fill="#657791">'+esc(p.year)+'</text>'});
+   markup+='<text x="'+(w-right)+'" y="425" text-anchor="end" font-size="12" fill="#657791">Anni · Valori in '+esc(item.unit||'unità non indicata')+'</text>';
    chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Andamento '+esc(item.label)+' per anno">'+markup+'</svg>';
-   note.textContent=range?'Fascia verde: intervallo indicativo per adulti ('+range[0]+'–'+range[1]+' '+(item.unit||'')+'), non necessariamente coincidente con i limiti del laboratorio.':'Intervallo di riferimento non disponibile nello storico: nessuna fascia verde mostrata.';
+   const info=explanations[item.label]||null;
+   const reference=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'.':'Intervallo di riferimento non disponibile.';
+   note.textContent=(info?info.join(' '):'Il significato dei valori bassi o alti dipende dal parametro e dal referto.')+' '+reference+' I limiti possono variare per laboratorio e situazione clinica.';
    table.innerHTML='<table><thead><tr><th>Anno</th><th>Valore</th><th>Unità</th></tr></thead><tbody>'+points.map(p=>'<tr><td>'+esc(p.year)+'</td><td>'+esc(p.value)+'</td><td>'+esc(item.unit||'')+'</td></tr>').join('')+'</tbody></table>';
    kpis.replaceChildren(...[['Ultimo valore',vals.at(-1)+' '+(item.unit||'')],['Minimo',min+' '+(item.unit||'')],['Massimo',max+' '+(item.unit||'')],['Rilevazioni',String(points.length)]].map(([name,val])=>{const d=document.createElement('div');d.className='category';d.textContent=name;const sm=document.createElement('small');sm.textContent=val;d.append(sm);return d}));
   }
