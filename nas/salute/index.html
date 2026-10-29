@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Salute · Zenchak Hub</title>
+<style>
+:root{color-scheme:light;--text:#15233d;--muted:#657791;--border:#e2e9f3;--accent:#198e85}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#f7fbfd,#f2f6fb);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+main{width:min(1030px,calc(100% - 30px));margin:24px auto 70px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}nav a{color:#436078;text-decoration:none;font-weight:700;font-size:13px}
+header{padding:25px 27px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 8px 28px rgba(24,61,94,.045)}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0 0 9px;letter-spacing:-.04em}
+h2{font-size:19px;margin:0 0 12px}p{margin:0;color:var(--muted)}.tag{font-size:11px;color:#137b73;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin-bottom:9px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.button{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:11px 15px;background:#168d83;color:white;text-decoration:none;font-weight:800;font-size:13px}.button.secondary{background:#eef7f6;color:#187e76}
+.layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:17px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:19px;padding:21px;min-width:0}
+.panel.full{grid-column:1/-1}
+.placeholder{margin-top:15px;padding:19px;border:1px dashed #cbd8e5;border-radius:13px;background:#f9fbfe;color:#687b95;font-size:13px}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+.category{padding:12px;border:1px solid #e5ebf4;border-radius:12px;background:#fbfcfe;font-weight:750;font-size:13px}
+.category small{display:block;font-weight:400;color:var(--muted);margin-top:4px}
+.note{font-size:12px;line-height:1.6;color:#64758c;margin-top:13px}
+@media(max-width:680px){main{margin-top:15px}.layout{grid-template-columns:1fr}.panel.full{grid-column:auto}header,.panel{padding:17px}.categories{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main>
+<nav><a href="/">← Zenchak Hub</a><span class="tag">Profilo personale · Bogdan</span></nav>
+<header>
+<div class="tag">Archivio personale</div><h1>Salute</h1>
+<p>Analisi cliniche, parametri nel tempo, visite e referti in un unico spazio.</p>
+<div class="actions"><a class="button" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Apri cartella Salute su Drive ↗</a><a class="button secondary" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Carica nuovi referti ↗</a></div>
+</header>
+<div class="layout">
+<section class="panel full"><h2>Andamento dei valori</h2><p>Qui compariranno i grafici dello storico dopo l'estrazione e la verifica dei risultati dei referti.</p><div class="placeholder">Nessun valore clinico importato nell'Hub. I grafici verranno attivati quando i dati saranno stati analizzati e convalidati; non vengono mostrati valori inventati o stimati.</div></section>
+<section class="panel"><h2>Archivio analisi</h2><p>Organizzazione prevista per tipologia di documento.</p>
+<div class="categories"><div class="category">🩸 Sangue<small>Emocromo, glicemia, lipidi, ferro e altri esami</small></div><div class="category">🧪 Urine<small>Esame urine e altri test</small></div><div class="category">❤️ Cardiologia<small>ECG, visite e accertamenti</small></div><div class="category">📋 AVIS e visite<small>Donazioni, certificati e referti</small></div></div></section>
+<section class="panel"><h2>Monitoraggio</h2><p>Spazio per valori periodici e confronti nel tempo.</p>
+<div class="categories"><div class="category">Pressione e frequenza cardiaca</div><div class="category">Peso e composizione corporea</div><div class="category">Esami ematici</div><div class="category">Visite e scadenze</div></div>
+<p class="note">I documenti originali restano su Google Drive. Nessun referto o dato sanitario viene inserito automaticamente nel codice pubblico dell'Hub. L'importazione e i grafici richiedono una successiva integrazione privata.</p></section>
+</div>
+</main>
+</body></html>
