@@ -5,47 +5,100 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>Salute · Zenchak Hub</title>
 <style>
-:root{color-scheme:light;--text:#15233d;--muted:#657791;--border:#e2e9f3;--accent:#198e85}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#f7fbfd,#f2f6fb);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
-main{width:min(1030px,calc(100% - 30px));margin:24px auto 70px}
-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}nav a{color:#436078;text-decoration:none;font-weight:700;font-size:13px}.refresh{border:1px solid #d9e5ee;border-radius:50%;width:42px;height:42px;background:#fff;color:#168d83;font-size:25px;box-shadow:0 3px 10px #15233d18;cursor:pointer;flex-shrink:0}.refresh:active{transform:scale(.95)}
-header{padding:25px 27px;background:#fff;border:1px solid var(--border);border-radius:22px;box-shadow:0 8px 28px rgba(24,61,94,.045)}
-h1{font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0 0 9px;letter-spacing:-.04em}
-h2{font-size:19px;margin:0 0 12px}p{margin:0;color:var(--muted)}.tag{font-size:11px;color:#137b73;text-transform:uppercase;letter-spacing:.13em;font-weight:800;margin-bottom:9px}
-.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}.button{display:inline-flex;align-items:center;justify-content:center;border-radius:12px;padding:11px 15px;background:#168d83;color:white;text-decoration:none;font-weight:800;font-size:13px}.button.secondary{background:#eef7f6;color:#187e76}
-.layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:17px}
-.panel{background:#fff;border:1px solid var(--border);border-radius:19px;padding:21px;min-width:0}
-.panel.full{grid-column:1/-1}
-.placeholder{margin-top:15px;padding:19px;border:1px dashed #cbd8e5;border-radius:13px;background:#f9fbfe;color:#687b95;font-size:13px}
-.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
-.category{padding:12px;border:1px solid #e5ebf4;border-radius:12px;background:#fbfcfe;font-weight:750;font-size:13px}
-.category small{display:block;font-weight:400;color:var(--muted);margin-top:4px}
-.note{font-size:12px;line-height:1.6;color:#64758c;margin-top:13px}
-@media(max-width:680px){main{margin-top:15px}.layout{grid-template-columns:1fr}.panel.full{grid-column:auto}header,.panel{padding:17px}.categories{grid-template-columns:1fr}}
-#metric{padding:10px;border:1px solid var(--border);border-radius:10px;background:white}#health-chart{overflow:auto}#health-chart svg{width:100%;height:auto;max-height:300px}#health-table{overflow:auto;margin-top:15px}#health-table table{border-collapse:collapse;width:100%;font-size:13px}#health-table th,#health-table td{padding:8px;border-bottom:1px solid var(--border);text-align:left}.health-plot-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:15px;margin-top:18px}.health-choices{display:flex;flex-direction:column;gap:6px;max-height:440px;overflow:auto}.health-choices button{border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--text);padding:10px;text-align:left;font:inherit;cursor:pointer}.health-choices button[aria-pressed=true]{background:#e5f5f1;border-color:#168d83;font-weight:750}#health-chart{margin-top:0;min-width:0}@media(max-width:680px){.health-plot-layout{grid-template-columns:1fr}.health-choices{flex-direction:row;overflow-x:auto;max-height:none}.health-choices button{flex-shrink:0}}
-/* Mobile-first layout inspired by approved reference */
-body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));margin:12px auto 48px}nav{margin-bottom:12px}nav .tag{font-size:10px;margin:0}header{padding:17px 18px}header h1{font-size:27px}header>p{font-size:12px}.actions{margin-top:12px}.layout{gap:11px;margin-top:11px}.panel{padding:16px;border-radius:17px;box-shadow:0 2px 12px #182a4910}.panel h2{font-size:16px}.categories{gap:8px}.category{background:#f8faff}.health-plot-layout{display:flex;flex-direction:column;gap:12px}.health-choices{display:flex;flex-direction:row;flex-wrap:wrap;max-height:none;overflow:visible}.health-choices button{font-size:12px;padding:8px 11px;border-radius:12px}.health-choices .extra-choice[hidden]{display:none}.health-choices .expand-choice{color:#197f9d;background:#edf6ff;font-weight:700}#health-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}#health-kpis .category{font-size:11px;padding:10px}#health-kpis small{font-size:15px;font-weight:800;color:#15233d}#health-chart{background:#fff;border:1px solid #e3eaf3;border-radius:15px;padding:12px}#health-chart svg{max-height:350px}.health-quicklinks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.health-quicklinks a{display:flex;flex-direction:column;gap:5px;align-items:flex-start;text-decoration:none;color:#20345b;background:#fff;border:1px solid #e5eaf4;border-radius:14px;padding:12px 9px;font-size:11px;font-weight:700}.health-quicklinks span{font-size:23px}.health-quicklinks small{font-size:10px;color:#72819a;font-weight:400}@media(max-width:680px){main{margin-top:9px}nav{gap:5px}nav a{font-size:11px}nav .tag{font-size:8px;letter-spacing:.06em}header,.panel{padding:13px}.health-quicklinks{gap:6px}.health-quicklinks a{padding:10px 7px}#health-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.health-choices{gap:6px}.health-choices button{flex-shrink:0;font-size:11px}#health-chart{padding:5px}}
 
-/* Salute mobile redesign — reference-aligned, borderless chart */
-:root{--text:#203154;--muted:#8390aa;--accent:#568eea;--border:transparent}body{background:#f5f7ff;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(1120px,calc(100% - 24px))}header{border:0;box-shadow:none;background:transparent;padding:8px 4px 12px}header h1{font-size:27px;font-weight:800}nav{margin-bottom:8px}nav a{color:#5269a0}.tag{color:#667aa4}.refresh{border:0;color:#527be4;background:#fff;box-shadow:0 3px 16px #5369a51b}.button{background:#6089e8;border-radius:13px}.button.secondary{background:#e8edff;color:#5275c5}.health-quicklinks{gap:9px}.health-quicklinks a{border:0;box-shadow:0 3px 16px #5e73ad12;border-radius:16px;padding:14px 11px}.health-quicklinks span{font-size:23px}.panel{border:0;box-shadow:0 4px 22px #586fa50e;border-radius:20px}.panel h2{font-size:18px}.health-plot-layout{gap:8px}.health-choices{gap:7px}.health-choices button{border:0;background:#f1f4fd;color:#66789f;border-radius:12px;padding:9px 13px;font-weight:650}.health-choices button[aria-pressed=true]{background:#e4ecff;color:#416fd3;box-shadow:inset 0 0 0 1px #b5c9f8}.health-choices .expand-choice{background:#eef0fc;color:#536fc5}#health-chart{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;padding:0!important;min-height:340px;overflow:visible}#health-chart svg{display:block;width:100%;height:clamp(320px,43vw,440px);max-height:none!important;overflow:visible}#health-kpis .category{background:#f7f9ff;border:0;border-radius:13px}#health-table th,#health-table td{border-bottom:1px solid #edf0f8}.category{border:0;background:#f7f9ff}@media(max-width:680px){main{width:calc(100% - 20px)}header{padding:6px 4px 11px}.panel{padding:15px 13px}.health-quicklinks a{padding:12px 8px}.health-quicklinks small{font-size:9px}.health-choices button{font-size:12px;padding:9px 11px}#health-chart{min-height:330px}#health-chart svg{height:330px}#health-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.health-top-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}.health-icon-action{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#fff;color:#527be4;text-decoration:none;font-size:23px;font-weight:750;box-shadow:0 3px 16px #5369a51b}.health-icon-action:active{transform:scale(.95)}@media(max-width:680px){.health-top-actions{gap:6px}.health-icon-action,.health-top-actions .refresh{width:38px;height:38px;font-size:21px}nav .tag{display:none}}
-.health-page-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 4px 0}.health-title{min-width:0}.health-title .tag{margin:0 0 3px}.health-title h1{font-size:clamp(25px,5vw,32px);line-height:1.1;letter-spacing:-.04em;margin:0}.health-page-heading .health-top-actions{gap:7px}header{padding-top:4px!important}@media(max-width:680px){.health-page-heading{gap:6px}.health-page-heading .health-top-actions{gap:5px}.health-page-heading .health-icon-action,.health-page-heading .refresh{width:35px;height:35px;font-size:20px}.health-title h1{font-size:26px}.health-title .tag{font-size:9px}}
-#health-chart{min-height:0!important}#health-chart svg{height:auto!important}#health-status{display:none!important}#health-range-note{margin-top:7px!important;line-height:1.4!important}@media(max-width:680px){#health-range-note{margin-top:9px!important}}
-.health-summary-heading{font-size:15px;color:#203154;margin:18px 0 7px;font-weight:750}#health-kpis{margin-top:5px}.health-quicklinks{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:9px 0 12px}.health-quicklinks a{aspect-ratio:1/1;min-height:0;padding:10px 5px;align-items:center;justify-content:center;text-align:center;gap:5px;font-size:clamp(10px,2.7vw,13px);line-height:1.15;overflow-wrap:anywhere}.health-quicklinks span{font-size:clamp(20px,5vw,27px)}header{display:none}.health-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px!important}.health-choices button{width:100%;min-width:0;min-height:43px;white-space:normal;overflow-wrap:break-word;text-align:center;font-size:clamp(10px,2.7vw,12px)!important;padding:7px 4px!important;line-height:1.2}.health-choices .expand-choice{grid-column:auto}@media(max-width:420px){.health-choices{grid-template-columns:repeat(3,minmax(0,1fr))}.health-quicklinks a{font-size:10px}}
-.health-choices{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(38px,auto));gap:6px!important}.health-choices button{min-height:38px!important;max-height:54px;line-height:1.12!important;padding:5px 3px!important;font-size:clamp(9px,2.45vw,12px)!important;overflow-wrap:anywhere;word-break:normal}.health-choices .extra-choice[hidden]{display:none!important}.health-choices .expand-choice{grid-column:auto!important}@media(max-width:420px){.health-choices{grid-template-columns:repeat(4,minmax(0,1fr))!important}}#health-kpis,.health-summary-heading{display:none!important}
-#health-chart{margin-top:26px!important}
-#medical-certificates .categories{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}#medical-certificates .category{min-width:0;padding:11px 8px;font-size:12px;overflow-wrap:anywhere}#medical-certificates .category small{font-size:11px;line-height:1.35}
+:root{--ink:#152b58;--muted:#7184a5;--blue:#1e78ff;--bg:#f4f7fd;--line:#e4ebf6;--green:#05a35b}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.42 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #5c9dff;outline-offset:2px}
+main{width:min(1060px,calc(100% - 24px));margin:8px auto 55px}
+.topbar{display:flex;align-items:center;gap:11px;margin:0 0 12px;padding:3px 2px;min-height:48px}
+.brand{display:flex;flex-direction:column;line-height:.84;text-decoration:none;font-weight:950;letter-spacing:-.07em;font-size:13px;color:#123b96;min-width:72px}
+.brand strong{font-size:31px;line-height:1.12;color:#137af9;letter-spacing:-.065em;background:linear-gradient(#1460ff,#25d5f7);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.heart{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#fff0f3;color:#ff3f6c;font-size:23px}
+.page-name{flex:1;min-width:0}.page-name h1{font-size:20px;line-height:1.1;margin:0 0 2px;font-weight:850;letter-spacing:-.035em}.page-name p{color:var(--muted);font-size:11px;margin:0}
+.refresh{flex:none;width:37px;height:37px;border:0;border-radius:50%;background:white;color:#365cc7;font-size:25px;box-shadow:0 2px 12px #6179a41c;cursor:pointer}
+.quicklinks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.quick{min-width:0;min-height:88px;position:relative;padding:11px 7px;border-radius:15px;text-decoration:none;color:var(--ink);display:flex;align-items:flex-start;flex-direction:column;gap:3px;box-shadow:0 3px 18px #607caa12}
+.quick .qicon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:19px;margin-bottom:2px}
+.quick strong{font-size:11px;font-weight:800;letter-spacing:-.02em}.quick small{font-size:9px;color:#617698;line-height:1.25;max-width:95%}.quick b{position:absolute;right:8px;bottom:10px;font-size:20px;font-weight:400}
+.quick.red{background:#fff2f4}.quick.red .qicon{background:#ffe0e7}.quick.red b{color:#fa456b}
+.quick.green{background:#ecfaf6}.quick.green .qicon{background:#d8f7ee}.quick.green b{color:#0daa7d}
+.quick.blue{background:#f0f7ff}.quick.blue .qicon{background:#e0edff}.quick.blue b{color:#237cf4}
+.quick.purple{background:#f8f2ff}.quick.purple .qicon{background:#eee1ff}.quick.purple b{color:#9847fa}
+.layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.panel{min-width:0;background:white;border:1px solid #f1f4fa;padding:17px;border-radius:21px;box-shadow:0 4px 21px #7890bd0e}.panel.full{grid-column:1/-1}
+h2{font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:820;letter-spacing:-.025em}p{margin:0;color:var(--muted)}
+.section-heading{display:flex;align-items:center;gap:10px;margin-bottom:11px}.section-heading .secicon{flex:none;width:32px;height:32px;display:grid;place-items:center;background:#ecf4ff;color:#1677ff;border-radius:50%;font-size:20px}
+.section-heading h2{margin:0 0 2px}.section-heading p{font-size:11px}
+.health-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-bottom:10px}
+.health-choices button{min-width:0;min-height:38px;border:1px solid transparent;background:#f1f5fd;border-radius:11px;color:#5d7396;font-size:11px;font-weight:670;line-height:1.14;padding:6px 4px;cursor:pointer;overflow-wrap:anywhere}
+.health-choices button[aria-pressed=true]{background:#e3f0ff;border-color:#2385ff;color:#255cc3;box-shadow:0 0 0 1px #2385ff54}
+.health-choices button.expand-choice{color:#0875f7;font-weight:800}.health-choices button[hidden]{display:none}
+#health-status{font-size:11px;color:var(--muted);margin-bottom:6px}
+.metric-panel{border:1px solid #e9eef8;border-radius:16px;padding:11px;background:#fff}
+.metric-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.metric-bubble{width:36px;height:36px;display:grid;place-items:center;background:#ffeff3;border-radius:50%;font-size:21px;flex:none}
+.metric-title{flex:1;min-width:90px}.metric-title h3{font-size:16px;line-height:1.1;margin:0;font-weight:820}.metric-title p{font-size:11px}
+.range-controls{display:flex;align-items:center;gap:1px;border-radius:12px;background:#f3f6fc;padding:3px}.range-controls button{border:1px solid transparent;padding:7px 9px;color:#6a7fa4;background:transparent;border-radius:10px;font-size:10px;cursor:pointer}.range-controls button[aria-pressed=true]{background:#fff;border-color:#91bbff;color:#086ef0;box-shadow:0 1px 4px #7998c82a;font-weight:800}
+.metric-menu{position:relative}.metric-menu>button{background:#f3f6fc;border:0;border-radius:50%;width:31px;height:31px;color:#59729e;font-weight:800;font-size:18px;cursor:pointer}
+.metric-popover{position:absolute;right:0;top:36px;z-index:3;min-width:160px;border:1px solid var(--line);border-radius:12px;background:white;padding:5px;box-shadow:0 10px 25px #334f8a29}.metric-popover[hidden]{display:none}.metric-popover a,.metric-popover button{display:block;width:100%;padding:9px 7px;border:0;border-radius:8px;text-align:left;background:white;color:var(--ink);font-size:11px;text-decoration:none;cursor:pointer}.metric-popover :is(a,button):hover{background:#f3f7ff}
+#health-chart{width:100%;overflow:hidden;margin:11px 0 2px}#health-chart svg{display:block;width:100%;height:auto}#health-chart svg text{font-family:inherit}
+.chart-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;margin:4px 0 13px;color:#7183a2;font-size:10px}.chart-legend span{display:inline-flex;align-items:center;gap:4px}.legend-band{width:17px;height:9px;border-radius:3px;background:#dff7e9}.legend-line{width:16px;height:3px;background:#227dfa;border-radius:3px}.legend-dot{width:7px;height:7px;border-radius:50%;background:#ed3f56}
+.stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{position:relative;border:1px solid #e8eef9;border-radius:12px;background:#fbfcff;padding:11px;min-height:91px}.stat .stat-label{font-weight:800;font-size:11px;color:#1e345f}.stat .stat-value{font-size:22px;font-weight:850;line-height:1.2;margin-top:3px;letter-spacing:-.04em}.stat .stat-value small{font-size:11px;color:#697fa3;font-weight:500;letter-spacing:0}.stat .stat-sub{font-size:10px;margin-top:5px;color:#7286a7}.stat .stat-icon{position:absolute;right:9px;bottom:12px;font-size:17px;color:#1678ff;background:#eaf3ff;border-radius:50%;height:28px;width:28px;display:grid;place-items:center}.stat .stat-value.low{color:#1773ef}.stat .stat-value.high{color:#ea3a55}.stat .stat-value.ok{color:#008d50}.stat .stat-delta{position:absolute;right:9px;bottom:9px;font-size:10px;color:#008d53;background:#e4faee;padding:5px;border-radius:12px}
+.interpretation{display:flex;gap:8px;align-items:flex-start;margin-top:10px;border:1px solid #ddecff;background:#f0f7ff;border-radius:12px;padding:11px}.interpretation .paper{display:grid;place-items:center;border-radius:50%;height:31px;min-width:31px;background:#dfefff;color:#2379ec;font-size:17px}.interpretation strong{display:block;font-size:11px}.interpretation p{font-size:10px;margin-top:2px;color:#61779c}.interpretation summary{cursor:pointer;list-style:none}.interpretation summary::-webkit-details-marker{display:none}.interpretation summary::after{content:" ›";color:#2575e5;font-weight:800}.interpretation .details-note{padding-top:7px;color:#61779c;font-size:10px}
+.recent-header{display:flex;align-items:center;justify-content:space-between;margin:14px 0 7px}.recent-header h3{margin:0;font-size:15px;letter-spacing:-.02em}.recent-header button{border:0;background:#f3f6fd;color:#234a91;font-size:10px;border-radius:16px;padding:7px 10px;cursor:pointer}
+.readings{border:1px solid #e8eef8;border-radius:12px;overflow:hidden}.reading{display:grid;grid-template-columns:1.1fr .9fr 1fr;align-items:center;gap:7px;padding:9px 10px;border-bottom:1px solid #e7ecf5;font-size:11px}.reading:last-child{border-bottom:0}.reading b{font-size:12px}.reading .reading-value{white-space:nowrap}.reading .reading-value small{font-size:9px;color:#7285a3}.pill{justify-self:end;border-radius:13px;padding:4px 7px;font-size:9px;font-weight:750;background:#eff3fa;color:#536581;white-space:nowrap}.pill.ok{background:#e2f9e9;color:#038450}.pill.high{background:#ffeaed;color:#c62247}.pill.low{background:#eaf1ff;color:#1863cb}
+#health-range-note{color:#7385a3;font-size:10px;margin-top:8px}
+.categories{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.category{border:1px solid #e9eef7;border-radius:12px;background:#fbfcff;padding:12px;font-size:12px;font-weight:750;min-width:0}.category small{display:block;font-weight:400;color:#6d7e9e;margin-top:5px;font-size:10px;line-height:1.5}.note{font-size:11px;line-height:1.5;color:#7283a1;margin-top:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.button{background:#226ee6;color:white;padding:10px 12px;border-radius:11px;text-decoration:none;font-size:11px;font-weight:750}.button.secondary{background:#eef4ff;color:#205abb}
+@media(max-width:700px){main{width:calc(100% - 14px);margin-top:6px}.layout{grid-template-columns:1fr;gap:10px}.panel{padding:12px;border-radius:17px}.panel.full{grid-column:auto}.quick{padding:9px 6px;min-height:81px}.quick .qicon{font-size:18px;width:26px;height:26px}.quick strong{font-size:10px}.quick small{font-size:8.5px}.section-heading h2{font-size:16px}.metric-panel{padding:9px}.metric-title h3{font-size:14px}.range-controls button{font-size:9px;padding:6px 7px}.health-choices button{font-size:10px;padding:5px 3px}.stat{padding:9px;min-height:83px}.stat .stat-value{font-size:20px}.reading{padding:8px 7px;font-size:10px}.reading b{font-size:11px}.pill{padding:3px 5px;font-size:8px}}
+@media(max-width:370px){.topbar{gap:7px}.brand{min-width:60px;font-size:11px}.brand strong{font-size:27px}.heart{width:32px;height:32px}.page-name h1{font-size:18px}.page-name p{font-size:10px}.refresh{width:33px;height:33px}.quicklinks{gap:5px}.quick{padding:8px 5px}.health-choices{gap:5px}.health-choices button{font-size:9px}.metric-head{gap:5px}.metric-title{min-width:75px}.range-controls button{padding:5px 6px}}
+
 </style>
 </head>
 <body>
 <main>
-<div class="health-page-heading"><div class="health-title"><div class="tag">Archivio personale</div><h1>Salute</h1></div><div class="health-top-actions"><a class="health-icon-action" href="/" aria-label="Torna alla Home dell'Hub" title="Home">⌂</a><a class="health-icon-action" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer" aria-label="Apri cartella Salute su Google Drive" title="Apri Drive"><svg width="23" height="23" viewBox="0 0 87.3 78" aria-hidden="true" focusable="false"><path fill="#00875A" d="M29.1 0h19.4L19.4 50.4H0z"/><path fill="#0066DA" d="M19.4 50.4h58.2L67.9 67.2H9.7z"/><path fill="#FFBA00" d="M48.5 0 87.3 67.2H67.9L29.1 0z"/><path fill="#00AC47" d="M0 50.4 9.7 67.2l9.7-16.8z"/><path fill="#EA4335" d="M77.6 50.4 87.3 67.2H67.9z"/></svg></a><a class="health-icon-action" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer" aria-label="Carica nuovi referti" title="Carica referti">⇧</a><button class="refresh" id="health-refresh" type="button" aria-label="Aggiorna pagina Salute" title="Aggiorna pagina">↻</button></div></div>
-<header>
-
-
-</header>
-<div class="health-quicklinks"><a href="#health-history"><span>🩸</span>Analisi</a><a href="#vaccinations"><span>💉</span>Vaccinazioni</a><a href="#visits"><span>💙</span>Visite</a><a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener"><span>📄</span>Documenti</a></div><div class="layout">
-<section class="panel full" id="health-history"><h2>Andamento dei valori</h2><p id="health-status">Caricamento storico analisi…</p><div class="health-plot-layout"><div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div><div id="health-chart" class="placeholder"></div></div><p id="health-range-note" class="note"></p></section>
+<div class="topbar">
+<a class="brand" href="/" aria-label="Zenchak Hub, torna alla Home"><span>Zenchak</span><strong>Hub</strong></a>
+<span class="heart" aria-hidden="true">♥</span>
+<div class="page-name"><h1>Salute</h1><p>Analisi, parametri nel tempo e referti</p></div>
+<button type="button" id="health-refresh" class="refresh" title="Aggiorna" aria-label="Aggiorna Salute">↻</button>
+</div>
+<div class="quicklinks">
+<a class="quick red" href="#health-history"><span class="qicon">🩸</span><strong>Analisi</strong><small>Sangue, urine e altri esami</small><b>›</b></a>
+<a class="quick green" href="#vaccinations"><span class="qicon">💉</span><strong>Vaccinazioni</strong><small>Libretto e scadenze</small><b>›</b></a>
+<a class="quick blue" href="#visits"><span class="qicon">💙</span><strong>Visite</strong><small>Referti e accertamenti</small><b>›</b></a>
+<a class="quick purple" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer"><span class="qicon">📄</span><strong>Documenti</strong><small>Cartella salute su Drive</small><b>›</b></a>
+</div>
+<div class="layout">
+<section class="panel full" id="health-history">
+<div class="section-heading"><span class="secicon">↗</span><div><h2>Andamento dei valori</h2><p>Seleziona un parametro per vedere l’andamento nel tempo</p></div></div>
+<div id="health-status" role="status">Caricamento storico analisi…</div>
+<div id="health-choices" class="health-choices" role="group" aria-label="Seleziona parametro clinico"></div>
+<div class="metric-panel">
+ <div class="metric-head">
+  <span class="metric-bubble" id="metric-icon" aria-hidden="true">🩸</span>
+  <div class="metric-title"><h3 id="metric-name">Glicemia</h3><p id="metric-unit">mg/dL</p></div>
+  <div class="range-controls" role="group" aria-label="Intervallo di tempo">
+    <button type="button" data-span="1" aria-pressed="false">1 anno</button>
+    <button type="button" data-span="3" aria-pressed="false">3 anni</button>
+    <button type="button" data-span="all" aria-pressed="true">Tutto</button>
+  </div>
+  <div class="metric-menu"><button id="metric-more" type="button" aria-label="Altre azioni" aria-expanded="false">•••</button>
+  <div class="metric-popover" id="metric-popover" hidden>
+  <button id="download-csv" type="button">Esporta valori CSV</button>
+  <a href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Apri referti su Drive</a>
+  </div></div>
+ </div>
+ <div id="health-chart"></div>
+ <div class="chart-legend"><span><i class="legend-band"></i> Fascia indicativa</span><span><i class="legend-line"></i> Valore</span><span><i class="legend-dot"></i> Fuori fascia</span></div>
+ <div id="health-kpis" class="stat-grid"></div>
+ <div class="interpretation"><div class="paper" aria-hidden="true">▤</div><details><summary><strong>Interpretazione</strong><p id="medical-summary"></p></summary><p class="details-note" id="medical-explanation"></p></details></div>
+ <div class="recent-header"><h3>Ultimi valori</h3><button type="button" id="toggle-readings" aria-expanded="false">Vedi tutti ›</button></div>
+ <div id="health-readings" class="readings"></div>
+</div>
+<p id="health-range-note" class="note"></p>
+</section>
 <section class="panel full" id="visits"><h2>Visite e accertamenti</h2><div class="categories">
 <div class="category">❤️ Elettrocardiogrammi · 2020 e 2022<small>Entrambi descritti nei referti come nei limiti della norma. Documenti e tracciati originali disponibili su Drive.</small></div>
 <div class="category">🩺 Endocrinologia · novembre 2020<small>TSH 1,49 mUI/L; esame clinico senza segni di tireopatia. Nessuna terapia consigliata.</small></div>
@@ -66,22 +119,18 @@ body{background:#f6f8fd;font-size:14px}main{width:min(1080px,calc(100% - 22px));
 <p class="note">Questa è una trascrizione documentale, non una verifica dell'immunità o delle scadenze. Le annotazioni non confermate non vanno usate per decidere richiami o certificare la copertura vaccinale.</p>
 <div class="actions"><a class="button secondary" href="https://drive.google.com/drive/folders/1Sv4-vxzEVkiJhcXV4ihb-yi2mWkbPhIN" target="_blank" rel="noopener noreferrer">Consulta le 4 pagine originali su Drive ↗</a></div></section>
 
+
 </div>
 </main>
 <script>
 'use strict';
 document.getElementById('health-refresh').addEventListener('click',()=>location.reload());
 (async()=>{
- const status=document.getElementById('health-status'),choices=document.getElementById('health-choices'),chart=document.getElementById('health-chart'),note=document.getElementById('health-range-note');
- const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- try{
-  const response=await fetch('/salute/history.json',{credentials:'same-origin',cache:'no-store'});
-  if(!response.ok)throw Error('Storico non disponibile (HTTP '+response.status+')');
-  const payload=await response.json(),series=Array.isArray(payload.series)?payload.series:[];
-  if(!series.length)throw Error('Nessun parametro nello storico');
-  status.textContent='Storico disponibile: '+series.length+' parametri · origine: storico analisi Hub';
-  // Indicative adult reference/decision intervals; never presented as laboratory-specific ranges.
-  const explanations={
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>new Intl.NumberFormat('it-IT',{maximumFractionDigits:2}).format(Number(v));
+const csvQuote=t=>'"'+String(t).replace(/"/g,'""')+'"';
+const explanations={
 'Glicemia':'Concentrazione di glucosio nel sangue a digiuno. Valori elevati possono richiedere ulteriori accertamenti.',
 'Colesterolo totale':'Somma del colesterolo circolante. La valutazione del rischio considera soprattutto LDL, HDL e altri fattori.',
 'Colesterolo HDL':'Colesterolo HDL: valori bassi sono associati a maggior rischio cardiovascolare; non esiste un massimo protettivo universale.',
@@ -107,9 +156,7 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
 'Leucociti urine':'Globuli bianchi nelle urine; l’interpretazione dipende dal metodo e dai sintomi.',
 'Batteri urine':'Conteggio dei batteri nelle urine; la presenza può riflettere anche contaminazione del campione.'
 };
-  // Fasce indicative da fonti cliniche generali, non intervalli specifici del laboratorio.
-  // Per gli analiti con cut-off dipendenti dal metodo non mostriamo una fascia arbitraria.
-  const indicative={
+const indicative={
 'Glicemia':[70,99],'Colesterolo totale':[0,200],'Colesterolo HDL':[40,90],
 'Trigliceridi':[0,150],'ALT / GPT':[4,36],'AST / GOT':[8,33],
 'Gamma GT':[8,61],'Creatinina':[0.7,1.3],'eGFR':[60,120],
@@ -118,33 +165,71 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
 'VES':[0,15],'INR':[0.9,1.2],'aPTT':[20,40],
 'Urea':[15,45],'Densità urine':[1.005,1.030],'pH urine':[4.5,8]
 };
-  let active=0;
-  function render(){
-   const item=series[active],points=(item.values||[]).filter(p=>Number.isFinite(Number(p.value))&&Number.isFinite(Number(p.year))).sort((a,b)=>Number(a.year)-Number(b.year));
-   choices.querySelectorAll('[data-series-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.seriesIndex)===active)));
-   if(!points.length){chart.textContent='Nessun valore disponibile';return}
-   const vals=points.map(p=>Number(p.value)),min=Math.min(...vals),max=Math.max(...vals),range=indicative[item.label]||null;
-   const all=range?[...vals,...range]:vals,lo=Math.min(...all),hi=Math.max(...all),padding=(hi-lo||1)*.16,lower=lo-padding,upper=hi+padding;
-   const w=760,h=390,left=78,right=22,top=40,bottom=335;
-   const years=points.map(p=>Number(p.year)),minYear=Math.min(...years),maxYear=Math.max(...years);
-   const plotStart=left+24,plotEnd=w-right;const x=year=>{const index=years.indexOf(Number(year));return plotStart+((index+1)/(points.length+1))*(plotEnd-plotStart)};
-   const y=value=>bottom-(value-lower)/(upper-lower)*(bottom-top);
-   let markup='';
-   if(range){const bandTop=y(range[1]),bandBottom=y(range[0]);markup+='<rect x="'+left+'" y="'+bandTop+'" width="'+(w-left-right)+'" height="'+(bandBottom-bandTop)+'" fill="#d9f3e8" opacity=".65"/>';[range[0],range[1]].forEach(v=>{const yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#47ad82" stroke-dasharray="5 4" opacity=".75"/><rect x="'+(left+2)+'" y="'+(yy-18)+'" width="65" height="22" rx="6" fill="#e6f7ed"/><text x="'+(left+34)+'" y="'+(yy-3)+'" text-anchor="middle" font-size="17" font-weight="800" fill="#26764f">'+v+'</text>'})}
-   for(let i=0;i<5;i++){const v=lower+(upper-lower)*i/4,yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#edf1f9"/><text x="'+(left-8)+'" y="'+(yy+4)+'" text-anchor="end" font-size="24" font-weight="700" fill="#526587">'+Number(v.toFixed(1))+'</text>'}
-   markup+='<line x1="'+left+'" y1="'+y(Number(points[0].value))+'" x2="'+x(Number(points[0].year))+'" y2="'+y(Number(points[0].value))+'" stroke="#4d91e6" stroke-width="2" stroke-dasharray="4 5" opacity=".55"/>';markup+='<polyline points="'+points.map(p=>x(Number(p.year))+','+y(Number(p.value))).join(' ')+'" fill="none" stroke="#4d91e6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>';
-   points.forEach((p,index)=>{const xx=x(Number(p.year)),yy=y(Number(p.value));const valueText=esc(p.value);const labelY=yy-23;const outOfRange=!!range&&(Number(p.value)<range[0]||Number(p.value)>range[1]);const pointColor=outOfRange?'#d93036':'#4d91e6';const textColor=outOfRange?'#c5222b':'#344d78';markup+='<circle cx="'+xx+'" cy="'+yy+'" r="5.5" fill="'+(outOfRange?'#d93036':'#fff')+'" stroke="'+pointColor+'" stroke-width="3"><title>'+esc(p.year+': '+p.value+' '+(item.unit||'')+(outOfRange?' · fuori fascia indicativa':''))+'</title></circle>';markup+='<text x="'+xx+'" y="'+labelY+'" font-size="27" font-weight="750" text-anchor="middle" fill="'+textColor+'">'+valueText+'</text>';markup+='<text x="'+xx+'" y="363" font-size="24" font-weight="700" text-anchor="middle" fill="#526587">'+esc(p.year)+'</text>'});
-   markup+='<text x="'+(left-8)+'" y="19" text-anchor="end" font-size="19" font-weight="700" fill="#526587">'+esc(item.unit||'')+'</text>';
-   chart.innerHTML='<svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="Andamento '+esc(item.label)+' per anno">'+markup+'</svg>';
-   const info=explanations[item.label]||null;
-   const reference=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'.':'Intervallo di riferimento non disponibile.';
-   note.textContent=(info||'Il significato dei valori dipende dal parametro e dal referto.')+' '+reference+' Valori indicativi da fonti cliniche generali, non limiti del laboratorio; possono variare per metodo, età e situazione clinica.';
-
-
-  }
-  const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];let expanded=false;const ordered=[...series.keys()].sort((a,b)=>{const rank=i=>{const label=(series[i].label||'').toLowerCase();const p=priority.findIndex(x=>label.includes(x.toLowerCase()));return p<0?99:p};return rank(a)-rank(b)});ordered.forEach((i,pos)=>{const s=series[i],b=document.createElement('button');b.type='button';b.textContent=s.label||s.key||('Parametro '+(i+1));b.className=pos>=priority.length?'extra-choice':'';if(pos>=priority.length)b.hidden=true;b.dataset.seriesIndex=String(i);b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{active=i;render()});choices.append(b)});const more=document.createElement('button');more.type='button';more.className='expand-choice';more.textContent='+ Altro';more.setAttribute('aria-expanded','false');more.addEventListener('click',()=>{expanded=!expanded;choices.querySelectorAll('.extra-choice').forEach(b=>b.hidden=!expanded);more.textContent=expanded?'− Meno':'+ Altro';more.setAttribute('aria-expanded',String(expanded))});if(series.length>priority.length)choices.append(more);
-  render();
- }catch(e){status.textContent='Storico analisi non disponibile';chart.textContent=e.message}
+const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];
+let allReadings=false,yearsShown='all',active=0,expanded=false,series=[];
+const choiceBox=$('health-choices'),chart=$('health-chart');
+function cleanValues(item){return (item.values||[]).filter(p=>Number.isFinite(Number(p.value))&&Number.isFinite(Number(p.year))).sort((a,b)=>Number(a.year)-Number(b.year))}
+function statusFor(value,range){if(!range)return ['Dato registrato',''];if(value>range[1])return ['Sopra fascia','high'];if(value<range[0])return ['Sotto fascia','low'];return ['Nella fascia','ok']}
+function kpi(label,value,unit,sub,style,icon,delta){const stat=document.createElement('div');stat.className='stat';stat.innerHTML='<div class="stat-label">'+esc(label)+'</div><div class="stat-value '+esc(style||'')+'">'+esc(value)+' <small>'+esc(unit)+'</small></div><div class="stat-sub">'+esc(sub||'')+'</div>'+(delta?'<span class="stat-delta">'+esc(delta)+'</span>':'<span class="stat-icon">'+esc(icon||'')+'</span>');return stat}
+function draw(){
+const item=series[active];if(!item)return;
+const points=cleanValues(item),values=points.map(p=>Number(p.value));if(!points.length){chart.textContent='Nessun dato disponibile';return}
+const last=points.at(-1),previous=points.at(-2),range=indicative[item.label]||null,[status,style]=statusFor(Number(last.value),range);
+choiceBox.querySelectorAll('[data-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.index)===active)));
+$('metric-name').textContent=item.label;$('metric-unit').textContent=item.unit||'Valore';$('metric-icon').textContent=/colesterolo|trigliceridi/i.test(item.label)?'💧':/urine/i.test(item.label)?'🧪':/apt|inr/i.test(item.label)?'🩸':'🩸';
+const yearEnd=Number(last.year),startYear=yearsShown==='all'?Number(points[0].year):yearEnd-Number(yearsShown)+1;
+let visible=points.filter(p=>Number(p.year)>=startYear);if(!visible.length)visible=[last];
+const vals=visible.map(p=>Number(p.value)),ext=range?[...vals,...range]:vals;let lo=Math.min(...ext),hi=Math.max(...ext);let pad=(hi-lo||1)*.17;lo-=pad;hi+=pad;
+const W=520,H=280,L=43,R=13,T=28,B=246,plotB=220;
+const px=year=>L+(W-L-R)*(yearsShown==='all'?(Number(year)-Number(points[0].year))/(Math.max(1,yearEnd-Number(points[0].year))):((Number(year)-startYear+.5)/Math.max(1,yearsShown==='all'?1:Number(yearsShown))));
+const py=value=>plotB-(Number(value)-lo)/(hi-lo)*(plotB-T);
+let svg='';
+if(range){const top=py(range[1]),bottom=py(range[0]);svg+='<rect x="'+L+'" y="'+top.toFixed(1)+'" width="'+(W-L-R)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>';}
+for(let n=0;n<=4;n++){const value=lo+(hi-lo)*n/4,y=py(value);svg+='<line x1="'+L+'" y1="'+y+'" x2="'+(W-R)+'" y2="'+y+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(y+3)+'" font-size="10" text-anchor="end" fill="#7185aa">'+num(Number(value.toFixed(1)))+'</text>'}
+let minX=yearsShown==='all'?Number(points[0].year):startYear;
+for(let y=minX;y<=yearEnd;y++){const x=px(y);svg+='<line x1="'+x+'" y1="'+T+'" x2="'+x+'" y2="'+plotB+'" stroke="#eef2fa"/>';if(yearEnd-minX<=10||(y-minX)%2===0)svg+='<text x="'+x+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+y+'</text>'}
+if(range){[range[0],range[1]].forEach(v=>{const y=py(v);svg+='<text x="'+(L+4)+'" y="'+(y-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
+const coords=visible.map(p=>({x:px(p.year),y:py(p.value),p}));
+if(coords.length>1)svg+='<polyline fill="none" stroke="#237cff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="'+coords.map(p=>p.x+','+p.y).join(' ')+'"/>';
+for(const c of coords){const outside=range&&(Number(c.p.value)<range[0]||Number(c.p.value)>range[1]);const color=outside?'#f03a56':'#237cff';svg+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+(outside?5:4)+'" fill="'+(outside?'#f03a56':'white')+'" stroke="'+color+'" stroke-width="2"><title>'+esc(c.p.year+': '+c.p.value+' '+(item.unit||''))+'</title></circle><text x="'+c.x+'" y="'+Math.max(12,c.y-11)+'" text-anchor="middle" font-size="11" fill="'+(outside?'#da2450':'#203763')+'" font-weight="760">'+esc(c.p.value)+'</text>'}
+svg+='<text x="3" y="13" font-size="10" fill="#6c82a8">'+esc(item.unit||'')+'</text>';
+chart.innerHTML='<svg role="img" aria-label="Storico '+esc(item.label)+' dal '+minX+' al '+yearEnd+'" viewBox="0 0 '+W+' '+H+'">'+svg+'</svg>';
+const mean=values.reduce((a,b)=>a+b,0)/values.length;
+const lowest=Math.min(...values),highest=Math.max(...values),minimum=points.find(p=>Number(p.value)===lowest),maximum=points.find(p=>Number(p.value)===highest);
+let delta='';if(previous&&Number(previous.value)!==0){const percentage=(Number(last.value)/Number(previous.value)-1)*100;delta=(percentage>0?'↑ ':'↓ ')+Math.abs(percentage).toFixed(0)+'% vs precedente'}
+$('health-kpis').replaceChildren(
+ kpi('Ultimo valore',num(last.value),item.unit||'',last.year,style,'◉',delta),
+ kpi('Valore medio',num(Number(mean.toFixed(2))),item.unit||'',points[0].year+'–'+last.year,'','▥'),
+ kpi('Valore minimo',num(lowest),item.unit||'',minimum.year,'low','↓'),
+ kpi('Valore massimo',num(highest),item.unit||'',maximum.year,'high','↑')
+);
+let summary='';
+const out=points.filter(p=>range&&(p.value<range[0]||p.value>range[1]));
+if(!range)summary='Per questo parametro lo storico non contiene un intervallo di riferimento verificato.';
+else if(style==='ok')summary='L’ultimo valore ('+num(last.value)+' '+(item.unit||'')+') è nella fascia indicativa.'+(out.length?' '+out.length+' rilevazione/i storica/e fuori fascia.':'');
+else summary='L’ultimo valore è '+status.toLowerCase()+' rispetto alla fascia indicativa.';
+$('medical-summary').textContent=summary;
+$('medical-explanation').textContent=(explanations[item.label]||'Valore da interpretare insieme al referto e al contesto clinico.')+' Gli intervalli sono indicativi, non equivalgono ai limiti specifici dei tuoi referti e non costituiscono una diagnosi.';
+$('health-range-note').textContent=range?'Fascia verde indicativa: '+range[0]+'–'+range[1]+' '+(item.unit||'')+'. I limiti dei laboratori possono differire.':'Per questo parametro non è rappresentata una fascia verde: serve un intervallo verificato.';
+const shown=allReadings?points.slice().reverse():points.slice().reverse().slice(0,3);
+$('health-readings').innerHTML=shown.map(p=>{const [text,type]=statusFor(Number(p.value),range);return '<div class="reading"><b>'+esc(p.year)+'</b><span class="reading-value">'+esc(num(p.value))+' <small>'+esc(item.unit||'')+'</small></span><span class="pill '+type+'">'+esc(text)+'</span></div>'}).join('');
+$('toggle-readings').textContent=allReadings?'Mostra meno ↑':'Vedi tutti ›';$('toggle-readings').setAttribute('aria-expanded',String(allReadings));
+}
+function addChoice(index,extra){const item=series[index],b=document.createElement('button');b.type='button';b.dataset.index=String(index);b.textContent=item.label;b.setAttribute('aria-pressed','false');if(extra){b.classList.add('extra-choice');b.hidden=!expanded}b.addEventListener('click',()=>{active=index;allReadings=false;draw()});choiceBox.append(b)}
+try{
+const response=await fetch('/salute/history.json',{credentials:'same-origin',cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+const payload=await response.json();series=Array.isArray(payload.series)?payload.series:[];if(!series.length)throw Error('Nessun dato');
+$('health-status').textContent=series.length+' parametri disponibili · storico aggiornato al '+(payload.updated||'ultimo import');
+const order=[];for(const name of priority){const i=series.findIndex(s=>s.label===name);if(i>=0)order.push(i)}
+const extras=series.map((_,i)=>i).filter(i=>!order.includes(i));order.forEach(i=>addChoice(i,false));
+const more=document.createElement('button');more.type='button';more.className='expand-choice';more.textContent='+ Altro';more.setAttribute('aria-expanded','false');more.addEventListener('click',()=>{expanded=!expanded;choiceBox.querySelectorAll('.extra-choice').forEach(b=>b.hidden=!expanded);more.textContent=expanded?'− Meno':'+ Altro';more.setAttribute('aria-expanded',String(expanded))});choiceBox.append(more);extras.forEach(i=>addChoice(i,true));
+active=order[0]??0;
+$('toggle-readings').addEventListener('click',()=>{allReadings=!allReadings;draw()});
+document.querySelectorAll('[data-span]').forEach(b=>b.addEventListener('click',()=>{yearsShown=b.dataset.span;document.querySelectorAll('[data-span]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));draw()}));
+$('metric-more').addEventListener('click',()=>{const opened=$('metric-popover').hidden;$('metric-popover').hidden=!opened;$('metric-more').setAttribute('aria-expanded',String(opened))});
+$('download-csv').addEventListener('click',()=>{const item=series[active];const rows=[['Anno','Valore','Unità'],...cleanValues(item).map(p=>[p.year,p.value,item.unit||''])].map(r=>r.map(csvQuote).join(';')).join('\r\n');const blob=new Blob(['\uFEFF'+rows],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='salute-'+item.label.toLowerCase().replace(/[^a-z0-9]+/g,'-')+'.csv';a.click();URL.revokeObjectURL(url);$('metric-popover').hidden=true});
+draw();
+}catch(err){$('health-status').textContent='Storico non disponibile: '+err.message;chart.textContent='Non riesco a caricare i dati dal NAS.'}
 })();
 </script>
 </body></html>
