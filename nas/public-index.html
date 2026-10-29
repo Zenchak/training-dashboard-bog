@@ -363,7 +363,7 @@ body{background:#fff;padding:22px 16px}.wrap{max-width:480px}.hero{background:tr
 <a class="card casa" data-visible-profile="all" href="/casa/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-casa" data-default-src="/assets/home/ricerca_casa-eea474075f66.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Ricerca Casa</div><div class="desc">Annunci, visite e documenti</div></a>
 <a class="card auto" data-visible-profile="all" href="/auto/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-auto" data-default-src="/assets/home/auto_e_veicoli-9d594a2c8304.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Auto e Veicoli</div><div class="desc">Gestione, scadenze e costi</div></a>
 <a class="card viaggi" data-visible-profile="all" href="/viaggi/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-viaggi" data-default-src="/assets/home/viaggi-valigia-aereo.svg" src="/assets/home/viaggi-valigia-aereo.svg" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Viaggi</div><div class="desc">Destinazioni, itinerari e prenotazioni</div></a>
-<a class="card salute" data-visible-profile="Bogdan" href="/salute/"><div class="card-top"><div class="card-icon" aria-hidden="true"><svg width="54" height="54" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 53S10 40 10 24c0-8 6-13 13-13 4 0 7 2 9 6 2-4 6-6 10-6 7 0 13 5 13 13 0 16-23 29-23 29Z" fill="#E5F8F5" stroke="#168D83" stroke-width="3" stroke-linejoin="round"/><path d="M17 32h9l4-8 6 16 4-8h7" stroke="#168D83" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div><div class="title">Salute</div><div class="desc">Analisi, parametri, visite e referti</div></a>
+<a class="card salute" data-visible-profile="Bogdan" href="/salute/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-salute" data-default-src="/assets/home/salute-cuore.svg" src="/assets/home/salute-cuore.svg" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Salute</div><div class="desc">Analisi, parametri, visite e referti</div></a>
 <a class="card finanze" data-visible-profile="Bogdan" href="/finanze/"><div class="card-top"><div class="card-icon"><img data-media-slot="home-finanze" data-default-src="/assets/home/finanze-c9cfc3c35ee3.webp" alt="" width="82" height="82" loading="eager" decoding="async"></div></div><div class="title">Finanze</div><div class="desc">Budget, spese e investimenti</div></a>
 </div>
   <div class="foot"><span>HTTPS tramite Tailscale Funnel · accesso ricordato 30 giorni</span><a href="/gestione-icone/">🖼️ Gestisci icone</a><a href="/passkey-test/">🧪 Face ID</a><a href="/auth/logout">Esci</a></div>
@@ -433,6 +433,11 @@ document.getElementById('hubRefresh')?.addEventListener('click',function(){
         if(mediaResponse.ok){
           const media=await mediaResponse.json();
           for(const character of profileCharacters){const slotName=character.dataset.character==='Bogdan'?'profile-bogdan':'profile-camilla';if(media.items && media.items[slotName] && media.items[slotName].url){character.style.backgroundImage='url("'+media.items[slotName].url.replace(/"/g,'')+'")'}}
+          for(const img of document.querySelectorAll('img[data-media-slot]')){
+            const mediaSlot=img.dataset.mediaSlot;
+            const custom=media.items && media.items[mediaSlot] && media.items[mediaSlot].url;
+            if(custom){img.src=custom;img.addEventListener('error',()=>{img.src=img.dataset.defaultSrc||''},{once:true})}
+          }
           const slot=authenticatedUser==='Bogdan'?'profile-bogdan':'profile-camilla';
           if(media.items && media.items[slot] && media.items[slot].url){
             avatar.textContent='';
