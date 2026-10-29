@@ -125,7 +125,7 @@ document.getElementById('health-refresh').addEventListener('click',()=>location.
    const all=range?[...vals,...range]:vals,lo=Math.min(...all),hi=Math.max(...all),padding=(hi-lo||1)*.16,lower=lo-padding,upper=hi+padding;
    const w=760,h=390,left=78,right=22,top=40,bottom=335;
    const years=points.map(p=>Number(p.year)),minYear=Math.min(...years),maxYear=Math.max(...years);
-   const plotStart=left+24;const x=year=>plotStart+(maxYear===minYear?.5:(year-minYear)/(maxYear-minYear))*(w-plotStart-right);
+   const plotStart=left+24,plotEnd=w-right;const yearSpan=Math.max(1,maxYear-minYear);const x=year=>plotStart+((year-(minYear-1))/(yearSpan+2))*(plotEnd-plotStart);
    const y=value=>bottom-(value-lower)/(upper-lower)*(bottom-top);
    let markup='';
    if(range){const bandTop=y(range[1]),bandBottom=y(range[0]);markup+='<rect x="'+left+'" y="'+bandTop+'" width="'+(w-left-right)+'" height="'+(bandBottom-bandTop)+'" fill="#d9f3e8" opacity=".65"/>';[range[0],range[1]].forEach(v=>{const yy=y(v);markup+='<line x1="'+left+'" x2="'+(w-right)+'" y1="'+yy+'" y2="'+yy+'" stroke="#47ad82" stroke-dasharray="5 4" opacity=".75"/><rect x="'+(left+2)+'" y="'+(yy-18)+'" width="65" height="22" rx="6" fill="#e6f7ed"/><text x="'+(left+34)+'" y="'+(yy-3)+'" text-anchor="middle" font-size="17" font-weight="800" fill="#26764f">'+v+'</text>'})}
