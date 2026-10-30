@@ -127,6 +127,11 @@ const indicative={
 'Urea':[15,45],'Densità urine':[1.005,1.030],'pH urine':[4.5,8]
 };
 const ranges2026={"Glicemia":[65,100],"Colesterolo totale":[0,190],"Colesterolo HDL":[35,55],"Trigliceridi":[0,150],"ALT / GPT":[0,50],"AST / GOT":[0,50],"Gamma GT":[0,55],"Creatinina":[0.84,1.25],"eGFR":[90,120],"Emoglobina":[13,17.5],"Ematocrito":[40,50],"Leucociti":[4,11.3],"Eritrociti sangue":[4.52,5.9],"MCV":[80,98],"Piastrine":[150,450],"VES":[0,10],"INR":[0.78,1.18],"aPTT":[22.1,28.1],"Urea":[17,43],"Densità urine":[1.01,1.03],"pH urine":[4.5,7.5],"Eritrociti urine":[0,15],"Leucociti urine":[0,20],"Batteri urine":[0,1000]};
+const clinicalTiers={
+'eGFR':[{from:90,to:Infinity,label:'G1 · filtrazione normale o alta',color:'#cdeedc'},{from:60,to:90,label:'G2 · lieve riduzione; da sola non diagnostica malattia renale',color:'#fff0ba'},{from:45,to:60,label:'G3a · riduzione lieve-moderata',color:'#ffdaa6'},{from:30,to:45,label:'G3b · riduzione moderata-grave',color:'#ffc2a8'},{from:15,to:30,label:'G4 · riduzione grave',color:'#ff9b94'},{from:-Infinity,to:15,label:'G5 · insufficienza renale',color:'#ed757d'}],
+'Colesterolo HDL':[{from:55,to:Infinity,label:'Oltre 55 · rischio basso secondo referto',color:'#cdeedc'},{from:35,to:55,label:'35–55 · rischio moderato secondo referto',color:'#fff0ba'},{from:-Infinity,to:35,label:'Sotto 35 · rischio alto secondo referto',color:'#ffc2a8'}],
+'Glicemia':[{from:65,to:100,label:'65–100 · intervallo del laboratorio',color:'#cdeedc'},{from:100,to:126,label:'100–125 · zona grigia / prediabete (se a digiuno)',color:'#fff0ba'},{from:126,to:Infinity,label:'Da 126 · soglia diagnostica da confermare',color:'#ffc2a8'}]
+};
 const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];
 let active=0,expanded=false,series=[];
 const choiceBox=$('health-choices'),chart=$('health-chart');
@@ -148,8 +153,11 @@ function draw(){
  const sidePadding=30; // Margine interno per evitare che le etichette dei valori estremi tocchino i bordi.
  const x=year=>L+sidePadding+(W-L-R-2*sidePadding)*(Number(year)-firstYear)/Math.max(1,lastYear-firstYear);
  const y=value=>B-(Number(value)-lo)/(hi-lo)*(B-T);
+ const tiers=clinicalTiers[item.label]||null;
+ if(tiers){const bounds=tiers.flatMap(t=>[t.from,t.to]).filter(Number.isFinite);lo=Math.min(lo,...bounds);hi=Math.max(hi,...bounds);const margin=(hi-lo||1)*.05;lo-=margin;hi+=margin;}
+
  let svg='';
- if(range){const latest=ranges2026[item.label]||range;const split=(x(2024)+x(2026))/2;const bands=[[L,Math.min(split,W-R),range],[Math.max(L,split),W-R,latest]];for(const [left,right,rr] of bands){if(right<=left)continue;const top=y(rr[1]),bottom=y(rr[0]);svg+='<rect x="'+left.toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+(right-left).toFixed(1)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>'}svg+='<line x1="'+split.toFixed(1)+'" y1="'+T+'" x2="'+split.toFixed(1)+'" y2="'+B+'" stroke="#61b58d" stroke-dasharray="4 3"/>'}
+ if(tiers){for(const t of tiers){const low=Math.max(lo,t.from),high=Math.min(hi,t.to);if(high<=low)continue;svg+='<rect x="'+L+'" y="'+y(high).toFixed(1)+'" width="'+(W-L-R)+'" height="'+(y(low)-y(high)).toFixed(1)+'" fill="'+t.color+'" opacity=".85"/>'}}else if(range){const latest=ranges2026[item.label]||range;const split=(x(2024)+x(2026))/2;const bands=[[L,Math.min(split,W-R),range],[Math.max(L,split),W-R,latest]];for(const [left,right,rr] of bands){if(right<=left)continue;const top=y(rr[1]),bottom=y(rr[0]);svg+='<rect x="'+left.toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+(right-left).toFixed(1)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>'}svg+='<line x1="'+split.toFixed(1)+'" y1="'+T+'" x2="'+split.toFixed(1)+'" y2="'+B+'" stroke="#61b58d" stroke-dasharray="4 3"/>'}
  for(let n=0;n<=4;n++){const v=lo+(hi-lo)*n/4,yy=y(v);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(yy+3)+'" text-anchor="end" font-size="10" fill="#7185aa">'+num(Number(v.toFixed(1)))+'</text>'}
  for(let year=firstYear;year<=lastYear;year++){const xx=x(year);svg+='<line x1="'+xx+'" y1="'+T+'" x2="'+xx+'" y2="'+B+'" stroke="#eef2fa"/>';if(lastYear-firstYear<=10||(year-firstYear)%2===0)svg+='<text x="'+xx+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+year+'</text>'}
  if(range&&!(ranges2026[item.label])){[range[0],range[1]].forEach(v=>{svg+='<text x="'+(L+4)+'" y="'+(y(v)-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
@@ -159,6 +167,7 @@ function draw(){
  svg+='<text x="3" y="13" font-size="10" fill="#6c82a8">'+esc(item.unit||'')+'</text>';
  chart.innerHTML='<svg role="img" aria-label="Storico '+esc(item.label)+' dal '+firstYear+' al '+lastYear+'" viewBox="0 0 '+W+' '+H+'">'+svg+'</svg>';
  showInsight(item);
+ const legend=$('metric-explainer');if(legend){const base=insights[item.label]?.[0]||'';legend.textContent=base+(tiers?' Fasce del referto: '+tiers.slice().reverse().map(t=>t.label).join('; ')+'.':'');}
 }
 function addChoice(i,extra){const item=series[i],b=document.createElement('button');b.type='button';b.dataset.index=String(i);b.textContent=item.label;b.setAttribute('aria-pressed','false');if(extra){b.classList.add('extra-choice');b.hidden=!expanded}b.addEventListener('click',()=>{active=i;draw()});choiceBox.append(b)}
 try{
