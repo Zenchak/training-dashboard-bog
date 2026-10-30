@@ -238,7 +238,7 @@ fs.mkdirSync(financeIncomeDir, { recursive: true });
 fs.mkdirSync(financeOutflowDir, { recursive: true });
 fs.mkdirSync(autoDir, { recursive: true });
 fs.copyFileSync(path.join(__dirname, 'nas', 'lan-hub.html'), path.join(hubDir, 'index.html'));
-fs.copyFileSync(path.join(__dirname, 'nas', 'finance-menu.html'), path.join(financeDir, 'index.html'));
+fs.copyFileSync(path.join(__dirname, 'nas', 'finance.html'), path.join(financeDir, 'index.html'));
 fs.copyFileSync(path.join(__dirname, 'nas', 'finance.html'), path.join(financeIncomeDir, 'index.html'));
 fs.copyFileSync(path.join(__dirname, 'nas', 'finance-outflows.html'), path.join(financeOutflowDir, 'index.html'));
 fs.copyFileSync(path.join(__dirname, 'nas', 'auto', 'index.html'), path.join(autoDir, 'index.html'));
