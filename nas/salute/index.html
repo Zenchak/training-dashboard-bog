@@ -16,7 +16,7 @@ main{width:min(1060px,calc(100% - 24px));margin:8px auto 55px}
 .heart{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:#fff0f3;color:#ff3f6c;font-size:23px}
 .page-name{flex:1;min-width:0}.page-name h1{font-size:20px;line-height:1.1;margin:0 0 2px;font-weight:850;letter-spacing:-.035em}.page-name p{color:var(--muted);font-size:11px;margin:0}
 .refresh{flex:none;width:37px;height:37px;border:0;border-radius:50%;background:white;color:#365cc7;font-size:25px;box-shadow:0 2px 12px #6179a41c;cursor:pointer}
-.quicklinks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
+.header-actions{display:flex;align-items:center;gap:7px;flex:none}.home-button{display:grid;place-items:center;text-decoration:none}.quicklinks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:0 0 12px}
 .quick{min-width:0;min-height:88px;position:relative;padding:11px 7px;border-radius:15px;text-decoration:none;color:var(--ink);display:flex;align-items:flex-start;flex-direction:column;gap:3px;box-shadow:0 3px 18px #607caa12}
 .quick .qicon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:19px;margin-bottom:2px}
 .quick strong{font-size:11px;font-weight:800;letter-spacing:-.02em}.quick small{font-size:9px;color:#617698;line-height:1.25;max-width:95%}.quick b{position:absolute;right:8px;bottom:10px;font-size:20px;font-weight:400}
@@ -60,7 +60,7 @@ h2{font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:820;letter-spacing:
 <div class="topbar">
 <span class="heart" aria-hidden="true">♥</span>
 <div class="page-name"><h1>Salute</h1><p>Analisi, parametri nel tempo e referti</p></div>
-<button type="button" id="health-refresh" class="refresh" title="Aggiorna" aria-label="Aggiorna Salute">↻</button>
+<div class="header-actions"><a class="refresh home-button" href="/" title="Torna alla Home" aria-label="Torna alla Home"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg></a><button type="button" id="health-refresh" class="refresh" title="Aggiorna" aria-label="Aggiorna Salute">↻</button></div>
 </div>
 <div class="quicklinks">
 <a class="quick red" href="#health-history"><span class="qicon">🩸</span><strong>Analisi</strong><small>Sangue, urine e altri esami</small><b>›</b></a>
@@ -96,11 +96,11 @@ h2{font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:820;letter-spacing:
 <div class="category">📋 Medicina del lavoro · aprile 2024<small><strong>Valutazione:</strong> eri stato giudicato idoneo alla mansione, senza limitazioni riportate nel riepilogo disponibile. La prossima visita è indicata per aprile 2029 nel referto; l'idoneità resta riferita alla mansione e alle condizioni valutate allora.</small></div>
 </div></section>
 <section class="panel" id="medical-certificates"><h2>Idoneità sportiva</h2><div class="categories"><div class="category">🏊🚴🏃 Triathlon<small>Valido fino al 29/09/2027</small></div><div class="category">🏃 Atletica leggera<small>Valido fino al 28/09/2027</small></div></div></section>
-<section class="panel" id="vaccinations"><h2>Vaccinazioni</h2><p>Storico trascritto dal certificato vaccinale moldavo (4 fotografie su Google Drive). Le date poco leggibili richiedono conferma.</p>
+<section class="panel" id="vaccinations"><h2>Vaccinazioni</h2><p>Storico trascritto dal certificato vaccinale moldavo (4 fotografie su Google Drive). Le date di BCG, epatite B e polio sono state integrate in base alle tue indicazioni; resta da verificarle sul certificato.</p>
 <div class="categories">
-<div class="category">🫁 Tubercolosi · BCG<small>2 annotazioni presenti; date manoscritte da verificare (pag. 2)</small></div>
-<div class="category">🧬 Epatite B · HBV<small>Annotazioni vaccinali presenti; numero e date delle dosi da verificare (pag. 2)</small></div>
-<div class="category">💧 Poliomielite · VPO<small>5 annotazioni leggibili come righe di somministrazione; date da verificare (pag. 2)</small></div>
+<div class="category">🫁 Tubercolosi · BCG<small>Date comunicate: 05/06/1990 e 18/12/1997. La prima precede la data di nascita registrata: da verificare sul certificato originale.</small></div>
+<div class="category">🧬 Epatite B · HBV<small>3 date comunicate: 15/03/2005, 15/04/2005, 26/04/2007. Da confrontare con il certificato originale.</small></div>
+<div class="category">💧 Poliomielite · VPO<small>5 date comunicate: 05/02/1991, 04/04/1991, 06/06/1991, 13/07/1993, 09/10/1997. Da confrontare con il certificato originale.</small></div>
 <div class="category">🛡️ Difterite, tetano, pertosse · DTP/DT/Td<small>Più somministrazioni storiche e annotazione «ANTITETANO» 04/2018; verifica del richiamo necessaria (pag. 3)</small></div>
 <div class="category">🦠 Morbillo, parotite, rosolia · ROR/MPR<small>2 annotazioni storiche; date da verificare (pag. 4)</small></div>
 <div class="category">📋 Altre vaccinazioni<small>Registrazione «КК» (morbillo e rosolia, secondo denominazione locale), datata apparentemente 15/10/2002; data e formulazione esatta da confermare (pag. 4)</small></div>
