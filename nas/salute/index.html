@@ -148,7 +148,7 @@ function draw(){
  $('metric-icon').textContent=/urine/i.test(item.label)?'🧪':/colesterolo|trigliceridi/i.test(item.label)?'💧':'🩸';
  const vals=points.map(p=>Number(p.value)),ext=range?[...vals,...range,...(ranges2026[item.label]||[])]:vals;
  let lo=Math.min(...ext),hi=Math.max(...ext);const pad=(hi-lo||1)*.17;lo-=pad;hi+=pad;
- const W=520,H=280,L=44,R=13,T=28,B=220;
+ const W=520,H=280,L=44,R=47,T=28,B=220;
  const firstYear=Number(points[0].year),lastYear=Number(points.at(-1).year);
  const sidePadding=30; // Margine interno per evitare che le etichette dei valori estremi tocchino i bordi.
  const x=year=>L+sidePadding+(W-L-R-2*sidePadding)*(Number(year)-firstYear)/Math.max(1,lastYear-firstYear);
@@ -158,6 +158,7 @@ function draw(){
 
  let svg='';
  if(tiers){for(const t of tiers){const low=Math.max(lo,t.from),high=Math.min(hi,t.to);if(high<=low)continue;svg+='<rect x="'+L+'" y="'+y(high).toFixed(1)+'" width="'+(W-L-R)+'" height="'+(y(low)-y(high)).toFixed(1)+'" fill="'+t.color+'" opacity=".85"/>'}}else if(range){const latest=ranges2026[item.label]||range;const split=(x(2024)+x(2026))/2;const bands=[[L,Math.min(split,W-R),range],[Math.max(L,split),W-R,latest]];for(const [left,right,rr] of bands){if(right<=left)continue;const top=y(rr[1]),bottom=y(rr[0]);svg+='<rect x="'+left.toFixed(1)+'" y="'+top.toFixed(1)+'" width="'+(right-left).toFixed(1)+'" height="'+(bottom-top).toFixed(1)+'" fill="#dff6e8" opacity=".9"/>'}svg+='<line x1="'+split.toFixed(1)+'" y1="'+T+'" x2="'+split.toFixed(1)+'" y2="'+B+'" stroke="#61b58d" stroke-dasharray="4 3"/>'}
+ if(tiers){const thresholds=[...new Set(tiers.flatMap(t=>[t.from,t.to]).filter(Number.isFinite))].filter(v=>v>=lo&&v<=hi).sort((a,b)=>a-b);for(const v of thresholds){const yy=y(v);svg+='<line x1="'+L+'" y1="'+yy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+yy.toFixed(1)+'" stroke="#7891a7" stroke-dasharray="3 3" opacity=".7"/><text x="'+(W-R+7)+'" y="'+(yy+3).toFixed(1)+'" font-size="11" font-weight="750" fill="#344767">'+num(v)+'</text>'}}else if(range){const limits=[...new Set([...range,...(ranges2026[item.label]||[])])].filter(Number.isFinite).sort((a,b)=>a-b);for(const v of limits){const yy=y(v);svg+='<line x1="'+L+'" y1="'+yy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+yy.toFixed(1)+'" stroke="#7891a7" stroke-dasharray="3 3" opacity=".5"/><text x="'+(W-R+7)+'" y="'+(yy+3).toFixed(1)+'" font-size="10" font-weight="700" fill="#344767">'+num(v)+'</text>'}}
  for(let n=0;n<=4;n++){const v=lo+(hi-lo)*n/4,yy=y(v);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(yy+3)+'" text-anchor="end" font-size="10" fill="#7185aa">'+num(Number(v.toFixed(1)))+'</text>'}
  for(let year=firstYear;year<=lastYear;year++){const xx=x(year);svg+='<line x1="'+xx+'" y1="'+T+'" x2="'+xx+'" y2="'+B+'" stroke="#eef2fa"/>';if(lastYear-firstYear<=10||(year-firstYear)%2===0)svg+='<text x="'+xx+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+year+'</text>'}
  if(range&&!(ranges2026[item.label])){[range[0],range[1]].forEach(v=>{svg+='<text x="'+(L+4)+'" y="'+(y(v)-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
