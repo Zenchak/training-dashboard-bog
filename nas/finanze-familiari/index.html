@@ -24,7 +24,7 @@ td button{padding:5px 8px;font-size:11px;background:#edf2f6;color:#39546d;margin
 <div class="metric"><div class="name">Uscite del mese</div><strong id="expenses">—</strong><small>Affitto e spese comuni</small></div>
 <div class="metric"><div class="name">Saldo movimenti registrati</div><strong id="balance">—</strong><small>Non è il saldo bancario reale</small></div>
 </section>
-<div class="layout"><section class="panel"><h2 id="formTitle">Aggiungi movimento</h2>
+<div class="layout"><section class="panel"><h2>Importa estratti ING</h2><p>Carica l'archivio JSON preparato dagli estratti verificati. L'importazione conserva i dati sul NAS ed evita i duplicati.</p><div class="actions"><input id="importFile" type="file" accept=".json,application/json" aria-label="Seleziona archivio movimenti ING"><button id="importBtn" type="button">Importa movimenti</button></div><p class="note">Importazione disponibile al profilo Bogdan. Non pubblicare questo file nel repository.</p></section><section class="panel"><h2 id="formTitle">Aggiungi movimento</h2>
 <form id="entryForm" class="fields">
 <label>Data<input id="date" type="date" required></label>
 <label>Tipo<select id="type"><option value="expense">Uscita</option><option value="income">Entrata / versamento</option></select></label>
@@ -78,5 +78,16 @@ $('entryForm').addEventListener('submit',async e=>{
  catch(err){msg('Errore: '+err.message)}finally{$('save').disabled=false}
 });
 $('cancel').onclick=resetForm;$('month').onchange=()=>{allMonths=false;render()};$('all').onclick=()=>{allMonths=!allMonths;$('all').textContent=allMonths?'Solo mese selezionato':'Tutti i movimenti';render()};
+$('importBtn').onclick=async()=>{
+ const f=$('importFile').files[0];if(!f){msg('Seleziona il file JSON degli estratti');return}
+ if(!confirm('Importare i movimenti bancari nel conto comune? I duplicati saranno ignorati.'))return;
+ $('importBtn').disabled=true;
+ try{
+  const data=JSON.parse(await f.text());
+  const result=await request('/api/family-finances/import',{method:'POST',headers:{'Content-Type':'application/json','X-Zenchak-Family':'1'},body:JSON.stringify(data)});
+  await load();msg('Importati '+result.added+' movimenti; '+result.skipped+' già presenti.');
+ }catch(e){msg('Errore importazione: '+e.message)}
+ finally{$('importBtn').disabled=false}
+};
 load().catch(e=>{msg('Impossibile caricare i dati: '+e.message);$('rows').replaceChildren()});
 </script></body></html>
