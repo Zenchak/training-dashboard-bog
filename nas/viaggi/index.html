@@ -77,20 +77,20 @@ header .sub{font-size:11px;margin-top:4px}
 
 /* Riepilogo spese Egitto: barre orizzontali responsive */
 .egypt-expenses{background:#f1f6fc;border-radius:18px;padding:18px 15px;margin:14px 0 18px}
-.egypt-expenses h3{margin:0 0 17px;font-size:18px}
+.egypt-expenses h3{margin:0 0 17px;font-size:clamp(15px,4.1vw,18px);white-space:nowrap;letter-spacing:-.025em}
 .egypt-expense-row{display:grid;grid-template-columns:95px minmax(0,1fr) 104px;align-items:center;gap:10px;margin:12px 0}
-.egypt-expense-name{font-weight:650;font-size:14px}
+.egypt-expense-name{font-weight:650;font-size:14px;white-space:nowrap}
 .egypt-expense-track{height:17px;background:#dce6f2;border-radius:999px;overflow:hidden}
 .egypt-expense-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#4d89d3,#235b9d);min-width:3px}
 .egypt-expense-value{text-align:right;white-space:nowrap;font-size:14px;font-variant-numeric:tabular-nums}
 .egypt-expense-total{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #cbd9e9;padding-top:14px;margin-top:17px;font-weight:700}
 .egypt-expense-total strong{white-space:nowrap;font-variant-numeric:tabular-nums}
 .egypt-expenses .sub{margin:12px 0 0;line-height:1.5}
-@media(max-width:420px){.egypt-expenses{padding:14px 11px}.egypt-expense-row{grid-template-columns:80px minmax(0,1fr) 95px;gap:7px}.egypt-expense-name,.egypt-expense-value{font-size:12px}}
+@media(max-width:420px){.egypt-expenses{padding:14px 11px}.egypt-expense-row{grid-template-columns:94px minmax(0,1fr) 95px;gap:7px}.egypt-expense-name,.egypt-expense-value{font-size:12px}}
 
 .egypt-todo{margin-top:14px}.egypt-todo h3{margin:0 0 7px}.egypt-todo-list{margin-top:13px}.egypt-todo-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid #dae3ef}.egypt-todo-num{flex:0 0 26px;height:26px;border-radius:50%;background:#dceaf9;color:#245d9c;display:grid;place-items:center;font-weight:700;font-size:12px}.egypt-todo-item strong{display:block;font-size:14px}.egypt-todo-item p{margin:5px 0 0;color:#697d99;font-size:13px;line-height:1.45}
 
-.egypt-quick-nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.egypt-quick-nav button{appearance:none;border:1px solid #c7d9ef;background:#eaf2fc;color:#204b7c;border-radius:999px;padding:9px 13px;font:600 13px system-ui,-apple-system,sans-serif;cursor:pointer}.egypt-quick-nav button:active{background:#c9dff8}[id^="egypt-trip-section-"]{scroll-margin-top:90px}
+.egypt-quick-nav{display:flex;flex-wrap:nowrap;gap:6px;margin:12px 0 18px;width:100%;overflow-x:auto;scrollbar-width:none}.egypt-quick-nav::-webkit-scrollbar{display:none}.egypt-quick-nav button{appearance:none;flex:1 1 0;min-width:0;white-space:nowrap;border:1px solid #c7d9ef;background:#eaf2fc;color:#204b7c;border-radius:999px;padding:9px 4px;font:600 clamp(10px,2.8vw,13px) system-ui,-apple-system,sans-serif;cursor:pointer}.egypt-quick-nav button:active{background:#c9dff8}[id^="egypt-trip-section-"]{scroll-margin-top:90px}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
 <nav class="travel-tabs" aria-label="Sezioni viaggi"><button type="button" data-tab="futuri" class="active"><span>Viaggi futuri</span></button><button type="button" data-tab="mappa"><span>Mappa</span></button><button type="button" data-tab="elenco"><span>Elenco</span></button></nav><section id="futureSection" class="panel"><h2>Viaggi in programma</h2><div id="futureCards" class="cards"></div></section><section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
