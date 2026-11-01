@@ -216,7 +216,7 @@ const scenicPhotos=[
  {re:/peru|perù/i,term:'Machu Picchu Peru'},
  {re:/thailandia|thailand/i,term:'Thailand Phi Phi islands'}
 ];
-async /* Illustrazioni cartoon vettoriali per le schede: nessuna foto esterna casuale. */
+/* Illustrazioni cartoon vettoriali per le schede: nessuna foto esterna casuale. */
 function cartoonCountry(p){
  const code=(p.code||'').toUpperCase(),name=p.place||p.country||'',seed=[...code+name].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7),v=seed%7;
  const warm=['#7fcaff','#9bd7f4','#90c7f0','#98d8df','#8dbfea','#88cce5','#a8d9ed'][v];
@@ -462,22 +462,4 @@ render();$('editor').close();if(Number.isFinite(lat)&&Number.isFinite(lon))map.s
 };
 showTravelTab('futuri');initShared();setTimeout(()=>map.invalidateSize(),200);
 })();
-</script><script>
-/* Recupero indipendente se il modulo principale Viaggi si interrompe: mai mostrare pagina vuota. */
-window.addEventListener('load',()=>{
- setTimeout(()=>{
-  const root=document.getElementById('futureCards'),cards=document.getElementById('cards');
-  if(!root||!cards||root.children.length)return;
-  const trips=[['Egitto','6–15 novembre 2026','EG'],['Tanzania e Zanzibar','23 gennaio – 12 febbraio 2027','TZ']];
-  const names=typeof Intl.DisplayNames==='function'?new Intl.DisplayNames(['it'],{type:'region'}):{of:c=>c};
-  const countries=["AF","AL","DZ","AD","AO","AG","AR","AM","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BT","BO","BA","BW","BR","BN","BG","BF","BI","CV","KH","CM","CA","CF","TD","CL","CN","CO","KM","CG","CD","CR","CI","HR","CU","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","SZ","ET","FJ","FI","FR","GA","GM","GE","DE","GH","GR","GD","GT","GN","GW","GY","HT","HN","HU","IS","IN","ID","IR","IQ","IE","IL","IT","JM","JP","JO","KZ","KE","KI","KP","KR","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MG","MW","MY","MV","ML","MT","MH","MR","MU","MX","FM","MD","MC","MN","ME","MA","MZ","MM","NA","NR","NP","NL","NZ","NI","NE","NG","MK","NO","OM","PK","PW","PA","PG","PY","PE","PH","PL","PT","QA","RO","RU","RW","KN","LC","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SK","SI","SB","SO","ZA","SS","ES","LK","SD","SR","SE","CH","SY","TJ","TZ","TH","TL","TG","TO","TT","TN","TR","TM","TV","UG","UA","AE","GB","US","UY","UZ","VU","VA","VE","VN","YE","ZM","ZW","PS","XK","TW"];
-  const art=(code)=>{const scene=code==='EG'?'M130 240 260 65 390 240Z M340 240 440 110 540 240Z':code==='TZ'?'M310 240V105 M180 120Q300 10 460 115Z':'M100 250 260 70 400 250Z M290 250 420 110 560 250Z';return 'data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"><rect width="640" height="360" fill="#b9dfea"/><circle cx="500" cy="75" r="42" fill="#ffe4a3"/><path d="M0 275Q160 235 320 275T640 260V360H0Z" fill="#a7cda1"/><path d="'+scene+'" fill="#d7a77a" stroke="#a87866" stroke-width="8"/><path d="M0 320Q200 290 350 320T640 305V360H0Z" fill="#79b9a0"/></svg>')};
-  const make=(name,sub,code)=>{const card=document.createElement('article');card.className='wish';card.innerHTML='<div class="wish-photo"><img alt="" src="'+art(code)+'"></div><h3></h3><p></p>';card.querySelector('h3').textContent=name;card.querySelector('p').textContent=sub;return card};
-  trips.forEach(([n,d,c])=>root.appendChild(make(n,d,c)));
-  const paint=(tab)=>{document.querySelectorAll('.travel-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('futureSection')?.classList.toggle('travel-hidden',tab!=='futuri');document.querySelector('.map-panel')?.classList.toggle('travel-hidden',tab!=='mappa');document.querySelector('.wishlist-panel')?.classList.toggle('travel-hidden',tab==='futuri');cards.replaceChildren();if(tab==='elenco'){countries.map(c=>[names.of(c)||c,c]).sort((a,b)=>a[0].localeCompare(b[0],'it')).forEach(([n,c])=>cards.appendChild(make(n,'Paesaggi, monumenti e periodo migliore da approfondire',c)));}else if(tab==='mappa'){cards.innerHTML='<p>Seleziona Elenco per esplorare i paesi e i preferiti.</p>'} };
-  document.querySelectorAll('.travel-tabs button').forEach(b=>b.addEventListener('click',()=>paint(b.dataset.tab)));
-  paint('futuri');
-  const note=document.createElement('p');note.style.cssText='font-size:12px;color:#b45309;padding:8px';note.textContent='Modalità di recupero: '+(window.__travelStartupError||'modulo Viaggi non inizializzato')+'. Le schede principali sono temporaneamente disponibili.';root.after(note);
- },450);
-});
 </script><script defer src="/shared-nav-icons.js"></script></body></html>
