@@ -360,9 +360,13 @@ function countryPlace(code){const name=countryNames.of(code),f=countryFacts[code
 const allCountries=countryCodes.map(countryPlace).sort((a,b)=>a.place.localeCompare(b.place,'it'));
 let countrySearch='';
 
-const tabIcons={futuri:'✈',mappa:'🌐',elenco:'☷'};const iconKey='zenchak.viaggi.tabicons.v1';let customTabIcons={};try{customTabIcons=JSON.parse(localStorage.getItem(iconKey)||'{}')}catch{}
-function paintTabIcons(){document.querySelectorAll('.travel-tabs button').forEach(b=>{let i=b.querySelector('.tab-symbol');if(!i){i=document.createElement('span');i.className='tab-symbol';b.insertBefore(i,b.firstChild);}const v=customTabIcons[b.dataset.tab]||tabIcons[b.dataset.tab];i.replaceChildren();if(v.startsWith('data:image/')){const img=document.createElement('img');img.src=v;img.alt='';img.style.cssText='height:26px;width:26px;object-fit:contain';i.appendChild(img)}else i.textContent=v})}
-paintTabIcons();
+const tabIcons={futuri:'🧳',mappa:'🌐',elenco:'☷'};
+const mediaSlots={futuri:'viaggi-in-partenza',mappa:'viaggi-mappa',elenco:'viaggi-elenco'};
+let travelMedia={};
+function paintTabIcons(){document.querySelectorAll('.travel-tabs button').forEach(b=>{let i=b.querySelector('.tab-symbol');if(!i){i=document.createElement('span');i.className='tab-symbol';b.insertBefore(i,b.firstChild)}const media=travelMedia[mediaSlots[b.dataset.tab]];i.replaceChildren();if(media?.url){const img=document.createElement('img');img.src=media.url;img.alt='';img.style.cssText='height:28px;width:28px;object-fit:contain';i.appendChild(img)}else i.textContent=tabIcons[b.dataset.tab]})}
+async function refreshTravelMedia(){try{const r=await fetch('/api/media/',{credentials:'same-origin',cache:'no-store'});if(r.ok){const data=await r.json();travelMedia=data.items||{};paintTabIcons()}}catch{}}
+paintTabIcons();refreshTravelMedia();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshTravelMedia()});
 let activeTravelTab='futuri';
 const plannedTrips=[{key:'egitto',name:'Egitto',date:'6–15 novembre 2026',description:'Cairo, Luxor, crociera sul Nilo, Assuan · itinerario e spese'},{key:'tanzania',name:'Tanzania e Zanzibar',date:'23 gennaio – 12 febbraio 2027',description:'Safari Suricata, voli, Zanzibar · itinerario e spese'}];
 function tripKey(p){const name=(p.place+' '+p.country).toLowerCase();return /egitto|egypt/.test(name)?'egitto':/tanzania|zanzibar|serengeti|arusha/.test(name)?'tanzania':null}
