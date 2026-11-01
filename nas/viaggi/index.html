@@ -270,6 +270,40 @@ function renderEgyptTodo(content){
  items.forEach(([title,detail],i)=>{const row=document.createElement('div');row.className='egypt-todo-item';const num=document.createElement('span');num.className='egypt-todo-num';num.textContent=String(i+1);const body=document.createElement('div');const name=document.createElement('strong');name.textContent=title;const desc=document.createElement('p');desc.textContent=detail;body.append(name,desc);row.append(num,body);list.appendChild(row)});
  section.appendChild(list);content.appendChild(section);
 }
+function renderTanzaniaExpenses(content){
+ const section=document.createElement('section');section.className='egypt-expenses';
+ const h=document.createElement('h3');h.textContent='Spese del viaggio · 2 persone';section.appendChild(h);
+ const rows=[['Voli',2342.99,'€',2342.99],['Safari',2400,'USD',2400]];
+ rows.forEach(([label,value,currency,max])=>{
+  const line=document.createElement('div');line.className='egypt-expense-row';
+  const name=document.createElement('span');name.className='egypt-expense-name';name.textContent=label;
+  const track=document.createElement('div');track.className='egypt-expense-track';
+  const fill=document.createElement('div');fill.className='egypt-expense-fill';fill.style.width='100%';track.appendChild(fill);
+  const amount=document.createElement('strong');amount.className='egypt-expense-value';amount.textContent=currency==='€'?new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(value):'2.400 USD';
+  line.append(name,track,amount);section.appendChild(line);
+ });
+ const total=document.createElement('div');total.className='egypt-expense-total';const label=document.createElement('span');label.textContent='Voli confermati';const val=document.createElement('strong');val.textContent='2.342,99 €';total.append(label,val);section.appendChild(total);
+ const note=document.createElement('p');note.className='sub';note.textContent='Safari: 2.400 USD totali, di cui 480 USD di acconto pagato e 1.920 USD da saldare. Valute non sommate. Assicurazione acquistata (importo da recuperare); hotel, visti e attività da quantificare.';section.appendChild(note);
+ content.appendChild(section);
+}
+function renderTanzaniaTodo(content){
+ const items=[
+ ['Alloggi Arusha','Verificare e completare i pernottamenti prima e dopo il safari, e comunicare a Suricata hotel di prelievo e rientro'],
+ ['Alloggi Zanzibar','Confermare strutture e date dei soggiorni'],
+ ['Saldo safari','1.920 USD ancora da versare; verificare modalità e scadenza con Suricata'],
+ ['Visti Tanzania','Richiedere i visti per entrambi e conservare le conferme'],
+ ['Vaccini e prevenzione sanitaria','Controllare libretto vaccinale e indicazioni del centro di medicina dei viaggi'],
+ ['Trasferimenti','Organizzare aeroporto–Arusha, collegamenti con gli hotel e trasferimenti a Zanzibar'],
+ ['Documenti e prenotazioni','Raccogliere biglietti, assicurazione Heymondo, conferme safari e pernottamenti offline'],
+ ['Attività Zanzibar','Scegliere eventuali escursioni e guide locali, senza considerarle già prenotate']
+ ];
+ const section=document.createElement('section');section.className='trip-block egypt-todo';
+ const h=document.createElement('h3');h.textContent='Cosa manca ancora';section.appendChild(h);
+ const intro=document.createElement('p');intro.className='sub';intro.textContent='Prenotazioni, pagamenti e verifiche ancora aperti.';section.appendChild(intro);
+ const list=document.createElement('div');list.className='egypt-todo-list';
+ items.forEach(([title,detail],i)=>{const row=document.createElement('div');row.className='egypt-todo-item';const num=document.createElement('span');num.className='egypt-todo-num';num.textContent=String(i+1);const body=document.createElement('div');const name=document.createElement('strong');name.textContent=title;const desc=document.createElement('p');desc.textContent=detail;body.append(name,desc);row.append(num,body);list.appendChild(row)});
+ section.appendChild(list);content.appendChild(section);
+}
 function openTripDossier(key,card){
  const trip=tripRecords[key],dialog=$('destinationDialog');
  dialog.classList.add('trip-fullscreen');
@@ -279,18 +313,14 @@ function openTripDossier(key,card){
  const img=card?.querySelector('.wish-photo img');if(img){const copy=img.cloneNode(true);copy.loading='eager';photo.appendChild(copy)}
  const content=$('destinationContent');content.replaceChildren();
  if(key==='egitto'){renderEgyptExpenseBars(content);renderEgyptTodo(content);}
- else {
- const grid=document.createElement('div');grid.className='trip-info-grid';
- const facts=key==='egitto'?[['1.048,98 €','Voli · 2 persone'],['871,98 €','Crociera · 2 persone'],['94,42 €','Assicurazione'],['36 €','eSIM · 2 persone'],['2.051,38 €','Totale noto in euro'],['60 USD','Visti · 2 persone'],['Da confermare','Hotel e attività']]:[['23 gen – 12 feb 2027','Date viaggio'],['2.342,99 €','Voli per due'],['2.400 USD','Safari per due'],['1.920 USD','Saldo safari']];
- for(const [value,label] of facts){const item=document.createElement('div');const strong=document.createElement('strong');strong.textContent=value;const small=document.createElement('small');small.textContent=label;item.append(strong,small);grid.appendChild(item)}content.appendChild(grid);
- }
+ else {renderTanzaniaExpenses(content);renderTanzaniaTodo(content);}
  const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
  addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
  addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
  addSection('Pernottamenti e sistemazioni',tripLodging[key]);
- if(key!=='egitto')addSection('Spese e pagamenti',trip.costs.map(x=>[x[0],x[1]]));
+ 
  if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Bagagli','Andata 1×25 kg stiva e 2×7 kg cabina; interno 23 kg a persona; ritorno 20 kg a persona']]);
- if(key==='egitto'){
+ if(key==='egitto'||key==='tanzania'){
   const sections=[...content.children].filter(el=>el.matches('.egypt-expenses,.egypt-todo,.trip-block'));
   const labels=['Spese','Da fare','Voli','Itinerario','Alloggi'];
   const nav=document.createElement('nav');nav.className='egypt-quick-nav';nav.setAttribute('aria-label','Vai alle sezioni del viaggio');
