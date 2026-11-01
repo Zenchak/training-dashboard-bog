@@ -135,6 +135,9 @@ header .sub{font-size:11px;margin-top:4px}
 (()=>{
 'use strict';
 const KEY='zenchak.viaggi.desideri.v1';
+window.__travelStartupError='';
+window.addEventListener('error',e=>{window.__travelStartupError=String(e.message||e.error||'Errore JavaScript');});
+window.addEventListener('unhandledrejection',e=>{window.__travelStartupError=String(e.reason?.message||e.reason||'Errore caricamento');});
 document.getElementById('refreshPage').addEventListener('click',()=>location.reload());
 const $=id=>document.getElementById(id);
 let places=[];try{const data=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(data))places=data.filter(p=>p&&typeof p.id==='string')}catch{}
@@ -474,7 +477,7 @@ window.addEventListener('load',()=>{
   const paint=(tab)=>{document.querySelectorAll('.travel-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));document.getElementById('futureSection')?.classList.toggle('travel-hidden',tab!=='futuri');document.querySelector('.map-panel')?.classList.toggle('travel-hidden',tab!=='mappa');document.querySelector('.wishlist-panel')?.classList.toggle('travel-hidden',tab==='futuri');cards.replaceChildren();if(tab==='elenco'){countries.map(c=>[names.of(c)||c,c]).sort((a,b)=>a[0].localeCompare(b[0],'it')).forEach(([n,c])=>cards.appendChild(make(n,'Paesaggi, monumenti e periodo migliore da approfondire',c)));}else if(tab==='mappa'){cards.innerHTML='<p>Seleziona Elenco per esplorare i paesi e i preferiti.</p>'} };
   document.querySelectorAll('.travel-tabs button').forEach(b=>b.addEventListener('click',()=>paint(b.dataset.tab)));
   paint('futuri');
-  const note=document.createElement('p');note.style.cssText='font-size:12px;color:#b45309;padding:8px';note.textContent='Modalità di recupero: il modulo Viaggi principale non è stato caricato completamente.';root.after(note);
+  const note=document.createElement('p');note.style.cssText='font-size:12px;color:#b45309;padding:8px';note.textContent='Modalità di recupero: '+(window.__travelStartupError||'modulo Viaggi non inizializzato')+'. Le schede principali sono temporaneamente disponibili.';root.after(note);
  },450);
 });
 </script><script defer src="/shared-nav-icons.js"></script></body></html>
