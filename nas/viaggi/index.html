@@ -71,6 +71,9 @@ header .sub{font-size:11px;margin-top:4px}
 
 /* Navigazione sezioni Viaggi */
 .travel-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:5px 0 14px}.travel-tabs button{background:#fff;color:#47718d;border:1px solid #dceaf3;border-radius:15px;padding:10px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:21px;box-shadow:0 3px 12px #24547712}.travel-tabs button span{font-size:12px}.travel-tabs button .tab-symbol{font-size:23px;line-height:27px;min-height:27px}.travel-tabs button.active{background:#e2f2ff;color:#167bd1;border-color:#aed7f6}.travel-tabs button:active{transform:scale(.97)}.travel-hidden{display:none!important}#futureSection .wish{cursor:pointer}#futureSection .wish h3{margin:12px 12px 5px}#futureSection .wish p{margin:5px 12px 12px;color:#58738d;font-size:12px}.wishlist-panel .cards .wish{min-width:0}body{padding-bottom:0}main{padding-bottom:35px}
+
+/* Dossier viaggio a tutto schermo e foto resilienti */
+#destinationDialog.trip-fullscreen{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;border-radius:0}#destinationDialog.trip-fullscreen .destination-detail{max-width:1000px;margin:auto;padding-bottom:55px}#destinationDialog.trip-fullscreen .detail-photo{height:clamp(220px,35vh,390px)}#destinationDialog.trip-fullscreen .destination-detail h2{font-size:clamp(27px,5vw,40px)}.trip-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:15px 0}.trip-info-grid>div{padding:13px;background:#eaf3fb;border-radius:14px}.trip-info-grid strong{display:block;font-size:17px;color:#183b63}.trip-info-grid small{color:#61758a}.trip-block{padding:15px;margin:15px 0;background:#f3f8fc;border-radius:15px;white-space:normal!important}.trip-block h3{margin:0 0 10px}.trip-block li{margin:8px 0}.trip-warning{color:#9a671d;font-size:13px}.wish-photo.photo-fallback{background:linear-gradient(130deg,#a8d5e9,#c6e1d2 55%,#f4dbac)!important}.wish-photo.photo-fallback:before{content:'◈';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:42px;color:#ffffffbd}.wish-photo{position:relative}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
 <nav class="travel-tabs" aria-label="Sezioni viaggi"><button type="button" data-tab="futuri" class="active"><span>Viaggi futuri</span></button><button type="button" data-tab="mappa"><span>Mappa</span></button><button type="button" data-tab="elenco"><span>Elenco</span></button></nav><section id="futureSection" class="panel"><h2>Viaggi in programma</h2><div id="futureCards" class="cards"></div></section><section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2><button id="addTop" type="button">+ Nuova meta</button></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
@@ -161,28 +164,33 @@ const scenicPhotos=[
  {re:/thailandia|thailand/i,term:'Thailand Phi Phi islands'}
 ];
 async function decorateCard(card,p){
- const photo=card.querySelector('.wish-photo');
- const key=(p.place+' '+p.country).trim().toLowerCase();
- const preset=scenicPhotos.find(x=>x.re.test(key));
- const search=p.photoTerm||preset?.term||[p.place,p.country,'famous monument landscape'].filter(Boolean).join(' ');
- try{
-  let url=guideCache.get(key);
-  if(url===undefined){
-   const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=30&gsrsearch='+encodeURIComponent(search)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=900&format=json&origin=*';
-   const response=await fetch(endpoint);if(!response.ok)throw Error('Foto non disponibile');
-   const data=await response.json();
-   const candidates=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|wikidata|diagram|drawing|painting|stamp|passport|currency|portrait|selfie|tourist|people|group.photo|team|person|visitor|family|wedding|meeting|conference)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl && i.width>=900 && i.height>=450 && i.width/i.height>1.25});
-   const tokens=search.toLowerCase().split(/\s+/).filter(x=>x.length>3);
-   candidates.sort((a,b)=>{
-    const score=x=>{const t=x.title.toLowerCase(),i=x.imageinfo[0],ratio=i.width/i.height;return tokens.filter(w=>t.includes(w)).length*12-Math.abs(ratio-1.65)*3-(/people|group|tour|event|celebration|football|team|man|woman/i.test(t)?100:0)};
-    return score(b)-score(a);
-   });
-   url=candidates[0]?.imageinfo?.[0]?.thumburl||'';
-   guideCache.set(key,url);
-  }
-  if(!card.isConnected||!url)return;
-  const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Panorama di '+p.place;img.referrerPolicy='no-referrer';photo.prepend(img);
- }catch{ /* Non mostrare bandiere o schede enciclopediche come ripiego. */ }
+ const photo=card.querySelector('.wish-photo');if(!photo)return;
+ const key=(p.code||p.place+' '+p.country).trim().toLowerCase();
+ const preset=scenicPhotos.find(x=>x.re.test(p.place+' '+p.country));
+ const search=p.photoTerm||preset?.term||p.place+' famous landmark landscape';
+ const getCommons=async(q)=>{
+  const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=24&gsrsearch='+encodeURIComponent(q)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=800&format=json&origin=*';
+  const response=await fetch(endpoint);if(!response.ok)return '';
+  const data=await response.json();
+  const candidates=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|diagram|painting|portrait|selfie|tourist|group.photo|team|person|wedding|conference)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl&&i.width>=600&&i.height>=320&&i.width/i.height>1.1});
+  const tokens=q.toLowerCase().split(/\s+/).filter(w=>w.length>3);
+  candidates.sort((a,b)=>tokens.filter(w=>b.title.toLowerCase().includes(w)).length-tokens.filter(w=>a.title.toLowerCase().includes(w)).length);
+  return candidates[0]?.imageinfo?.[0]?.thumburl||'';
+ };
+ const getWiki=async()=>{
+  if(!p.code)return '';
+  const api='https://it.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(p.place)+'&prop=pageimages&piprop=thumbnail&pithumbsize=800&format=json&origin=*';
+  const res=await fetch(api);if(!res.ok)return '';const data=await res.json();return Object.values(data.query?.pages||{})[0]?.thumbnail?.source||'';
+ };
+ let url=guideCache.get(key);
+ if(url===undefined){
+  try{url=await getCommons(search)||await getCommons(p.place+' landmark')||await getWiki()}catch{try{url=await getWiki()}catch{url=''}}
+  guideCache.set(key,url||'');
+ }
+ if(!card.isConnected)return;
+ photo.querySelectorAll('img').forEach(x=>x.remove());
+ if(url){const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Monumento o paesaggio di '+p.place;img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();photo.classList.add('photo-fallback')};photo.prepend(img)}
+ else photo.classList.add('photo-fallback');
 }
 
 const tripRecords={
@@ -201,7 +209,36 @@ function addTripRecord(p,content){
  const ul=document.createElement('ul');for(const [name,amount] of t.costs){const li=document.createElement('li');li.style.marginBottom='7px';li.textContent=name+': '+amount;ul.appendChild(li)}section.appendChild(ul);
  const note=document.createElement('p');note.className='sub';note.textContent='Dati recuperati dalle prenotazioni discusse. Importi non documentati lasciati da confermare; acconto safari già compreso nel totale. Aggiornabile con nuove conferme.';section.appendChild(note);content.appendChild(section);
 }
+const flightDetails={
+ egitto:[['Andata · Milano → Cairo','Data e orari da recuperare','Compagnia, numero volo, eventuali scali e durata da verificare'],['Trasferimenti interni','Cairo → Luxor → Assuan → Cairo','Mezzi, distanze, orari e costi da confermare'],['Ritorno · Cairo → Milano','15 novembre 2026','Compagnia, numero volo e scali da verificare']],
+ tanzania:[['Andata · Milano Malpensa → Kilimangiaro','23–24 gennaio 2027 · 1.116,99 € per due','Etihad + Ethiopian; scali, aeroporti di transito, durata e numeri di volo da confermare dai biglietti'],['Volo interno · Arusha → Zanzibar','2 febbraio 2027 · 09:05–10:20 · 272 € per due','Precision Air PW421 · durata 1 h 15 min · bagaglio 23 kg a persona'],['Ritorno · Zanzibar → Milano Malpensa','12 febbraio 2027 · 05:35–19:05 · 954 € per due','Oman Air · aeroporti di scalo e durata delle coincidenze da verificare dai biglietti']]
+};
+const tripLodging={
+ egitto:[['6–8 novembre','Queen Cleopatra · Giza/Cairo · 2 notti'],['8–9 novembre','Nefertiti Hotel · Luxor · 1 notte'],['9–13 novembre','Crociera TourShare · Luxor–Assuan · 4 notti'],['13–14 novembre','Unique Studio · Assuan · 1 notte'],['14–15 novembre','Heaven Hostel · Cairo · 1 notte']],
+ tanzania:[['24–26 gennaio','Arusha · sistemazione da verificare'],['27 gennaio – 1 febbraio','Safari camping Suricata · 5 notti incluse nel pacchetto di 6 giorni'],['2–11 febbraio','Zanzibar · strutture e pernottamenti da completare']]
+};
+function openTripDossier(key,card){
+ const trip=tripRecords[key],dialog=$('destinationDialog');
+ dialog.classList.add('trip-fullscreen');
+ $('destinationTitle').textContent=key==='egitto'?'Egitto':'Tanzania e Zanzibar';
+ $('destinationCountry').textContent=trip.heading+' · 2 viaggiatori';
+ const photo=dialog.querySelector('.detail-photo');photo.replaceChildren();
+ const img=card?.querySelector('.wish-photo img');if(img){const copy=img.cloneNode(true);copy.loading='eager';photo.appendChild(copy)}
+ const content=$('destinationContent');content.replaceChildren();
+ const grid=document.createElement('div');grid.className='trip-info-grid';
+ const facts=key==='egitto'?[['6–15 novembre 2026','Date viaggio'],['9 notti','Durata'],['60 USD','Visti per due'],['36 €','eSIM per due']]:[['23 gen – 12 feb 2027','Date viaggio'],['2.342,99 €','Voli per due'],['2.400 USD','Safari per due'],['1.920 USD','Saldo safari']];
+ for(const [value,label] of facts){const item=document.createElement('div');const strong=document.createElement('strong');strong.textContent=value;const small=document.createElement('small');small.textContent=label;item.append(strong,small);grid.appendChild(item)}content.appendChild(grid);
+ const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
+ addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
+ addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
+ addSection('Pernottamenti e sistemazioni',tripLodging[key]);
+ addSection('Spese e pagamenti',trip.costs.map(x=>[x[0],x[1]]));
+ if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Bagagli','Andata 1×25 kg stiva e 2×7 kg cabina; interno 23 kg a persona; ritorno 20 kg a persona']]);
+ const note=document.createElement('p');note.className='trip-warning';note.textContent='Le distanze terrestri, i tempi di trasferimento, gli scali e le spese senza ricevuta restano da verificare. Non vengono presentati come dati confermati.';content.appendChild(note);
+ dialog.showModal();
+}
 function openDestination(p,card){
+ $('destinationDialog').classList.remove('trip-fullscreen');
  const guide=guideFor(p),dialog=$('destinationDialog');
  const heart=dialog.querySelector('.detail-favorite');const favKey='zenchak.travel.favorites';const getFavs=()=>{try{const x=JSON.parse(localStorage.getItem(favKey)||'[]');return Array.isArray(x)?x:[]}catch{return []}};const updateHeart=()=>{const selected=getFavs().includes(p.id);heart.textContent=selected?'♥':'♡';heart.classList.toggle('active',selected);heart.setAttribute('aria-label',selected?'Rimuovi dai preferiti':'Aggiungi ai preferiti')};updateHeart();heart.onclick=()=>{const previous=getFavs();const next=previous.includes(p.id)?previous.filter(id=>id!==p.id):[...previous,p.id];localStorage.setItem(favKey,JSON.stringify(next));updateHeart();if(activeTravelTab==='mappa')render()};
  $('destinationTitle').textContent=p.place||'Destinazione';
@@ -238,7 +275,7 @@ const plannedTrips=[{key:'egitto',name:'Egitto',date:'6–15 novembre 2026',desc
 function tripKey(p){const name=(p.place+' '+p.country).toLowerCase();return /egitto|egypt/.test(name)?'egitto':/tanzania|zanzibar|serengeti|arusha/.test(name)?'tanzania':null}
 function showTravelTab(tab){activeTravelTab=tab;document.querySelectorAll('.travel-tabs button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-pressed',String(b.dataset.tab===tab))});document.getElementById('futureSection').classList.toggle('travel-hidden',tab!=='futuri');document.querySelector('.map-panel').classList.toggle('travel-hidden',tab!=='mappa');document.querySelector('.wishlist-panel').classList.toggle('travel-hidden',tab==='futuri');document.getElementById('listHeading').textContent=tab==='mappa'?'Preferiti sulla mappa':'Paesi da scoprire';document.getElementById('addBottom').style.display='none';document.getElementById('countrySearchWrap').style.display=tab==='elenco'?'block':'none';render();if(tab==='mappa')setTimeout(()=>map.invalidateSize(),80)}
 document.querySelectorAll('.travel-tabs button').forEach(b=>b.onclick=()=>showTravelTab(b.dataset.tab));document.getElementById('countrySearch').oninput=e=>{countrySearch=e.target.value.trim().toLocaleLowerCase('it');if(activeTravelTab==='elenco')render()};
-function renderFuture(){const root=document.getElementById('futureCards');root.replaceChildren();for(const trip of plannedTrips){const p=places.find(x=>tripKey(x)===trip.key);const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(trip.name)+'</h3><p><strong>'+escapeHtml(trip.date)+'</strong></p><p>'+escapeHtml(trip.description)+'</p>';card.onclick=()=>{if(p)openDestination(p,card);else{const d=$('destinationDialog');$('destinationTitle').textContent=trip.name;$('destinationCountry').textContent=trip.date;d.querySelector('.detail-photo').replaceChildren();$('destinationContent').replaceChildren();addTripRecord({place:trip.name,country:trip.name},$('destinationContent'));d.showModal()}};card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}};root.appendChild(card);if(p)decorateCard(card,p)}for(const p of places.filter(x=>x.status==='programmato'&&!tripKey(x))){const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(shortDescription(p,guideFor(p)))+'</p>';card.onclick=()=>openDestination(p,card);card.onkeydown=e=>{if(e.key==='Enter'){card.click()}};root.appendChild(card);decorateCard(card,p)}}
+function renderFuture(){const root=document.getElementById('futureCards');root.replaceChildren();for(const trip of plannedTrips){const p=places.find(x=>tripKey(x)===trip.key);const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(trip.name)+'</h3><p><strong>'+escapeHtml(trip.date)+'</strong></p><p>'+escapeHtml(trip.description)+'</p>';card.onclick=()=>openTripDossier(trip.key,card);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}};root.appendChild(card);decorateCard(card,p||{place:trip.name,country:trip.name,photoTerm:trip.key==='egitto'?'Pyramids of Giza Egypt':'Serengeti Tanzania safari landscape'})}for(const p of places.filter(x=>x.status==='programmato'&&!tripKey(x))){const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(shortDescription(p,guideFor(p)))+'</p>';card.onclick=()=>openDestination(p,card);card.onkeydown=e=>{if(e.key==='Enter'){card.click()}};root.appendChild(card);decorateCard(card,p)}}
 const photoObserver=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){photoObserver.unobserve(entry.target);const p=entry.target._travelPlace;if(p)decorateCard(entry.target,p)}}},{rootMargin:'250px'});
 function render(){
 markers.clearLayers();$('cards').replaceChildren();renderFuture();const favIds=(()=>{try{return JSON.parse(localStorage.getItem('zenchak.travel.favorites')||'[]')}catch{return []}})();const filtered=activeTravelTab==='mappa'?places.filter(p=>favIds.includes(p.id)):allCountries.filter(p=>p.place.toLocaleLowerCase('it').includes(countrySearch));filtered.sort((a,b)=>a.place.localeCompare(b.place,'it'));$('count').textContent='('+filtered.length+')';
