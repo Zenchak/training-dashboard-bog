@@ -89,6 +89,8 @@ header .sub{font-size:11px;margin-top:4px}
 @media(max-width:420px){.egypt-expenses{padding:14px 11px}.egypt-expense-row{grid-template-columns:80px minmax(0,1fr) 95px;gap:7px}.egypt-expense-name,.egypt-expense-value{font-size:12px}}
 
 .egypt-todo{margin-top:14px}.egypt-todo h3{margin:0 0 7px}.egypt-todo-list{margin-top:13px}.egypt-todo-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid #dae3ef}.egypt-todo-num{flex:0 0 26px;height:26px;border-radius:50%;background:#dceaf9;color:#245d9c;display:grid;place-items:center;font-weight:700;font-size:12px}.egypt-todo-item strong{display:block;font-size:14px}.egypt-todo-item p{margin:5px 0 0;color:#697d99;font-size:13px;line-height:1.45}
+
+.egypt-quick-nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.egypt-quick-nav button{appearance:none;border:1px solid #c7d9ef;background:#eaf2fc;color:#204b7c;border-radius:999px;padding:9px 13px;font:600 13px system-ui,-apple-system,sans-serif;cursor:pointer}.egypt-quick-nav button:active{background:#c9dff8}[id^="egypt-trip-section-"]{scroll-margin-top:90px}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg><span>Refresh</span></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg><span>Home</span></a></nav></header>
 <nav class="travel-tabs" aria-label="Sezioni viaggi"><button type="button" data-tab="futuri" class="active"><span>Viaggi futuri</span></button><button type="button" data-tab="mappa"><span>Mappa</span></button><button type="button" data-tab="elenco"><span>Elenco</span></button></nav><section id="futureSection" class="panel"><h2>Viaggi in programma</h2><div id="futureCards" class="cards"></div></section><section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
@@ -262,7 +264,7 @@ function renderEgyptTodo(content){
  ['Biglietti e documenti','Verificare ingressi non inclusi, passaporti e copie offline di prenotazioni e polizza']
  ];
  const section=document.createElement('section');section.className='trip-block egypt-todo';
- const h=document.createElement('h3');h.textContent='2. Cosa manca ancora';section.appendChild(h);
+ const h=document.createElement('h3');h.textContent='Cosa manca ancora';section.appendChild(h);
  const intro=document.createElement('p');intro.className='sub';intro.textContent='Attività ancora da completare o verificare prima della partenza.';section.appendChild(intro);
  const list=document.createElement('div');list.className='egypt-todo-list';
  items.forEach(([title,detail],i)=>{const row=document.createElement('div');row.className='egypt-todo-item';const num=document.createElement('span');num.className='egypt-todo-num';num.textContent=String(i+1);const body=document.createElement('div');const name=document.createElement('strong');name.textContent=title;const desc=document.createElement('p');desc.textContent=detail;body.append(name,desc);row.append(num,body);list.appendChild(row)});
@@ -286,8 +288,15 @@ function openTripDossier(key,card){
  addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
  addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
  addSection('Pernottamenti e sistemazioni',tripLodging[key]);
- addSection('Spese e pagamenti',trip.costs.map(x=>[x[0],x[1]]));
+ if(key!=='egitto')addSection('Spese e pagamenti',trip.costs.map(x=>[x[0],x[1]]));
  if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Bagagli','Andata 1×25 kg stiva e 2×7 kg cabina; interno 23 kg a persona; ritorno 20 kg a persona']]);
+ if(key==='egitto'){
+  const sections=[...content.children].filter(el=>el.matches('.egypt-expenses,.egypt-todo,.trip-block'));
+  const labels=['Spese','Da fare','Voli','Itinerario','Alloggi'];
+  const nav=document.createElement('nav');nav.className='egypt-quick-nav';nav.setAttribute('aria-label','Vai alle sezioni del viaggio');
+  sections.slice(0,5).forEach((section,i)=>{section.id='egypt-trip-section-'+i;const button=document.createElement('button');button.type='button';button.textContent=labels[i];button.onclick=()=>section.scrollIntoView({behavior:'smooth',block:'start'});nav.appendChild(button)});
+  content.prepend(nav);
+ }
  const note=document.createElement('p');note.className='trip-warning';note.textContent='Le distanze terrestri, i tempi di trasferimento, gli scali e le spese senza ricevuta restano da verificare. Non vengono presentati come dati confermati.';content.appendChild(note);
  dialog.showModal();
 }
