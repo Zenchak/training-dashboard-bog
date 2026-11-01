@@ -213,34 +213,44 @@ const scenicPhotos=[
  {re:/peru|perù/i,term:'Machu Picchu Peru'},
  {re:/thailandia|thailand/i,term:'Thailand Phi Phi islands'}
 ];
-async function decorateCard(card,p){
+async /* Illustrazioni cartoon vettoriali per le schede: nessuna foto esterna casuale. */
+function cartoonCountry(p){
+ const code=(p.code||'').toUpperCase(),name=p.place||p.country||'',seed=[...code+name].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7),v=seed%7;
+ const warm=['#7fcaff','#9bd7f4','#90c7f0','#98d8df','#8dbfea','#88cce5','#a8d9ed'][v];
+ const ground=['#edbf70','#a8c88c','#d9bd88','#80c3a4','#a6c8a1','#b5bd86','#d4b883'][v];
+ const monuments={
+ EG:'pyramids',JO:'petra',GR:'temple',IT:'colosseum',FR:'tower',GB:'tower',JP:'pagoda',CN:'wall',IN:'taj',US:'city',BR:'christ',PE:'mountains',TZ:'safari',KE:'safari',ZA:'safari',NA:'safari',BW:'safari',ZM:'waterfall',ZW:'waterfall',NP:'mountains',CH:'mountains',AT:'mountains',NZ:'mountains',IS:'mountains',NO:'mountains',CL:'mountains',AR:'mountains',BO:'mountains',PK:'mountains',AF:'mountains',BT:'pagoda',TH:'pagoda',KH:'temple',MM:'pagoda',ID:'temple',VN:'pagoda',KR:'pagoda',TR:'mosque',MA:'mosque',TN:'mosque',DZ:'mosque',AE:'city',QA:'city',SG:'city',MY:'city',AU:'opera',MX:'pyramids',GT:'pyramids',ET:'temple',ES:'temple',DE:'castle',CZ:'castle',RO:'castle',IE:'castle',PT:'castle',RU:'cathedral',UA:'cathedral',MD:'castle',LK:'temple',MV:'island',SC:'island',MU:'island',FJ:'island',CU:'island',PH:'island',BS:'island',BB:'island',MG:'safari',OM:'mosque',SA:'mosque',IL:'temple',PS:'temple',IR:'mosque',IQ:'mosque',UZ:'mosque',KZ:'mountains',MN:'mountains',CA:'mountains'};
+ const type=monuments[code]||['castle','mountains','temple','island','city','mosque','safari'][v];
+ const landmark={
+ pyramids:'<path d="M115 275 252 80 392 275Z" fill="#f5cb83" stroke="#d99454" stroke-width="6"/><path d="M252 80 392 275H277Z" fill="#e7a963"/><path d="M315 275 425 126 535 275Z" fill="#e8b878" stroke="#ce8d56" stroke-width="5"/>',
+ petra:'<path d="M110 275V95L190 52H470L552 95V275Z" fill="#c77c68"/><path d="M220 275V155H430V275M250 135H400M280 95H375" fill="#f3ba95" stroke="#9f554f" stroke-width="12"/><path d="M300 275V207Q325 173 350 207V275" fill="#6e494a"/>',
+ tower:'<path d="M317 65 284 170 256 273H384L356 170 323 65M280 180H360M268 232H372M300 120H344" fill="none" stroke="#465b76" stroke-width="17" stroke-linejoin="round"/>',
+ pagoda:'<path d="M270 275V115H370V275" fill="#e6b18a"/><path d="M230 117Q320 153 410 117L390 104H250ZM246 166Q320 200 394 166L377 153H263ZM260 219Q320 244 380 219L370 205H270Z" fill="#c84448" stroke="#8e3444" stroke-width="5"/>',
+ wall:'<path d="M70 258Q180 205 270 245T570 215" fill="none" stroke="#e4b57a" stroke-width="42"/><path d="M70 245Q180 192 270 232T570 202" fill="none" stroke="#9b805e" stroke-width="8" stroke-dasharray="15 10"/><path d="M220 180H275V248H220ZM420 162H470V235H420Z" fill="#cfa475"/>',
+ taj:'<path d="M185 275V160H455V275Z" fill="#fff0da" stroke="#b9b3ae" stroke-width="6"/><path d="M230 157Q245 78 320 74Q395 78 410 157Z" fill="#fff6e7" stroke="#c5b4a5" stroke-width="6"/><path d="M295 275V215Q320 176 345 215V275" fill="#718ba0"/><path d="M145 275V105M495 275V105" stroke="#f7ead6" stroke-width="25"/>',
+ christ:'<path d="M320 94V250M235 155H405" stroke="#eee5d7" stroke-width="39" stroke-linecap="round"/><circle cx="320" cy="73" r="26" fill="#eee5d7"/>',
+ opera:'<path d="M100 265Q160 105 300 245Q340 95 440 245Q480 135 545 265Z" fill="#fff7e7" stroke="#9ab1b9" stroke-width="7"/>',
+ colosseum:'<ellipse cx="320" cy="252" rx="206" ry="37" fill="#c99665"/><path d="M125 265V155Q320 70 515 155V265Z" fill="#d8b085" stroke="#a17a58" stroke-width="6"/>'+Array.from({length:8},(_,i)=>'<path d="M'+(156+i*45)+' 248v-42q16-20 32 0v42" fill="#786857"/>').join(''),
+ castle:'<path d="M155 275V135H210V95H255V135H380V105H425V135H490V275Z" fill="#f1d4aa" stroke="#a47f75" stroke-width="7"/><path d="M286 275v-75q34-38 68 0v75" fill="#a98578"/><path d="m145 135 38-45 38 45m149 0 34-55 34 55" fill="#ba6d68"/>',
+ mosque:'<path d="M190 275V172H450V275Z" fill="#f4d6ad"/><path d="M205 174Q230 89 320 86Q410 89 435 174Z" fill="#d9a78a"/><path d="M145 275V96m350 179V96" stroke="#ead0ad" stroke-width="27"/><path d="M145 80v-25m350 25v-25" stroke="#b28a79" stroke-width="10"/><path d="M295 275v-65q25-36 50 0v65" fill="#866f71"/>',
+ cathedral:'<path d="M170 275V155H470V275Z" fill="#f4c7a2"/><path d="M215 155V105m210 50v-50" stroke="#e7a983" stroke-width="34"/><path d="M190 105Q215 50 240 105m160 0q25-55 50 0" fill="#70b7d3"/><path d="M295 275v-76q25-36 50 0v76" fill="#8c6e78"/>',
+ temple:'<path d="M130 270H510M160 150H480L320 80Z" fill="#e9c89b" stroke="#a78169" stroke-width="10"/>'+Array.from({length:6},(_,i)=>'<path d="M'+(190+i*53)+' 160v105" stroke="#e5c7a2" stroke-width="24"/>').join(''),
+ city:'<path d="M110 275V175H185V275M195 275V110H270V275M280 275V155H340V275M350 275V75H425V275M435 275V135H530V275" fill="#f2d1a8" stroke="#6688a4" stroke-width="7"/>',
+ waterfall:'<path d="M85 145H555V275H85Z" fill="#b5d4a1"/><path d="M170 145v135m65-135v135m65-135v135m65-135v135m65-135v135" stroke="#d7f4f8" stroke-width="35"/>',
+ island:'<path d="M80 265Q320 230 560 265V310H80Z" fill="#f2d59e"/><path d="M305 250Q315 150 360 88" stroke="#8b7750" stroke-width="19" fill="none"/><path d="M360 88Q255 47 232 119Q305 102 360 88Q395 12 450 76Q406 73 360 88Q431 106 465 155Q406 131 360 88" fill="#58a96c"/>',
+ safari:'<path d="M360 275V125" stroke="#815f46" stroke-width="15"/><path d="M210 135Q235 75 340 100Q390 42 475 100Q535 108 515 145Z" fill="#63966b"/><path d="M155 250h112v-55h-112zm93 0v28m-73-28v28m100-55 35-22m-150-3-35-18" fill="#d6b17d" stroke="#8d725d" stroke-width="11" stroke-linejoin="round"/>',
+ mountains:'<path d="M65 275 215 80 350 275Z" fill="#7a9db6"/><path d="m153 160 62-80 60 85-54-18-30 20Z" fill="#fff"/><path d="M250 275 425 60 585 275Z" fill="#668eac"/><path d="m353 151 72-91 77 103-65-22-38 26Z" fill="#fff"/>'
+ };
+ const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360"><defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="'+warm+'"/><stop offset="1" stop-color="#e8f6ed"/></linearGradient></defs><path fill="url(#sky)" d="M0 0h640v360H0z"/><circle cx="'+(100+seed%410)+'" cy="70" r="39" fill="#fff0bc"/><path d="M0 252Q100 210 200 248T400 236T640 244V360H0Z" fill="'+ground+'"/><path d="M0 290Q170 255 300 296T640 276V360H0Z" fill="#6da17f" opacity=".36"/>'+landmark[type]+'<path d="M0 320Q180 295 320 320T640 310V360H0Z" fill="#4d9b84" opacity=".35"/></svg>';
+ return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+function decorateCard(card,p){
  const photo=card.querySelector('.wish-photo');if(!photo)return;
- const key=(p.code||p.place+' '+p.country).trim().toLowerCase();
- const preset=scenicPhotos.find(x=>x.re.test(p.place+' '+p.country));
- const search=p.photoTerm||preset?.term||p.place+' famous landmark landscape';
- const getCommons=async(q)=>{
-  const endpoint='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrnamespace=6&gsrlimit=24&gsrsearch='+encodeURIComponent(q)+'&prop=imageinfo&iiprop=url%7Csize&iiurlwidth=800&format=json&origin=*';
-  const response=await fetch(endpoint);if(!response.ok)return '';
-  const data=await response.json();
-  const candidates=Object.values(data.query?.pages||{}).filter(x=>!/(flag|bandiera|coat.of.arms|emblem|map|locator|logo|seal|icon|symbol|svg|diagram|painting|portrait|selfie|tourist|group.photo|team|person|wedding|conference)/i.test(x.title||'')).filter(x=>{const i=x.imageinfo?.[0];return i?.thumburl&&i.width>=600&&i.height>=320&&i.width/i.height>1.1});
-  const tokens=q.toLowerCase().split(/\s+/).filter(w=>w.length>3);
-  candidates.sort((a,b)=>tokens.filter(w=>b.title.toLowerCase().includes(w)).length-tokens.filter(w=>a.title.toLowerCase().includes(w)).length);
-  return candidates[0]?.imageinfo?.[0]?.thumburl||'';
- };
- const getWiki=async()=>{
-  if(!p.code)return '';
-  const api='https://it.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(p.place)+'&prop=pageimages&piprop=thumbnail&pithumbsize=800&format=json&origin=*';
-  const res=await fetch(api);if(!res.ok)return '';const data=await res.json();return Object.values(data.query?.pages||{})[0]?.thumbnail?.source||'';
- };
- let url=guideCache.get(key);
- if(url===undefined){
-  try{url=await getCommons(search)||await getCommons(p.place+' landmark')||await getWiki()}catch{try{url=await getWiki()}catch{url=''}}
-  guideCache.set(key,url||'');
- }
- if(!card.isConnected)return;
+ photo.classList.remove('photo-fallback');
  photo.querySelectorAll('img').forEach(x=>x.remove());
- if(url){const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Monumento o paesaggio di '+p.place;img.referrerPolicy='no-referrer';img.onerror=()=>{img.remove();photo.classList.add('photo-fallback')};photo.prepend(img)}
- else photo.classList.add('photo-fallback');
+ const img=document.createElement('img');
+ img.src=cartoonCountry(p);img.loading='lazy';img.alt='Illustrazione cartoon di '+(p.place||p.country);
+ photo.prepend(img);
 }
 
 const tripRecords={
