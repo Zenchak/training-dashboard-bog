@@ -63,14 +63,18 @@ window.AUTO_FAMILY_DATA = {
         ]
       },
       tax: {
-        status:"Domiciliazione bancaria Regione Lombardia attiva dal 03/03/2026. Al 02/11/2026 non è stato trovato nelle e-mail ING un nuovo addebito chiaramente riconducibile al bollo annuale 2026.",
+        status:"Situazione ufficiale Regione Lombardia verificata il 02/11/2026. Annualità 2021–2025 regolari; 2026 in scadenza con domiciliazione attiva; 2027 già predisposto come futuro.",
         history:[
-          {date:"2026-03-03", amount:null, detail:"Regione Lombardia: confermata attivazione domiciliazione bollo per la Kia Rio."},
-          {date:"2026-02-27", amount:516.20, detail:"Tre pagamenti consecutivi PagoPA con carta ING: 178,76 € + 172,09 € + 165,35 €. Il foglio finanziario personale li descrive come «Bollo auto non pagato da 3 anni». Le notifiche bancarie confermano i tre pagamenti PagoPA, ma non riportano l'annualità di ciascuno."},
-          {date:"2023-11-06", amount:174.87, detail:"Ricevuta pagoPA esplicita Regione Lombardia: «Pagamento della Tassa Auto: ES127YH - Scadenza 10/2023 - Mesi Validità 12» (173,92 € + 0,95 € commissione)."},
-          {date:"2022-03-22", amount:168.41, detail:"Ricevuta pagoPA esplicita: «Pagamento della Tassa Auto ES127YH» a Regione Lombardia (167,41 € + 1,00 € commissione). Annualità non indicata nella ricevuta."}
+          {date:"2027-11-30", amount:136.97, detail:"Annualità 2027 · stato FUTURO · validità 11/2027–10/2028 · domiciliazione attiva · importo 136,97 €, di cui 1,00 € commissioni/sanzioni/interessi. Importo ridotto grazie alla domiciliazione."},
+          {date:"2026-11-30", amount:136.97, detail:"Annualità 2026 · IN SCADENZA · validità 11/2026–10/2027 · domiciliazione attiva · importo 136,97 €, di cui 1,00 € commissioni/sanzioni/interessi."},
+          {date:"2026-02-27", amount:163.85, detail:"Annualità 2025 · REGOLARE · validità 11/2025–10/2026 · termine pagamento 01/12/2025. Importo tassa/sanzioni 163,85 €, di cui 3,89 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 165,35 € = 163,85 € + 1,50 € commissione di pagamento."},
+          {date:"2026-02-27", amount:170.59, detail:"Annualità 2024 · REGOLARE · validità 11/2024–10/2025 · termine pagamento 02/12/2024. Importo tassa/sanzioni 170,59 €, di cui 10,63 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 172,09 € = 170,59 € + 1,50 € commissione di pagamento."},
+          {date:"2026-02-27", amount:177.26, detail:"Annualità 2023 · REGOLARE · validità 11/2023–10/2024 · termine pagamento 30/11/2023. Importo tassa/sanzioni 177,26 €, di cui 17,30 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 178,76 € = 177,26 € + 1,50 € commissione di pagamento."},
+          {date:"2023-11-06", amount:173.92, detail:"Annualità 2022 · REGOLARE · validità 11/2022–10/2023 · termine pagamento 30/11/2022. Importo 173,92 €, di cui 13,96 € commissioni/sanzioni/interessi. Ricevuta PagoPA del 06/11/2023: 174,87 € = 173,92 € + 0,95 € commissione."},
+          {date:"2022-03-22", amount:167.41, detail:"Annualità 2021 · REGOLARE · validità 11/2021–10/2022 · termine pagamento 30/11/2021. Importo 167,41 €, di cui 7,45 € commissioni/sanzioni/interessi. Ricevuta PagoPA del 22/03/2022: 168,41 € = 167,41 € + 1,00 € commissione."},
+          {date:"2026-03-03", amount:null, detail:"Regione Lombardia: confermata attivazione della domiciliazione bancaria per i bolli successivi."}
         ],
-        note:"Il controllo documentale prova i pagamenti sopra elencati. Per associare con certezza i tre pagamenti del 27/02/2026 alle singole annualità occorre la posizione ufficiale nell'Area Personale Tributi di Regione Lombardia, che mostra stato pagamenti per anno."
+        note:"La tassa ordinaria di riferimento risulta 159,96 € per le annualità 2021–2025. Le differenze sopra tale importo sono indicate dal portale come commissioni/sanzioni/interessi. Per 2026 e 2027 la domiciliazione riduce la tassa a circa 135,97 €; aggiungendo 1,00 € indicato dal portale si arriva a 136,97 €. I tre pagamenti PagoPA del 27/02/2026 sono ora associati con certezza alle annualità 2023, 2024 e 2025 perché ciascun addebito coincide con l'importo ufficiale Regione Lombardia + 1,50 €."
       },
       inspections: [
         {date:"2027-11-30", km:null, result:"Scadenza", note:"Prossima scadenza revisione mostrata da iPatente il 16/10/2026."},
