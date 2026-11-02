@@ -490,9 +490,35 @@ function tripKey(p){const name=(p.place+' '+p.country).toLowerCase();return /egi
 function showTravelTab(tab){activeTravelTab=tab;document.querySelectorAll('.travel-tabs button').forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-pressed',String(b.dataset.tab===tab))});document.getElementById('futureSection').classList.toggle('travel-hidden',tab!=='futuri');document.querySelector('.map-panel').classList.toggle('travel-hidden',tab!=='mappa');document.querySelector('.wishlist-panel').classList.toggle('travel-hidden',tab==='futuri');document.getElementById('listHeading').textContent=tab==='mappa'?'Preferiti sulla mappa':'Paesi da scoprire';document.getElementById('countrySearchWrap').style.display=tab==='elenco'?'block':'none';render();if(tab==='mappa')setTimeout(()=>map.invalidateSize(),80)}
 document.querySelectorAll('.travel-tabs button').forEach(b=>b.onclick=()=>showTravelTab(b.dataset.tab));document.getElementById('countrySearch').oninput=e=>{countrySearch=e.target.value.trim().toLocaleLowerCase('it');if(activeTravelTab==='elenco')render()};
 function renderFuture(){const root=document.getElementById('futureCards');root.replaceChildren();for(const trip of plannedTrips){const p=places.find(x=>tripKey(x)===trip.key);const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(trip.name)+'</h3><p><strong>'+escapeHtml(trip.date)+'</strong></p><p>'+escapeHtml(trip.description)+'</p>';card.onclick=()=>openTripDossier(trip.key,card);card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}};root.appendChild(card);decorateCard(card,p||{place:trip.name,country:trip.name,photoTerm:trip.key==='egitto'?'Pyramids of Giza Egypt':'Serengeti Tanzania safari landscape'})}for(const p of places.filter(x=>x.status==='programmato'&&!tripKey(x))){const card=document.createElement('article');card.className='wish';card.tabIndex=0;card.innerHTML='<div class="wish-photo"></div><h3>'+escapeHtml(p.place)+'</h3><p>'+escapeHtml(shortDescription(p,guideFor(p)))+'</p>';card.onclick=()=>openDestination(p,card);card.onkeydown=e=>{if(e.key==='Enter'){card.click()}};root.appendChild(card);decorateCard(card,p)}}
+
+// Contorni nazionali per preferiti e Paesi visitati; nessun segnaposto generico.
+const countryOutlines=L.layerGroup().addTo(map);
+let worldCountryShapes=null;
+const englishCountryNames=new Intl.DisplayNames(['en'],{type:'region'});
+const normalizeCountryName=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+const outlineAliases={us:'unitedstatesofamerica',gb:'unitedkingdom',kr:'southkorea',kp:'northkorea',cz:'czechrepublic',ru:'russia',md:'moldova',tz:'unitedrepublicoftanzania',vn:'vietnam',la:'laos',sy:'syria',ir:'iran',bo:'bolivia',ve:'venezuela',cd:'democraticrepublicofthecongo',cg:'republicofthecongo',ci:'ivorycoast',ps:'palestine',mk:'macedonia',sz:'swaziland',mm:'myanmar',tl:'easttimor',bn:'brunei',fm:'federatedstatesofmicronesia'};
+function storedTravelIds(key){try{const v=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
+function selectedCountryCodes(ids){const out=new Set();for(const p of allCountries){if(ids.includes(p.id)||ids.includes('world-'+p.code)||places.some(x=>ids.includes(x.id)&&(x.code===p.code||x.place===p.place)))out.add(p.code.toLowerCase())}return out}
+function refreshCountryOverlays(){
+ countryOutlines.clearLayers();
+ if(!worldCountryShapes)return;
+ const favorites=selectedCountryCodes(storedTravelIds('zenchak.travel.favorites'));
+ const visited=selectedCountryCodes(storedTravelIds('zenchak.travel.visited'));
+ const byName=new Map();
+ for(const p of allCountries){const code=p.code.toLowerCase();const english=normalizeCountryName(englishCountryNames.of(p.code));byName.set(english,code);if(outlineAliases[code])byName.set(outlineAliases[code],code)}
+ for(const feature of worldCountryShapes.features||[]){
+  const name=normalizeCountryName(feature.properties?.name);
+  const code=byName.get(name);
+  if(!code||(!favorites.has(code)&&!visited.has(code)))continue;
+  const isVisited=visited.has(code);
+  L.geoJSON(feature,{style:{color:isVisited?'#20945d':'#df4354',weight:2,opacity:1,fillColor:isVisited?'#8ce2a9':'#f6a6b3',fillOpacity:.5},onEachFeature:(f,layer)=>{const p=allCountries.find(x=>x.code.toLowerCase()===code);layer.bindPopup((p?.place||f.properties.name)+(isVisited?' · Visto':' · Preferito'))}}).addTo(countryOutlines);
+ }
+}
+fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json').then(r=>{if(!r.ok)throw Error('world boundaries unavailable');return r.json()}).then(data=>{worldCountryShapes=data;refreshCountryOverlays()}).catch(err=>console.warn('Contorni Paesi non disponibili',err));
 const photoObserver=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){photoObserver.unobserve(entry.target);const p=entry.target._travelPlace;if(p)decorateCard(entry.target,p)}}},{rootMargin:'250px'});
 function render(){
-markers.clearLayers();$('cards').replaceChildren();renderFuture();const favIds=(()=>{try{return JSON.parse(localStorage.getItem('zenchak.travel.favorites')||'[]')}catch{return []}})();const filtered=activeTravelTab==='mappa'?places.filter(p=>favIds.includes(p.id)):allCountries.filter(p=>p.place.toLocaleLowerCase('it').includes(countrySearch));filtered.sort((a,b)=>a.place.localeCompare(b.place,'it'));$('count').textContent='('+filtered.length+')';
+refreshCountryOverlays();
+markers.clearLayers();$('cards').replaceChildren();renderFuture();const favIds=(()=>{try{return JSON.parse(localStorage.getItem('zenchak.travel.favorites')||'[]')}catch{return []}})();const filtered=activeTravelTab==='mappa'?allCountries.filter(p=>favIds.includes(p.id)||favIds.includes('world-'+p.code)||places.some(x=>favIds.includes(x.id)&&(x.code===p.code||x.place===p.place))):allCountries.filter(p=>p.place.toLocaleLowerCase('it').includes(countrySearch));filtered.sort((a,b)=>a.place.localeCompare(b.place,'it'));$('count').textContent='('+filtered.length+')';
 if(!filtered.length){$('cards').innerHTML='<div class="empty">'+(activeTravelTab==='mappa'?'Nessun preferito. Aggiungi un cuore alle destinazioni che ti interessano.':'Nessun paese da scoprire in elenco.')+'</div>';return}
 for(const p of filtered){
 const card=document.createElement('article');card.className='wish';
@@ -506,12 +532,12 @@ const visitedKey='zenchak.travel.visited';
 const readVisited=()=>{try{const v=JSON.parse(localStorage.getItem(visitedKey)||'[]');return Array.isArray(v)?v:[]}catch{return []}};
 const updateVisited=()=>{const yes=readVisited().includes(p.id);visited.classList.toggle('active',yes);visited.textContent=yes?'✓ Visto':'✓';visited.setAttribute('aria-pressed',String(yes));visited.title=yes?'Già visitato':'Segna come visto'};
 updateVisited();
-visited.onclick=e=>{e.stopPropagation();const list=readVisited();const next=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(visitedKey,JSON.stringify(next));updateVisited()};
+visited.onclick=e=>{e.stopPropagation();const list=readVisited();const next=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(visitedKey,JSON.stringify(next));updateVisited();refreshCountryOverlays()};
 const fav=card.querySelector('.favorite');
 const favKey='zenchak.travel.favorites';
 let favorites=[];try{favorites=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{}
 fav.classList.toggle('active',favorites.includes(p.id));fav.textContent=favorites.includes(p.id)?'♥':'♡';
-fav.onclick=()=>{let list=[];try{list=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{};list=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(favKey,JSON.stringify(list));fav.classList.toggle('active',list.includes(p.id));fav.textContent=list.includes(p.id)?'♥':'♡';if(activeTravelTab==='mappa')render()};
+fav.onclick=()=>{let list=[];try{list=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{};list=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(favKey,JSON.stringify(list));fav.classList.toggle('active',list.includes(p.id));fav.textContent=list.includes(p.id)?'♥':'♡';refreshCountryOverlays();if(activeTravelTab==='mappa')render()};
 card.querySelector('[data-action="locate"]').onclick=()=>{if(Number.isFinite(p.lat)&&Number.isFinite(p.lon)){map.setView([p.lat,p.lon],8);markers.eachLayer(m=>{if(m.options.wishId===p.id)m.openPopup()})}else alert('Posizione non ancora disponibile sulla mappa.')};
 $('cards').appendChild(card);card._travelPlace=p;photoObserver.observe(card);
 if(Number.isFinite(p.lat)&&Number.isFinite(p.lon))L.marker([p.lat,p.lon],{wishId:p.id}).bindPopup('<strong>'+escapeHtml(p.place)+'</strong><div>'+escapeHtml(p.country)+'</div>').addTo(markers);
