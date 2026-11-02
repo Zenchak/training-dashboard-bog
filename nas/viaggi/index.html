@@ -353,14 +353,14 @@ function renderTanzaniaExpenses(content){
 }
 function renderTanzaniaTodo(content){
  const items=[
- ['Alloggi Arusha','Verificare e completare i pernottamenti prima e dopo il safari, e comunicare a Suricata hotel di prelievo e rientro'],
- ['Alloggi Zanzibar','Confermare strutture e date dei soggiorni'],
+ ['Alloggi Arusha · 24 e 25 gennaio','Ayman conferma che 26 gennaio e 1 febbraio sono già inclusi nel safari. Richiedere disponibilità e prezzo per le sole due notti extra presso Safari Homes; proposta non ancora accettata'],
+ ['Alloggi Zanzibar','Prenotare i pernottamenti dal 2 al 12 febbraio'],
  ['Saldo safari','1.920 USD ancora da versare; verificare modalità e scadenza con Suricata'],
  ['Visti Tanzania','Richiedere i visti per entrambi e conservare le conferme'],
  ['Assicurazione obbligatoria di ingresso','Verificare le regole aggiornate per Tanzania e Zanzibar e acquistare la copertura richiesta prima della partenza'],
  ['Bagagli e franchigie','Confermare dimensioni di cabina e stiva per tutti i voli, usando le franchigie dei biglietti acquistati'],
  ['Vaccini e prevenzione sanitaria','Controllare libretto vaccinale e indicazioni del centro di medicina dei viaggi'],
- ['Trasferimenti','Organizzare aeroporto–Arusha, collegamenti con gli hotel e trasferimenti a Zanzibar'],
+ ['Trasferimenti','Suricata organizzerà JRO→hotel il 24 gennaio, hotel→safari il 27, safari→hotel il 1 febbraio e hotel→ARK il 2 febbraio (volo 09:05). Confermare eventuali costi extra e orari; trasferimenti Zanzibar ancora da organizzare'],
  ['Documenti e prenotazioni','Raccogliere biglietti, assicurazione Heymondo, conferme safari e pernottamenti offline'],
  ['Attività Zanzibar','Scegliere eventuali escursioni e guide locali, senza considerarle già prenotate']
  ];
@@ -406,7 +406,7 @@ function openTripDossier(key,card){
  addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
  addSection('Pernottamenti e sistemazioni',tripLodging[key]);
  
- if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Bagagli','Andata 1×25 kg stiva e 2×7 kg cabina; interno 23 kg a persona; ritorno 20 kg a persona']]);
+ if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Alloggi Arusha','26 gennaio e 1 febbraio inclusi; 24 e 25 gennaio extra da quotare · Safari Homes consigliato da Ayman'],['Trasferimenti','Suricata organizza JRO 24/1, pickup hotel 27/1, rientro hotel 1/2, ARK 2/2 · costi extra da confermare'],['Bagagli','Andata 25 kg stiva; interno 23 kg stiva e 7 kg cabina per persona; ritorno 20 kg stiva']]);
  if(key==='egitto'||key==='tanzania'){
   const sections=[...content.children].filter(el=>el.matches('.egypt-expenses,.egypt-todo,.trip-block'));
   const labels=['Spese','Da fare','Voli','Bagagli','Itinerario','Alloggi'];
