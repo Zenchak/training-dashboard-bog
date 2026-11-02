@@ -60,9 +60,18 @@ body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,-apple-system
 .finance-floating-action[data-finance-home]{background:linear-gradient(145deg,#ffc349,#ff821c);box-shadow:0 5px 14px rgba(255,130,28,.24)}
 @media(max-width:370px){.finance-floating-action{width:94px;font-size:11px}}
 </style>
-<style>.zen-finance-nav{display:flex;justify-content:flex-end;gap:10px;max-width:1180px;margin:12px auto 0;padding:0 16px}.zen-finance-nav a,.zen-finance-nav button{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 15px;border:1px solid #d9e4ec;border-radius:13px;background:#fff;color:#243449;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;text-decoration:none;cursor:pointer;box-shadow:0 4px 12px rgba(20,40,60,.07)}.zen-finance-nav a:active,.zen-finance-nav button:active{transform:scale(.97)}</style></head>
-<body><nav class="zen-finance-nav" aria-label="Navigazione"><a href="/" title="Torna alla Home">⌂ Home</a><button type="button" onclick="location.reload()" title="Aggiorna la pagina">↻ Refresh</button></nav>
-<main class="wrap">
+<style>.zen-finance-nav{display:flex;justify-content:flex-end;gap:10px;max-width:1180px;margin:12px auto 0;padding:0 16px}.zen-finance-nav a,.zen-finance-nav button{appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:9px 15px;border:1px solid #d9e4ec;border-radius:13px;background:#fff;color:#243449;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;text-decoration:none;cursor:pointer;box-shadow:0 4px 12px rgba(20,40,60,.07)}.zen-finance-nav a:active,.zen-finance-nav button:active{transform:scale(.97)}</style><style>
+.zen-finance-nav{display:flex;align-items:center;gap:9px;margin:0;padding:0;flex-shrink:0}
+.zen-finance-nav a,.zen-finance-nav button{display:grid;place-items:center;width:48px;height:48px;min-width:48px;min-height:48px;padding:0;border:1px solid #e1e8f2;border-radius:50%;background:#fff;color:#2476c8;box-shadow:0 4px 14px #1b416012;cursor:pointer;text-decoration:none}
+.zen-finance-nav svg,.zen-finance-nav .zen-shared-nav-icon{width:29px!important;height:29px!important;max-width:29px!important;max-height:29px!important;object-fit:contain}
+.zen-finance-nav a:active,.zen-finance-nav button:active{transform:scale(.96)}
+.finance-heading-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+.finance-heading-row h1{margin:0;font-size:clamp(25px,4vw,36px);line-height:1.2}
+.family-hero-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+@media(max-width:450px){.zen-finance-nav a,.zen-finance-nav button{width:42px;height:42px;min-width:42px;min-height:42px}.zen-finance-nav svg,.zen-finance-nav .zen-shared-nav-icon{width:26px!important;height:26px!important}.finance-heading-row h1{font-size:26px}}
+</style></head>
+<body>
+<main class="wrap"><div class="finance-heading-row"><h1>Finanze personali</h1><nav class="zen-finance-nav" aria-label="Navigazione"><a href="/" title="Torna alla Home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h14V9M9 21v-8h6v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><button type="button" onclick="location.reload()" title="Aggiorna la pagina" aria-label="Refresh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></nav></div>
 <section class="finance-tabs" aria-label="Sezioni Finanze">
   <div class="finance-tab active" aria-current="page">
     <div class="tab-kicker">Finanze · Entrate</div>
