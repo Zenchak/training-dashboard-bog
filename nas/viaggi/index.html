@@ -301,7 +301,7 @@ function decorateCard(card,p){
  photo.classList.remove('photo-fallback');
  photo.querySelectorAll('img').forEach(x=>x.remove());
  const img=document.createElement('img');
- const local=originalCountryPhoto(p);const driveId=originalCountryDriveImages[local?.split('/').pop()?.replace(/\.png$/,'')];img.src=local||cartoonCountry(p);img.onerror=()=>{if(local&&img.src.includes('/viaggi/images/')&&driveId){img.src='https://drive.google.com/thumbnail?id='+encodeURIComponent(driveId)+'&sz=w1200';return}img.onerror=null;img.src=cartoonCountry(p)};img.loading='lazy';img.alt='Immagine del Paese: '+(p.place||p.country);
+ const local=originalCountryPhoto(p);const driveId=originalCountryDriveImages[local?.split('/').pop()?.replace(/\.png$/,'')];img.src=local||cartoonCountry(p);img.onerror=()=>{if(local&&img.src.includes('/viaggi/images/')&&driveId){img.onerror=()=>{img.onerror=null;img.src=cartoonCountry(p)};img.src='https://drive.google.com/thumbnail?id='+encodeURIComponent(driveId)+'&sz=w1200';return}img.onerror=null;img.src=cartoonCountry(p)};img.loading='lazy';img.alt='Immagine del Paese: '+(p.place||p.country);
  photo.prepend(img);
 }
 
