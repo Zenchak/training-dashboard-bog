@@ -141,6 +141,8 @@ header .sub{font-size:11px;margin-top:4px}
 .travel-tabs button>span:not(.tab-symbol){grid-column:2!important;grid-row:1!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;align-self:stretch!important;min-width:0!important;font-size:13px!important;line-height:1.15!important;letter-spacing:0!important;white-space:nowrap!important}
 .travel-tabs button[data-tab="futuri"]>span:not(.tab-symbol){font-size:13px!important;letter-spacing:-.3px!important}
 @media(max-width:390px){.travel-tabs button{grid-template-columns:34px minmax(0,1fr)!important;column-gap:3px!important;padding:4px!important}.travel-tabs button .tab-symbol{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;max-width:32px!important;max-height:32px!important}.travel-tabs button>span:not(.tab-symbol),.travel-tabs button[data-tab="futuri"]>span:not(.tab-symbol){font-size:11px!important;letter-spacing:-.35px!important}}
+
+.trip-baggage-item{padding:11px 0;border-bottom:1px solid #d8e4ef}.trip-baggage-item:last-child{border-bottom:0}.trip-baggage-item strong{display:block;margin-bottom:6px}.trip-baggage-item p{margin:4px 0;color:#536c89;font-size:13px;line-height:1.45}.trip-baggage .sub{line-height:1.5}
 </style></head><body><main>
 <header><img src="/assets/home/viaggi-valigia-aereo.svg" alt=""><div><h1>Viaggi</h1><div class="sub">La nostra lista dei luoghi dei desideri</div></div><nav class="header-actions" aria-label="Navigazione"><button id="refreshPage" type="button" title="Aggiorna pagina"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.1"/><path d="M20 4v7h-7"/></svg></button><a href="/" title="Torna alla Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-8h6v8"/></svg></a></nav></header>
 <nav class="travel-tabs" aria-label="Sezioni viaggi"><button type="button" data-tab="futuri" class="active"><span class="tab-symbol" aria-hidden="true">🧳</span><span>In partenza</span></button><button type="button" data-tab="mappa"><span class="tab-symbol" aria-hidden="true">🌐</span><span>Mappa</span></button><button type="button" data-tab="elenco"><span class="tab-symbol" aria-hidden="true">☷</span><span>Elenco</span></button></nav><section id="futureSection" class="panel"><h2>Viaggi in programma</h2><div id="futureCards" class="cards"></div></section><section class="panel map-panel"><div class="toolbar"><h2>Mappa dei desideri</h2></div><div id="map" role="region" aria-label="Mappa interattiva dei luoghi desiderati"></div><a class="map-interactive" href="#map">▧ Mappa interattiva</a><div class="hint">♧ Tocca un segnaposto per vedere il luogo sulla mappa.</div></section>
@@ -367,6 +369,25 @@ function renderTanzaniaTodo(content){
  items.forEach(([title,detail],i)=>{const row=document.createElement('div');row.className='egypt-todo-item';const num=document.createElement('span');num.className='egypt-todo-num';num.textContent=String(i+1);const body=document.createElement('div');const name=document.createElement('strong');name.textContent=title;const desc=document.createElement('p');desc.textContent=detail;body.append(name,desc);row.append(num,body);list.appendChild(row)});
  section.appendChild(list);content.appendChild(section);
 }
+function renderTripBaggage(content,key){
+ const section=document.createElement('section');section.className='trip-block trip-baggage';
+ const h=document.createElement('h3');h.textContent='Bagagli · dimensioni e pesi';section.appendChild(h);
+ const intro=document.createElement('p');intro.className='sub';intro.textContent='Limiti per persona, salvo diversa indicazione sul biglietto.';section.appendChild(intro);
+ const rows=key==='egitto'?[
+ ['6 nov · Nile Air NP222','Cabina: 7 kg · max 56 × 36 × 23 cm','Stiva: 30 kg secondo regola generale Economy; verificare la franchigia sul biglietto'],
+ ['8 nov · Air Cairo SM62','Cabina: 7 kg · max 55 × 40 × 23 cm','Stiva: 1 collo da 23 kg · somma dimensioni max 158 cm'],
+ ['14 nov · EgyptAir MS087','Cabina: 8 kg · max 55 × 40 × 23 cm','Stiva: 1 collo da 23 kg · somma dimensioni max 158 cm (Economy)'],
+ ['15 nov · Nile Air NP221','Cabina: 7 kg · max 56 × 36 × 23 cm','Stiva: 30 kg secondo regola generale Economy; verificare la franchigia sul biglietto']
+ ]:[
+ ['23–24 gen · Etihad / Ethiopian','Cabina: fino a 7 kg per collo secondo dati di prenotazione','Stiva: 1 collo da 25 kg secondo dati del viaggio; dimensioni da verificare sul biglietto'],
+ ['2 feb · Precision Air PW421','Cabina: peso e misure da verificare sul biglietto','Stiva: 23 kg per persona secondo prenotazione; dimensioni da verificare'],
+ ['12 feb · Oman Air','Cabina: peso e misure da verificare sul biglietto','Stiva: 20 kg per persona secondo prenotazione; dimensioni da verificare']
+ ];
+ const list=document.createElement('div');list.className='trip-baggage-list';
+ for(const [name,cabin,hold] of rows){const item=document.createElement('div');item.className='trip-baggage-item';const title=document.createElement('strong');title.textContent=name;const a=document.createElement('p');a.textContent=cabin;const b=document.createElement('p');b.textContent=hold;item.append(title,a,b);list.appendChild(item)}section.appendChild(list);
+ const note=document.createElement('p');note.className='sub';note.textContent=key==='egitto'?'Scelta prudente per tutti e quattro i voli: trolley max 55 × 36 × 23 cm e 7 kg; valigia in stiva max 23 kg e 158 cm totali. Le franchigie Nile Air possono variare: controllare i biglietti.':'Le dimensioni e alcune franchigie cabina non sono confermate: verificare i biglietti prima di preparare le valigie.';section.appendChild(note);
+ content.appendChild(section);
+}
 function openTripDossier(key,card){
  const trip=tripRecords[key],dialog=$('destinationDialog');
  dialog.classList.add('trip-fullscreen');
@@ -379,15 +400,16 @@ function openTripDossier(key,card){
  else {renderTanzaniaExpenses(content);renderTanzaniaTodo(content);}
  const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
  addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
+ renderTripBaggage(content,key);
  addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
  addSection('Pernottamenti e sistemazioni',tripLodging[key]);
  
  if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Bagagli','Andata 1×25 kg stiva e 2×7 kg cabina; interno 23 kg a persona; ritorno 20 kg a persona']]);
  if(key==='egitto'||key==='tanzania'){
   const sections=[...content.children].filter(el=>el.matches('.egypt-expenses,.egypt-todo,.trip-block'));
-  const labels=['Spese','Da fare','Voli','Itinerario','Alloggi'];
+  const labels=['Spese','Da fare','Voli','Bagagli','Itinerario','Alloggi'];
   const nav=document.createElement('nav');nav.className='egypt-quick-nav';nav.setAttribute('aria-label','Vai alle sezioni del viaggio');
-  sections.slice(0,5).forEach((section,i)=>{section.id='egypt-trip-section-'+i;const button=document.createElement('button');button.type='button';button.textContent=labels[i];button.onclick=()=>section.scrollIntoView({behavior:'smooth',block:'start'});nav.appendChild(button)});
+  sections.slice(0,6).forEach((section,i)=>{section.id='egypt-trip-section-'+i;const button=document.createElement('button');button.type='button';button.textContent=labels[i];button.onclick=()=>section.scrollIntoView({behavior:'smooth',block:'start'});nav.appendChild(button)});
   content.prepend(nav);
  }
  const note=document.createElement('p');note.className='trip-warning';note.textContent='Le distanze terrestri, i tempi di trasferimento, gli scali e le spese senza ricevuta restano da verificare. Non vengono presentati come dati confermati.';content.appendChild(note);
