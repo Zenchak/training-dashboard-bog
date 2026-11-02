@@ -63,13 +63,14 @@ window.AUTO_FAMILY_DATA = {
         ]
       },
       tax: {
-        status:"Domiciliazione bancaria attiva dal 03/03/2026; dalla prossima scadenza il bollo viene addebitato automaticamente.",
+        status:"Domiciliazione bancaria Regione Lombardia attiva dal 03/03/2026. Al 02/11/2026 non è stato trovato nelle e-mail ING un nuovo addebito chiaramente riconducibile al bollo annuale 2026.",
         history:[
           {date:"2026-03-03", amount:null, detail:"Regione Lombardia: confermata attivazione domiciliazione bollo per la Kia Rio."},
-          {date:"2023-11-06", amount:174.87, detail:"Pagamento pagoPA tassa auto · scadenza 10/2023 · validità 12 mesi (173,92 € tassa + 0,95 € commissione)."},
-          {date:"2022-03-22", amount:168.41, detail:"Pagamento pagoPA tassa auto (167,41 € tassa + 1,00 € commissione)."}
+          {date:"2026-02-27", amount:516.20, detail:"Tre pagamenti consecutivi PagoPA con carta ING: 178,76 € + 172,09 € + 165,35 €. Il foglio finanziario personale li descrive come «Bollo auto non pagato da 3 anni». Le notifiche bancarie confermano i tre pagamenti PagoPA, ma non riportano l'annualità di ciascuno."},
+          {date:"2023-11-06", amount:174.87, detail:"Ricevuta pagoPA esplicita Regione Lombardia: «Pagamento della Tassa Auto: ES127YH - Scadenza 10/2023 - Mesi Validità 12» (173,92 € + 0,95 € commissione)."},
+          {date:"2022-03-22", amount:168.41, detail:"Ricevuta pagoPA esplicita: «Pagamento della Tassa Auto ES127YH» a Regione Lombardia (167,41 € + 1,00 € commissione). Annualità non indicata nella ricevuta."}
         ],
-        note:"Non sono emerse nelle fonti collegate ricevute specifiche 2024/2025: questo non implica mancato pagamento."
+        note:"Il controllo documentale prova i pagamenti sopra elencati. Per associare con certezza i tre pagamenti del 27/02/2026 alle singole annualità occorre la posizione ufficiale nell'Area Personale Tributi di Regione Lombardia, che mostra stato pagamenti per anno."
       },
       inspections: [
         {date:"2027-11-30", km:null, result:"Scadenza", note:"Prossima scadenza revisione mostrata da iPatente il 16/10/2026."},
