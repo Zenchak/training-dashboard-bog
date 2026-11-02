@@ -45,6 +45,8 @@ header .sub{font-size:11px;margin-top:4px}
 .wish button.danger{background:#ffeff2;color:#e76b7d;width:27px}
 .wish .wish-photo .favorite{position:absolute;top:6px;right:6px;z-index:2;background:#ffffffd9;border:0;border-radius:50%;width:24px;height:24px;padding:2px!important;font-size:15px!important;color:#9aabc0;box-shadow:0 1px 5px #173e6430}
 .wish .wish-photo .favorite.active{color:#f04e78}
+.wish .wish-photo .visited{position:absolute;top:6px;right:36px;z-index:2;background:#ffffffeb;border:0;border-radius:15px;min-width:24px;height:24px;padding:2px 6px!important;font-size:11px!important;font-weight:700;color:#61738a;box-shadow:0 1px 5px #173e6430;cursor:pointer}
+.wish .wish-photo .visited.active{color:#087a56;background:#d9f8e9}
 .wish-photo:after{pointer-events:none}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:800;display:flex;justify-content:space-around;align-items:center;padding:5px 10px calc(5px + env(safe-area-inset-bottom));background:#ffffffed;border-top:1px solid #dceaf5;box-shadow:0 -3px 18px #164c6b12}
 .bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:62px;padding:6px 9px;border-radius:12px;color:#8498b1;text-decoration:none;font-size:10px;font-weight:650}
@@ -495,10 +497,16 @@ if(!filtered.length){$('cards').innerHTML='<div class="empty">'+(activeTravelTab
 for(const p of filtered){
 const card=document.createElement('article');card.className='wish';
 const guide=guideFor(p);
-card.innerHTML='<div class="wish-photo"><button type="button" class="favorite" aria-label="Preferito" title="Preferito">♡</button></div><h3>'+escapeHtml(p.place)+'</h3><p class="country-line">'+escapeHtml(p.country)+'</p><p class="destination-summary">'+escapeHtml(shortDescription(p,guide))+'</p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p class="status-line">● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">▧ Mappa</button></div>';
+card.innerHTML='<div class="wish-photo"><button type="button" class="visited" aria-label="Segna come visitato" title="Visto">✓</button><button type="button" class="favorite" aria-label="Preferito" title="Preferito">♡</button></div><h3>'+escapeHtml(p.place)+'</h3><p class="country-line">'+escapeHtml(p.country)+'</p><p class="destination-summary">'+escapeHtml(shortDescription(p,guide))+'</p><p class="detail"><strong>Periodo migliore:</strong> '+escapeHtml(p.bestTime||guide?.season||'Da definire in base alla destinazione')+'</p><p class="detail"><strong>Da vedere:</strong> '+escapeHtml(p.highlights||guide?.sights||'Da aggiungere')+'</p><p class="status-line">● '+({desiderio:'Da visitare',programmato:'In programma',visitato:'Visitato'}[p.status]||'Da visitare')+'</p><div class="actions"><button class="secondary" data-action="locate">▧ Mappa</button></div>';
 card.tabIndex=0;card.setAttribute('role','button');card.setAttribute('aria-label','Apri dettagli di '+p.place);
 card.addEventListener('click',e=>{if(!e.target.closest('button'))openDestination(p,card)});
 card.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===card){e.preventDefault();openDestination(p,card)}});
+const visited=card.querySelector('.visited');
+const visitedKey='zenchak.travel.visited';
+const readVisited=()=>{try{const v=JSON.parse(localStorage.getItem(visitedKey)||'[]');return Array.isArray(v)?v:[]}catch{return []}};
+const updateVisited=()=>{const yes=readVisited().includes(p.id);visited.classList.toggle('active',yes);visited.textContent=yes?'✓ Visto':'✓';visited.setAttribute('aria-pressed',String(yes));visited.title=yes?'Già visitato':'Segna come visto'};
+updateVisited();
+visited.onclick=e=>{e.stopPropagation();const list=readVisited();const next=list.includes(p.id)?list.filter(id=>id!==p.id):[...list,p.id];localStorage.setItem(visitedKey,JSON.stringify(next));updateVisited()};
 const fav=card.querySelector('.favorite');
 const favKey='zenchak.travel.favorites';
 let favorites=[];try{favorites=JSON.parse(localStorage.getItem(favKey)||'[]')}catch{}
