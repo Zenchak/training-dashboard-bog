@@ -91,6 +91,7 @@ header .sub{font-size:11px;margin-top:4px}
 @media(max-width:420px){.egypt-expenses{padding:14px 11px}.egypt-expense-row{grid-template-columns:94px minmax(0,1fr) 95px;gap:7px}.egypt-expense-name,.egypt-expense-value{font-size:12px}}
 
 .egypt-expenses .expense-detail{border-radius:10px;margin:3px 0}.egypt-expenses .expense-detail summary{list-style:none;cursor:pointer}.egypt-expenses .expense-detail summary::-webkit-details-marker{display:none}.egypt-expenses .expense-detail[open]{background:#e5eef9}.egypt-expenses .expense-detail-body{padding:0 8px 10px 10px;color:#526b8c;font-size:12px;line-height:1.4}.egypt-expenses .expense-detail-body p{margin:5px 0}.egypt-expenses .expense-planned .egypt-expense-fill{background:linear-gradient(90deg,#f9d56c,#e7a91e)}.egypt-expenses .expense-legend{font-size:12px;color:#647b99;line-height:1.45;margin:9px 0}.egypt-expenses .egypt-expense-row{grid-template-columns:minmax(78px,24%) minmax(25px,1fr) minmax(84px,27%)}.egypt-expenses .egypt-expense-name{white-space:normal;overflow-wrap:anywhere}.egypt-expenses .egypt-expense-value{font-size:clamp(11px,2.9vw,14px)}
+.egypt-expenses .egypt-expense-track{display:flex;align-items:stretch;overflow:hidden;height:18px;min-width:0}.egypt-expenses .egypt-expense-solid{display:block;flex:none;height:100%;background:#367ac8}.egypt-expenses .egypt-expense-dashed{display:block;flex:none;height:100%;background:repeating-linear-gradient(120deg,#e4a51d 0px,#e4a51d 6px,#fff0b9 6px,#fff0b9 11px)}.egypt-expenses .egypt-expense-row{grid-template-columns:minmax(65px,23%) minmax(30px,1fr) minmax(90px,33%);gap:8px;margin:12px 0}.egypt-expenses .egypt-expense-name{font-size:clamp(11px,3vw,14px);overflow-wrap:break-word}.egypt-expenses .egypt-expense-value{white-space:normal;overflow-wrap:break-word;font-size:clamp(10px,2.7vw,13px);line-height:1.2}.egypt-expenses .expense-detail-body{padding:2px 8px 10px}.egypt-expenses .expense-detail[open]{background:#e5eef9}
 .egypt-todo{margin-top:14px}.egypt-todo h3{margin:0 0 7px}.egypt-todo-list{margin-top:13px}.egypt-todo-item{display:flex;gap:12px;padding:12px 0;border-top:1px solid #dae3ef}.egypt-todo-num{flex:0 0 26px;height:26px;border-radius:50%;background:#dceaf9;color:#245d9c;display:grid;place-items:center;font-weight:700;font-size:12px}.egypt-todo-item strong{display:block;font-size:14px}.egypt-todo-item p{margin:5px 0 0;color:#697d99;font-size:13px;line-height:1.45}
 
 .egypt-quick-nav{display:flex;flex-wrap:nowrap;gap:6px;margin:12px 0 18px;width:100%;overflow-x:auto;scrollbar-width:none}.egypt-quick-nav::-webkit-scrollbar{display:none}.egypt-quick-nav button{appearance:none;flex:1 1 0;min-width:0;white-space:nowrap;border:1px solid #c7d9ef;background:#eaf2fc;color:#204b7c;border-radius:999px;padding:9px 4px;font:600 clamp(10px,2.8vw,13px) system-ui,-apple-system,sans-serif;cursor:pointer}.egypt-quick-nav button:active{background:#c9dff8}[id^="egypt-trip-section-"]{scroll-margin-top:90px}
@@ -362,37 +363,31 @@ const tripLodging={
 };
 function renderEgyptExpenseBars(content){
  const section=document.createElement('section');section.className='egypt-expenses';
- const title=document.createElement('h3');title.textContent='Spese del viaggio · 2 persone';section.appendChild(title);
+ const h=document.createElement('h3');h.textContent='Spese del viaggio · 2 persone';section.appendChild(h);
  const items=[
- {name:'Voli',amount:1048.98,currency:'EUR',paid:true,details:['4 voli complessivi · acquistati']},
- {name:'Crociera',amount:871.98,currency:'EUR',paid:true,details:['TourRadar · 4 notti · pagata']},
- {name:'Assicurazione',amount:94.42,currency:'EUR',paid:true,details:['Heymondo Premium · pagata']},
- {name:'eSIM',amount:36,currency:'EUR',paid:true,details:['2 eSIM da 5 GB · acquistate']},
- {name:'Visti',amount:60,currency:'USD',paid:true,details:['2 visti elettronici · approvati e stampati']},
- {name:'GEM',amount:3660,currency:'EGP',paid:true,details:['2 ingressi · 7 novembre, fascia 13:00–15:00 · pagati']},
- {name:'Ingressi',amount:204,currency:'USD',paid:false,details:['Crociera: 170 USD per due · da pagare su TourRadar','Abu Simbel: 34 USD per due · stima, da verificare']},
- {name:'Abu Simbel',amount:78.18,currency:'EUR',paid:false,details:['Tour condiviso con guida inglese · 14 novembre, ore 04:00 · da prenotare']},
- {name:'Mance',amount:190,currency:'USD',paid:false,details:['Crociera staff/autisti: 100 USD · suggeriti dall’operatore','Guida crociera: 25 USD · stima','Cairo, Giza e Saqqara: 40 USD · stima','Abu Simbel: 15 USD · stima','Trasferimenti e piccoli servizi: 10 USD · stima']}
+ ['Voli','1.048,98 €',1049,0,['Voli acquistati: 1.048,98 €']],
+ ['Crociera','871,98 € + 170 USD',872,153,['Crociera pagata: 871,98 €','Ingressi crociera da pagare: 170 USD']],
+ ['Assicurazione','94,42 €',94,0,['Heymondo Premium pagata: 94,42 €']],
+ ['eSIM','36 €',36,0,['Due eSIM pagate: 36 €']],
+ ['Visti','60 USD',54,0,['Due visti pagati: 60 USD']],
+ ['GEM','3.660 EGP',66,0,['Due biglietti pagati: 3.660 EGP']],
+ ['Abu Simbel','78,18 € + 34 USD',0,109,['Tour da prenotare: 78,18 €','Ingressi stimati: 34 USD']],
+ ['Mance','190 USD',0,171,['Crociera staff/autisti: 100 USD (suggeriti)','Guida crociera: 25 USD (stima)','Cairo/Giza/Saqqara: 40 USD (stima)','Abu Simbel: 15 USD (stima)','Trasferimenti e piccoli servizi: 10 USD (stima)']]
  ];
- const fmt=(n,c)=>new Intl.NumberFormat('it-IT',{style:'currency',currency:c,maximumFractionDigits:c==='EGP'||c==='USD'?0:2}).format(n);
- const maxByCurrency={EUR:1048.98,USD:204,EGP:3660};
- items.forEach(item=>{
-  const detail=document.createElement('details');detail.className='expense-detail'+(item.paid?'':' expense-planned');
+ items.forEach(([name,value,paid,pending,details])=>{
+  const el=document.createElement('details');el.className='expense-detail';
   const summary=document.createElement('summary');summary.className='egypt-expense-row';
-  const name=document.createElement('span');name.className='egypt-expense-name';name.textContent=item.name;
+  const label=document.createElement('span');label.className='egypt-expense-name';label.textContent=name;
   const track=document.createElement('span');track.className='egypt-expense-track';
-  const fill=document.createElement('span');fill.className='egypt-expense-fill';fill.style.width=Math.max(4,item.amount/maxByCurrency[item.currency]*100)+'%';track.appendChild(fill);
-  const amount=document.createElement('strong');amount.className='egypt-expense-value';amount.textContent=fmt(item.amount,item.currency);
-  summary.append(name,track,amount);detail.appendChild(summary);
-  const contentBox=document.createElement('div');contentBox.className='expense-detail-body';
-  item.details.forEach(d=>{const p=document.createElement('p');p.textContent=d;contentBox.appendChild(p)});
-  detail.appendChild(contentBox);section.appendChild(detail);
+  const solid=document.createElement('span');solid.className='egypt-expense-solid';solid.style.width=(paid/1049*100)+'%';
+  const dashed=document.createElement('span');dashed.className='egypt-expense-dashed';dashed.style.width=(pending/1049*100)+'%';
+  track.append(solid,dashed);
+  const amount=document.createElement('strong');amount.className='egypt-expense-value';amount.textContent=value;
+  summary.append(label,track,amount);el.appendChild(summary);
+  const body=document.createElement('div');body.className='expense-detail-body';
+  details.forEach(d=>{const p=document.createElement('p');p.textContent=d;body.appendChild(p)});
+  el.appendChild(body);section.appendChild(el);
  });
- const legend=document.createElement('p');legend.className='expense-legend';legend.textContent='Blu = pagato · Giallo = previsto / da pagare · Tocca una barra per i dettagli. Lunghezze indicative per valuta.';section.appendChild(legend);
- const paid=document.createElement('div');paid.className='egypt-expense-total';paid.innerHTML='<span>Pagato</span><strong>2.051,38 €</strong>';section.appendChild(paid);
- const other=document.createElement('p');other.className='expense-legend';other.textContent='Inoltre pagati: 60 USD + 3.660 EGP';section.appendChild(other);
- const planned=document.createElement('div');planned.className='egypt-expense-total';planned.innerHTML='<span>Previsto, non pagato</span><strong>78,18 € + 394 USD</strong>';section.appendChild(planned);
- const foot=document.createElement('p');foot.className='expense-legend';foot.textContent='Include 190 USD di mance stimate, modificabili man mano che si definiscono i servizi. Valute non convertite.';section.appendChild(foot);
  content.appendChild(section);
 }
 function renderEgyptTodo(content){
