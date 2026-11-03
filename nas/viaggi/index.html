@@ -375,7 +375,14 @@ function renderEgyptExpenseBars(content){
  }
  const total=document.createElement('div');total.className='egypt-expense-total';total.innerHTML='<span>Totale confermato</span><strong>'+format(rows.reduce((sum,r)=>sum+r[1],0))+'</strong>';section.appendChild(total);
  const other=document.createElement('div');other.className='egypt-expense-total';other.textContent='Altre spese pagate: visti 60 USD + GEM 3.660 EGP';section.appendChild(other);
- const note=document.createElement('p');note.className='sub';note.textContent='Il totale in euro comprende solo le spese pagate in EUR. Altre spese pagate in valuta originale: 60 USD per visti e 3.660 EGP per GEM. Ancora da pagare: 170 USD ingressi crociera, 78,18 EUR tour Abu Simbel, 34 USD ingressi Abu Simbel stimati. Mance crociera 100 USD consigliate e mance Abu Simbel facoltative.';section.appendChild(note);
+ const note=document.createElement('p');note.className='sub';note.textContent='Il totale in euro comprende solo le spese pagate in EUR. Altre spese pagate in valuta originale: 60 USD per visti e 3.660 EGP per GEM. Ancora da pagare: 170 USD ingressi crociera, 78,18 EUR tour Abu Simbel, 34 USD ingressi Abu Simbel stimati. Budget mance dettagliato riportato qui sotto, distinto dalle spese già pagate.';section.appendChild(note);
+ const tips=[['Crociera Nilo · staff e autisti (5 giorni)',100,'Suggerimento operatore: 10 USD a persona al giorno'],['Crociera · guida egittologa',25,'Stima aggiuntiva per due'],['Cairo/Giza/Saqqara · guida e autista (2 giorni)',40,'Stima per due, da rivedere quando prenotati'],['Abu Simbel · guida e autista',15,'Stima per due, tour condiviso'],['Trasferimenti aeroportuali e piccoli servizi',10,'Stima complessiva']];
+ const tipsSection=document.createElement('div');tipsSection.className='trip-block';
+ const tipsTitle=document.createElement('h3');tipsTitle.textContent='Budget mance previsto · 2 persone';tipsSection.appendChild(tipsTitle);
+ tips.forEach(([name,amount,basis])=>{const line=document.createElement('div');line.className='egypt-expense-row';const label=document.createElement('span');label.className='egypt-expense-name';label.textContent=name+' · '+basis;const val=document.createElement('strong');val.className='egypt-expense-value';val.textContent=amount+' USD';line.append(label,val);tipsSection.appendChild(line)});
+ const tipsTotal=document.createElement('div');tipsTotal.className='egypt-expense-total';const sum=tips.reduce((a,r)=>a+r[1],0);tipsTotal.textContent='Totale mance preventivate per due: '+sum+' USD';tipsSection.appendChild(tipsTotal);
+ const tipsNote=document.createElement('p');tipsNote.className='sub';tipsNote.textContent='Budget orientativo, non obbligatorio e non ancora pagato. Solo i 100 USD della crociera derivano dal suggerimento ricevuto dall’operatore; le altre voci sono stime di pianificazione, da aggiornare dopo le prenotazioni. Non incluse nel totale pagato.';tipsSection.appendChild(tipsNote);
+ section.appendChild(tipsSection);
  content.appendChild(section);
 }
 function renderEgyptTodo(content){
