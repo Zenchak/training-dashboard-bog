@@ -540,7 +540,7 @@ function refreshCountryOverlays(){
   const code=byName.get(name);
   if(!code||(!favorites.has(code)&&!visited.has(code)))continue;
   const isVisited=visited.has(code);
-  L.geoJSON(feature,{style:{color:isVisited?'#20945d':'#df4354',weight:2,opacity:1,fillColor:isVisited?'#8ce2a9':'#f6a6b3',fillOpacity:.5},onEachFeature:(f,layer)=>{const p=allCountries.find(x=>x.code.toLowerCase()===code);layer.bindPopup((p?.place||f.properties.name)+(isVisited?' · Visto':' · Preferito'))}}).addTo(countryOutlines);
+  L.geoJSON(feature,{style:{color:isVisited?'#69b993':'#ed93a2',weight:1,opacity:.8,fillColor:isVisited?'#bcebd0':'#f8d6dc',fillOpacity:.26},onEachFeature:(f,layer)=>{const p=allCountries.find(x=>x.code.toLowerCase()===code);layer.bindPopup((p?.place||f.properties.name)+(isVisited?' · Visto':' · Preferito'))}}).addTo(countryOutlines);
  }
 }
 fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json').then(r=>{if(!r.ok)throw Error('world boundaries unavailable');return r.json()}).then(data=>{worldCountryShapes=data;refreshCountryOverlays()}).catch(err=>console.warn('Contorni Paesi non disponibili',err));
