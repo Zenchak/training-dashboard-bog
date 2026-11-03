@@ -374,7 +374,8 @@ function renderEgyptExpenseBars(content){
   line.append(name,track,amount);section.appendChild(line);
  }
  const total=document.createElement('div');total.className='egypt-expense-total';total.innerHTML='<span>Totale confermato</span><strong>'+format(rows.reduce((sum,r)=>sum+r[1],0))+'</strong>';section.appendChild(total);
- const note=document.createElement('p');note.className='sub';note.textContent='Visti: 60 USD pagati. Da pagare: ingressi crociera 170 USD; mance crociera consigliate 100 USD per due (facoltative); GEM 3.660 EGP pagati; Abu Simbel 78,18 € più ingressi stimati 34 USD e mance facoltative non quantificate. Questi importi non sono nel totale confermato.';section.appendChild(note);
+ const other=document.createElement('div');other.className='egypt-expense-total';other.textContent='Altre spese pagate: visti 60 USD + GEM 3.660 EGP';section.appendChild(other);
+ const note=document.createElement('p');note.className='sub';note.textContent='Il totale in euro comprende solo le spese pagate in EUR. Altre spese pagate in valuta originale: 60 USD per visti e 3.660 EGP per GEM. Ancora da pagare: 170 USD ingressi crociera, 78,18 EUR tour Abu Simbel, 34 USD ingressi Abu Simbel stimati. Mance crociera 100 USD consigliate e mance Abu Simbel facoltative.';section.appendChild(note);
  content.appendChild(section);
 }
 function renderEgyptTodo(content){
