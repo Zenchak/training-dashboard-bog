@@ -374,13 +374,13 @@ function renderEgyptExpenseBars(content){
   line.append(name,track,amount);section.appendChild(line);
  }
  const total=document.createElement('div');total.className='egypt-expense-total';total.innerHTML='<span>Totale confermato</span><strong>'+format(rows.reduce((sum,r)=>sum+r[1],0))+'</strong>';section.appendChild(total);
- const note=document.createElement('p');note.className='sub';note.textContent='Visti: 60 USD pagati e approvati (non convertiti). Hotel e attività: importi ancora da completare. Totale esclusi visti, hotel e attività.';section.appendChild(note);
+ const note=document.createElement('p');note.className='sub';note.textContent='Visti: 60 USD pagati. Da pagare: ingressi crociera 170 USD; mance crociera consigliate 100 USD per due (facoltative); Abu Simbel 78,18 € più ingressi stimati 34 USD e mance facoltative non quantificate. Questi importi non sono nel totale confermato.';section.appendChild(note);
  content.appendChild(section);
 }
 function renderEgyptTodo(content){
  const items=[
  ['Visti elettronici · completato','Entrambi approvati, scaricati e stampati · validi fino al 30 gennaio 2027'],
- ['Abu Simbel · 14 novembre','Prenotare escursione da Assuan con rientro prima del volo serale'],
+ ['Abu Simbel · 14 novembre','Tour Viator 128688P15, condiviso con guida inglese, 14 novembre ore 04:00: 78,18 € per due, NON prenotato. Ingressi stimati 34 USD per due, mance facoltative non quantificate. Link: https://www.viator.com/it-IT/tours/Aswan/cheap-trip-Tour-to-Abu-Simbel-Temple/d796-128688P15'],
  ['Grand Egyptian Museum · 7 novembre','Acquistare biglietti con fascia oraria'],
  ['Guida e autista al Cairo · 7–8 novembre','Organizzare Giza, GEM e Saqqara e relativi spostamenti'],
  ['Trasferimenti aeroportuali','Confermare Cairo aeroporto–Giza, Luxor aeroporto–hotel, Assuan–aeroporto e Cairo aeroporto–Heaven Hostel'],
