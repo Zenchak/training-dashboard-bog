@@ -93,5 +93,20 @@
     "maxCadenceRpm": 114,
     "averageSpeedKmh": 28.57,
     "note": "FIT Garmin 24896415000_ACTIVITY.fit del 29/10/2026, ciclismo (sport=cycling), partenza 18:17 ora Italia (17:17 UTC). Distanza 27,12796 km in tempo attivo 56:58,850, trascorso 57:29,847; velocità media 28,57 km/h, max 41,18 km/h; D+ 100 m, D- 98 m. FC media 142 bpm, massima 182 bpm. Cadenza 83 rpm media, 114 rpm max, 4.682 pedalate/cicli registrati. Calorie totali Garmin 689 (campo total_calories). Split: 0–5 km 9:10 (32,7 km/h, FC 144), 5–10 km 9:00 (33,3, FC 148), 10–15 km 10:16 (29,2, FC 145), 15–20 km 11:43 (25,6, FC 140), 20–25 km 11:53 (25,3, FC 139), ultimi 2,13 km 4:56 (25,9, FC 135). Nessun dato potenza leggibile. Bici Van Rysel AF Discover attribuita da regola storica; da correggere se eccezione e-bike."
+  },
+  {
+    "date": "2026-11-03",
+    "type": "Bici",
+    "km": 41.08,
+    "duration": "1:37:24",
+    "dplus": 251,
+    "location": "Bergamo",
+    "kcal": 1229,
+    "equipmentId": "bike-vr",
+    "garminId": "24954755901",
+    "hrAvg": 144,
+    "hrMax": 180,
+    "avgCadenceRpm": 81,
+    "note": "FIT 24954755901; Van Rysel AF Discover gravel confermata dall'utente."
   }
 ]
