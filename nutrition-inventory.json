@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "updated": "2026-11-05",
+  "stock_note": "Quantità in casa non note. Acquisto confermato solo per le gelatine Decathlon.",
+  "items": [
+    {
+      "id": "decathlon-fruit-jellies",
+      "name": "Energy Mix Fruit Jellies",
+      "brand": "Decathlon",
+      "category": "Gelatine",
+      "carbs_g": 21,
+      "serving": "1 gelatina da 25 g",
+      "stock": "acquisto_confermato",
+      "notes": "82–84 kcal per pezzo; acquistate il 5 novembre 2026."
+    },
+    {
+      "id": "enervit-performance-bar",
+      "name": "Performance Lemon Cream",
+      "brand": "Enervit",
+      "category": "Barrette",
+      "carbs_g": 16,
+      "serving": "1 barretta da 30 g",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "decathlon-performance-bar",
+      "name": "Performance Bar",
+      "brand": "Decathlon",
+      "category": "Barrette",
+      "carbs_g": 20,
+      "serving": "1 barretta (valore indicativo)",
+      "stock": "da_verificare",
+      "notes": "Quantità di carboidrati da verificare sull'etichetta."
+    },
+    {
+      "id": "enervit-c21pro",
+      "name": "C2:1PRO Gel",
+      "brand": "Enervit",
+      "category": "Gel",
+      "carbs_g": 40,
+      "serving": "1 gel",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "decathlon-108-gel",
+      "name": "Gel 1:0,8",
+      "brand": "Decathlon",
+      "category": "Gel",
+      "carbs_g": 40,
+      "serving": "1 gel",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "powerbar-espresso",
+      "name": "PowerGel Original Espresso",
+      "brand": "PowerBar",
+      "category": "Gel",
+      "carbs_g": 27,
+      "serving": "1 gel (stima)",
+      "stock": "da_verificare",
+      "notes": "Circa 53 mg caffeina; carboidrati da confermare sull'etichetta."
+    },
+    {
+      "id": "enervit-malto-fructose",
+      "name": "Maltodextrin + Fructose During",
+      "brand": "Enervit",
+      "category": "Polveri",
+      "carbs_g": 50,
+      "serving": "1 porzione per borraccia",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "enervit-carbo-tablets",
+      "name": "Carbo Tablets",
+      "brand": "Enervit",
+      "category": "Compresse energetiche",
+      "carbs_g": null,
+      "serving": "Porzione da verificare",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "sis-go-hydro",
+      "name": "GO Hydro",
+      "brand": "SiS",
+      "category": "Elettroliti",
+      "carbs_g": null,
+      "serving": "1 compressa (dati da verificare)",
+      "stock": "da_verificare",
+      "notes": "Prodotto principalmente per elettroliti."
+    },
+    {
+      "id": "decathlon-electrolytes",
+      "name": "Compresse elettroliti",
+      "brand": "Decathlon",
+      "category": "Elettroliti",
+      "carbs_g": null,
+      "serving": "1 compressa (dati da verificare)",
+      "stock": "da_verificare"
+    },
+    {
+      "id": "magnesium-potassium",
+      "name": "Magnesio e potassio",
+      "brand": "Da verificare",
+      "category": "Integratori",
+      "carbs_g": null,
+      "serving": "Marca e dose da verificare",
+      "stock": "da_verificare"
+    }
+  ]
+}
