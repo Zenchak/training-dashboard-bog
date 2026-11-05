@@ -1538,8 +1538,12 @@ const SPORT_MEDIA_SLOTS={
 };
 function sportIcon(type){
   const slot=SPORT_MEDIA_SLOTS[type];
-  const media=slot?window.ZenchakMedia?.src(slot,null):null;
-  if(media)return '<img class="sport-svg sport-icon-original" data-media-slot="'+slot+'" src="'+media+'" alt="" decoding="async" style="object-fit:contain">';
+  const defaults={'sport-running':'/training/assets/icons/running_viola.svg','sport-bike':'/training/assets/icons/bici_arancione.svg','sport-swim':'/training/assets/icons/nuoto_azzurro_blu.svg','sport-trail':'/training/assets/icons/trail_running_verde.svg','sport-walk':'/training/assets/icons/camminata_marrone.svg','sport-gym':'/training/assets/icons/palestra_rosso.svg'};
+  if(slot){
+    const fallback=defaults[slot];
+    const src=window.ZenchakMedia?.src?.(slot,fallback)||fallback;
+    return '<img class="sport-svg sport-icon-original" data-media-slot="'+slot+'" data-default-src="'+fallback+'" src="'+src+'" alt="" decoding="async" style="object-fit:contain">';
+  }
   const file=SPORT_ICON_FILES[type];
   if(file)return INLINE_SPORT_SVG[file];
   const key=SPORT_SVG[type]?type:"Totale";
@@ -1553,19 +1557,20 @@ const EQUIPMENT_PHOTOS={
   "bike-vr":"https://i8.amplience.net/i/manor/mp-3bc719c2-tProduct_mainImage"
 };
 function gearArtwork(item){
-  const mediaSlots={
-    "run-noosa13":["equipment-noosa14","equipment-run-noosa13","equipment-noosa"],
-    "trail-hoka":["equipment-mafate-x","equipment-trail-hoka"],
-    "bike-vr":["equipment-af-discover","equipment-bike-vr"],
-    "run-stormer2":["equipment-stormer2","equipment-run-stormer2","gear-stormer2"],
-    "trail-tnf":["equipment-north-face-activist","equipment-trail-tnf","equipment-activist-futurelight"],
-    "bike-rental-ebike":["equipment-ebike","equipment-bike-rental-ebike","equipment-e-bike"]
+  // Stessi ID e immagini di base del registro Impostazioni > Gestione icone.
+  const equipmentMedia={
+    "run-noosa13":["equipment-run-noosa13","https://res.cloudinary.com/ekoweb/image/upload/s--63uo51rk--/f_auto%2Ch_600%2Cq_auto%3Aeco%2Cw_600/v1/products/9-101055/views/9-101055__1011b368-300_01"],
+    "trail-hoka":["equipment-trail-hoka","https://www.bfgcdn.com/1500_1500_90/023-2201-0511/hoka-mafate-x-trailrunningschuhe.jpg"],
+    "bike-vr":["equipment-bike-vr","https://contents.mediadecathlon.com/p2855633/k$e70d04d6b9e3301e379eee3745e40ef0/VAN%20RYSEL%20GRVL%20AF%20DISCOVERY.jpg?format=auto"],
+    "run-stormer2":["equipment-run-stormer2","https://img.eobuwie.cloud/eob_product_528w_704h%286/9/c/3/69c3a6ca00ff6f629fd9193cc4fe5906a833479c_0000200442334_01_jf%2Cjpg%29/schuhe-asics-stormer-2-t843n-race-blue-white-400.jpg"],
+    "trail-tnf":["equipment-trail-tnf","https://www.blacks.co.uk/cdn/shop/files/bl_346830_a.jpg?v=1768936255&width=1024"],
+    "bike-rental-ebike":["equipment-bike-rental-ebike","https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?auto=format&fit=crop&w=1000&q=85"]
   };
-  // Usa esclusivamente gli slot assegnati nelle Impostazioni: niente ricerca
-  // approssimativa per nome che può mostrare l'icona di un altro oggetto.
-  for(const slot of mediaSlots[item.id]||[]){
-    const src=window.ZenchakMedia?.src?.(slot,null);
-    if(src)return '<span class="equipment-photo-wrap"><img class="equipment-real-photo" data-media-slot="'+slot+'" src="'+src+'" alt="" loading="eager" decoding="async" onerror="this.style.display=\\'none\\';this.nextElementSibling.style.display=\\'block\\'"><span class="equipment-photo-fallback" style="display:none">'+(EQUIPMENT_ILLUSTRATIONS[item.id]||sportIcon("Scarpe"))+'</span></span>';
+  const assigned=equipmentMedia[item.id];
+  if(assigned){
+    const [slot,defaultSrc]=assigned;
+    const src=window.ZenchakMedia?.src?.(slot,defaultSrc)||defaultSrc;
+    return '<span class="equipment-photo-wrap"><img class="equipment-real-photo" data-media-slot="'+slot+'" data-default-src="'+defaultSrc.replace(/&/g,'&amp;')+'" src="'+src.replace(/&/g,'&amp;')+'" alt="" loading="eager" decoding="async" onerror="this.onerror=null;this.src=this.dataset.defaultSrc"></span>';
   }
   const specialArt={
     "run-stormer2":'<svg viewBox="0 0 180 100" aria-label="Scarpa ASICS Stormer 2" xmlns="http://www.w3.org/2000/svg"><path d="M13 65Q35 58 49 32L66 26Q85 45 103 50L151 61Q167 66 169 80L145 87H39Q12 84 13 65Z" fill="#a3b9d2" stroke="#486787" stroke-width="3"/><path d="M14 75Q78 88 168 76L168 87Q87 96 20 87Z" fill="#f1f5f9" stroke="#486787" stroke-width="2"/><path d="M63 39L88 54M72 34L98 51M80 43L101 57" stroke="#fff" stroke-width="3"/></svg>',
