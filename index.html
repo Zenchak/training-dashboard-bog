@@ -2778,10 +2778,11 @@ refreshWishlistMedia();
     target.innerHTML=[...groups.entries()].map(([cat,products])=>
       '<section class="nutrition-category"><h3>'+esc(cat)+'</h3><div class="nutrition-grid">'+products.map(item=>{
         const carb=item.carbs_g==null?'—':esc(item.carbs_g)+' g';
-        const stockConfirmed=item.stock==='acquisto_confermato';
+        const stockConfirmed=item.stock==='acquisto_confermato'||item.stock==='presente_foto';
+        const stockLabel=item.stock==='presente_foto'?(item.quantity?item.quantity+' '+(item.quantity_unit||'pezzi')+' visibili':'Presente in foto'):(stockConfirmed?'Acquisto confermato':'Scorte da verificare');
         return '<article class="nutrition-product"><div class="nutrition-product-head"><b>'+esc(item.brand)+' · '+esc(item.name)+'</b><span class="nutrition-carbs">'+carb+'<small>carboidrati</small></span></div>'
           +'<div class="nutrition-product-meta">'+esc(item.serving||'Porzione da verificare')+(item.notes?' · '+esc(item.notes):'')+'</div>'
-          +'<span class="nutrition-stock'+(stockConfirmed?' confirmed':'')+'">'+(stockConfirmed?'Acquisto confermato':'Scorte da verificare')+'</span></article>';
+          +'<span class="nutrition-stock'+(stockConfirmed?' confirmed':'')+'">'+esc(stockLabel)+'</span></article>';
       }).join('')+'</div></section>'
     ).join('')||'<p class="nutrition-disclaimer">Nessun prodotto registrato.</p>';
   }catch(error){target.innerHTML='<p class="nutrition-disclaimer">Inventario temporaneamente non disponibile. Verifica che il file di alimentazione sia sincronizzato sull’Hub.</p>';}
