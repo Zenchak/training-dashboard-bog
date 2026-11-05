@@ -108,5 +108,19 @@
     "hrMax": 180,
     "avgCadenceRpm": 81,
     "note": "FIT 24954755901; Van Rysel AF Discover gravel confermata dall'utente."
+  },
+  {
+    "date": "2026-11-05",
+    "type": "Nuoto",
+    "km": 1,
+    "duration": "0:25:00",
+    "dplus": null,
+    "location": "Piscina",
+    "kcal": 226,
+    "kcalSource": "Garmin FIT - tipo calorie da verificare",
+    "garminId": "24974404876",
+    "hrAvg": 114,
+    "hrMax": 131,
+    "note": "FIT Garmin 24974404876_ACTIVITY.fit. Nuoto in piscina: 1000 m, 40 vasche da 25 m, durata 25:00, passo medio 2:30/100 m, FC media 114 bpm, massima 131 bpm. Calorie Garmin 226; distinzione tra attive e totali da verificare."
   }
 ]
