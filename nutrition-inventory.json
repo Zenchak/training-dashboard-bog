@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "updated": "2026-11-05",
-  "stock_note": "Quantità in casa non note. Acquisto confermato solo per le gelatine Decathlon.",
+  "stock_note": "Quantità conteggiate dalle fotografie del 5 novembre 2026; per i tubi, il barattolo e la confezione x10 non è noto quanto prodotto rimanga. Gli altri articoli restano da verificare.",
   "items": [
     {
       "id": "decathlon-fruit-jellies",
@@ -15,12 +15,15 @@
     },
     {
       "id": "enervit-performance-bar",
-      "name": "Performance Lemon Cream",
+      "name": "Performance Creatine 0,5 g – Cocoa",
       "brand": "Enervit",
       "category": "Barrette",
-      "carbs_g": 16,
-      "serving": "1 barretta da 30 g",
-      "stock": "da_verificare"
+      "carbs_g": 20,
+      "serving": "1 barretta (20 g carboidrati dichiarati)",
+      "stock": "presente_foto",
+      "quantity": 2,
+      "quantity_unit": "barrette",
+      "notes": "2 barrette visibili, gusto cacao, 0,5 g creatina per barretta, 25% proteine dichiarato sulla confezione."
     },
     {
       "id": "decathlon-performance-bar",
@@ -48,7 +51,10 @@
       "category": "Gel",
       "carbs_g": 40,
       "serving": "1 gel",
-      "stock": "da_verificare"
+      "stock": "presente_foto",
+      "quantity": 4,
+      "quantity_unit": "gel",
+      "notes": "3 gel gusto neutro e 1 gusto cola; 40 g carboidrati per gel."
     },
     {
       "id": "powerbar-espresso",
@@ -57,8 +63,10 @@
       "category": "Gel",
       "carbs_g": 27,
       "serving": "1 gel (stima)",
-      "stock": "da_verificare",
-      "notes": "Circa 53 mg caffeina; carboidrati da confermare sull'etichetta."
+      "stock": "presente_foto",
+      "notes": "Gusto espresso; confezione indica 53 mg caffeina; carboidrati da verificare.",
+      "quantity": 1,
+      "quantity_unit": "gel"
     },
     {
       "id": "enervit-malto-fructose",
@@ -67,7 +75,10 @@
       "category": "Polveri",
       "carbs_g": 50,
       "serving": "1 porzione per borraccia",
-      "stock": "da_verificare"
+      "stock": "presente_foto",
+      "quantity": 1,
+      "quantity_unit": "barattolo",
+      "notes": "1 barattolo visibile; quantità di polvere residua sconosciuta."
     },
     {
       "id": "enervit-carbo-tablets",
@@ -76,26 +87,34 @@
       "category": "Compresse energetiche",
       "carbs_g": null,
       "serving": "Porzione da verificare",
-      "stock": "da_verificare"
+      "stock": "presente_foto",
+      "quantity": 1,
+      "quantity_unit": "tubo",
+      "notes": "1 tubo visibile; numero di compresse residue sconosciuto."
     },
     {
       "id": "sis-go-hydro",
-      "name": "GO Hydro",
+      "name": "GO Hydro Lemon",
       "brand": "SiS",
       "category": "Elettroliti",
       "carbs_g": null,
       "serving": "1 compressa (dati da verificare)",
-      "stock": "da_verificare",
-      "notes": "Prodotto principalmente per elettroliti."
+      "stock": "presente_foto",
+      "notes": "1 tubo visibile nella foto; numero di compresse residue sconosciuto.",
+      "quantity": 1,
+      "quantity_unit": "tubo"
     },
     {
       "id": "decathlon-electrolytes",
-      "name": "Compresse elettroliti",
+      "name": "Electrolytes Drink",
       "brand": "Decathlon",
       "category": "Elettroliti",
       "carbs_g": null,
       "serving": "1 compressa (dati da verificare)",
-      "stock": "da_verificare"
+      "stock": "presente_foto",
+      "quantity": 2,
+      "quantity_unit": "tubi",
+      "notes": "2 tubi visibili; numero di compresse residue sconosciuto."
     },
     {
       "id": "magnesium-potassium",
@@ -105,6 +124,18 @@
       "carbs_g": null,
       "serving": "Marca e dose da verificare",
       "stock": "da_verificare"
+    },
+    {
+      "id": "enervit-instant-sport-drink",
+      "name": "Instant Sport Drink Lemon",
+      "brand": "Enervit",
+      "category": "Polveri",
+      "carbs_g": null,
+      "serving": "1 bustina per borraccia (dose da verificare)",
+      "stock": "presente_foto",
+      "quantity": 1,
+      "quantity_unit": "confezione",
+      "notes": "Confezione x10 bustine, numero residuo non verificato."
     }
   ]
 }
