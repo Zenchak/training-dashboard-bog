@@ -1553,6 +1553,18 @@ const EQUIPMENT_PHOTOS={
   "bike-vr":"https://i8.amplience.net/i/manor/mp-3bc719c2-tProduct_mainImage"
 };
 function gearArtwork(item){
+  const mediaSlots={
+    "run-noosa13":["equipment-noosa14","equipment-run-noosa13","equipment-noosa"],
+    "trail-hoka":["equipment-mafate-x","equipment-trail-hoka"],
+    "bike-vr":["equipment-af-discover","equipment-bike-vr"],
+    "run-stormer2":["equipment-stormer2","equipment-run-stormer2","gear-stormer2"],
+    "trail-tnf":["equipment-north-face-activist","equipment-trail-tnf","equipment-activist-futurelight"],
+    "bike-rental-ebike":["equipment-ebike","equipment-bike-rental-ebike","equipment-e-bike"]
+  };
+  for(const slot of mediaSlots[item.id]||[]){
+    const src=window.ZenchakMedia?.src?.(slot,null);
+    if(src)return '<span class="equipment-photo-wrap"><img class="equipment-real-photo" data-media-slot="'+slot+'" src="'+src+'" alt="" loading="eager" decoding="async" onerror="this.style.display=\\'none\\';this.nextElementSibling.style.display=\\'block\\'"><span class="equipment-photo-fallback" style="display:none">'+(EQUIPMENT_ILLUSTRATIONS[item.id]||sportIcon("Scarpe"))+'</span></span>';
+  }
   const specialArt={
     "run-stormer2":'<svg viewBox="0 0 180 100" aria-label="Scarpa ASICS Stormer 2" xmlns="http://www.w3.org/2000/svg"><path d="M13 65Q35 58 49 32L66 26Q85 45 103 50L151 61Q167 66 169 80L145 87H39Q12 84 13 65Z" fill="#a3b9d2" stroke="#486787" stroke-width="3"/><path d="M14 75Q78 88 168 76L168 87Q87 96 20 87Z" fill="#f1f5f9" stroke="#486787" stroke-width="2"/><path d="M63 39L88 54M72 34L98 51M80 43L101 57" stroke="#fff" stroke-width="3"/></svg>',
     "trail-tnf":'<svg viewBox="0 0 180 100" aria-label="Scarpa da trail The North Face" xmlns="http://www.w3.org/2000/svg"><path d="M12 66Q35 59 46 31L70 24Q88 44 109 50L153 63Q169 68 170 80L145 87H35Q13 85 12 66Z" fill="#526e56" stroke="#254633" stroke-width="3"/><path d="M13 78L45 84L164 78L169 86L154 91L139 86L122 93L105 86L87 93L70 86L51 92L31 85L18 90Z" fill="#202c26"/><path d="M56 43L84 54M64 35L93 51M73 32L102 50" stroke="#d8e7d7" stroke-width="3"/></svg>',
@@ -2719,6 +2731,7 @@ document.getElementById("trainingRefresh")?.addEventListener("click",function(){
 </script>
 
 <script>window.addEventListener("zenchak-media-loaded",()=>{
+  if(typeof renderEquipment==="function")renderEquipment();
   const saved=window.ZenchakMedia?.items?.()||{};
   // Avoid expensive second full render unless a custom sport icon changed.
   if(['sport-running','sport-bike','sport-swim','sport-trail','sport-walk','sport-gym'].some(slot=>saved[slot]))
