@@ -1553,6 +1553,12 @@ const EQUIPMENT_PHOTOS={
   "bike-vr":"https://i8.amplience.net/i/manor/mp-3bc719c2-tProduct_mainImage"
 };
 function gearArtwork(item){
+  const specialArt={
+    "run-stormer2":'<svg viewBox="0 0 180 100" aria-label="Scarpa ASICS Stormer 2" xmlns="http://www.w3.org/2000/svg"><path d="M13 65Q35 58 49 32L66 26Q85 45 103 50L151 61Q167 66 169 80L145 87H39Q12 84 13 65Z" fill="#a3b9d2" stroke="#486787" stroke-width="3"/><path d="M14 75Q78 88 168 76L168 87Q87 96 20 87Z" fill="#f1f5f9" stroke="#486787" stroke-width="2"/><path d="M63 39L88 54M72 34L98 51M80 43L101 57" stroke="#fff" stroke-width="3"/></svg>',
+    "trail-tnf":'<svg viewBox="0 0 180 100" aria-label="Scarpa da trail The North Face" xmlns="http://www.w3.org/2000/svg"><path d="M12 66Q35 59 46 31L70 24Q88 44 109 50L153 63Q169 68 170 80L145 87H35Q13 85 12 66Z" fill="#526e56" stroke="#254633" stroke-width="3"/><path d="M13 78L45 84L164 78L169 86L154 91L139 86L122 93L105 86L87 93L70 86L51 92L31 85L18 90Z" fill="#202c26"/><path d="M56 43L84 54M64 35L93 51M73 32L102 50" stroke="#d8e7d7" stroke-width="3"/></svg>',
+    "bike-rental-ebike":'<svg viewBox="0 0 180 100" aria-label="Bicicletta elettrica a noleggio" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#e86c22" stroke-width="5" stroke-linejoin="round"><circle cx="36" cy="72" r="20"/><circle cx="145" cy="72" r="20"/><path d="M36 72L64 34L100 72H36L64 34L88 34L145 72L120 31H106"/></g><rect x="74" y="45" width="24" height="24" rx="4" fill="#ffb24b" stroke="#b64e17" stroke-width="2"/><path d="M87 49L80 59H87L83 66L94 55H87Z" fill="#fff"/><path d="M60 30H78M115 27H130" stroke="#653b28" stroke-width="4" stroke-linecap="round"/></svg>'
+  };
+  if(specialArt[item.id])return specialArt[item.id];
   const photo=EQUIPMENT_PHOTOS[item.id];
   const fallback=EQUIPMENT_ILLUSTRATIONS[item.id]||sportIcon(item.category==="bike"?"Bici":item.category==="trail"?"Trail":"Scarpe");
   if(photo)return '<span class="equipment-photo-wrap"><img class="equipment-real-photo" src="'+photo+'" alt="" loading="eager" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"><span class="equipment-photo-fallback" style="display:none">'+fallback+'</span></span>';
@@ -1665,7 +1671,7 @@ function renderDisciplines(){
 }
 function renderRecent(){
  const target=document.getElementById("recentActivities");if(!target)return;
- const recent=[...AY].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
+ const recent=[...AY].sort((a,b)=>b.date.localeCompare(a.date)||((b.startTime||"").localeCompare(a.startTime||""))||(a.type==="Corsa"?-1:b.type==="Corsa"?1:0)).slice(0,3);
  target.innerHTML=recent.map(a=>{
   const icon=sportIcon(a.type),date=dt(a.date);
   const duration=a.duration||"—";
@@ -2741,9 +2747,9 @@ refreshWishlistMedia();
   if(!target)return;
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   try{
-    const response=await fetch('./nutrition-inventory.json',{cache:'no-store'});
-    if(!response.ok)throw new Error('HTTP '+response.status);
-    const inventory=await response.json();
+    const embeddedInventory={"schema_version":1,"updated":"2026-11-05","stock_note":"Quantità in casa non note. Acquisto confermato solo per le gelatine Decathlon.","items":[{"id":"decathlon-fruit-jellies","name":"Energy Mix Fruit Jellies","brand":"Decathlon","category":"Gelatine","carbs_g":21,"serving":"1 gelatina da 25 g","stock":"acquisto_confermato","notes":"82–84 kcal per pezzo; acquistate il 5 novembre 2026."},{"id":"enervit-performance-bar","name":"Performance Lemon Cream","brand":"Enervit","category":"Barrette","carbs_g":16,"serving":"1 barretta da 30 g","stock":"da_verificare"},{"id":"decathlon-performance-bar","name":"Performance Bar","brand":"Decathlon","category":"Barrette","carbs_g":20,"serving":"1 barretta (valore indicativo)","stock":"da_verificare","notes":"Quantità di carboidrati da verificare sull'etichetta."},{"id":"enervit-c21pro","name":"C2:1PRO Gel","brand":"Enervit","category":"Gel","carbs_g":40,"serving":"1 gel","stock":"da_verificare"},{"id":"decathlon-108-gel","name":"Gel 1:0,8","brand":"Decathlon","category":"Gel","carbs_g":40,"serving":"1 gel","stock":"da_verificare"},{"id":"powerbar-espresso","name":"PowerGel Original Espresso","brand":"PowerBar","category":"Gel","carbs_g":27,"serving":"1 gel (stima)","stock":"da_verificare","notes":"Circa 53 mg caffeina; carboidrati da confermare sull'etichetta."},{"id":"enervit-malto-fructose","name":"Maltodextrin + Fructose During","brand":"Enervit","category":"Polveri","carbs_g":50,"serving":"1 porzione per borraccia","stock":"da_verificare"},{"id":"enervit-carbo-tablets","name":"Carbo Tablets","brand":"Enervit","category":"Compresse energetiche","carbs_g":null,"serving":"Porzione da verificare","stock":"da_verificare"},{"id":"sis-go-hydro","name":"GO Hydro","brand":"SiS","category":"Elettroliti","carbs_g":null,"serving":"1 compressa (dati da verificare)","stock":"da_verificare","notes":"Prodotto principalmente per elettroliti."},{"id":"decathlon-electrolytes","name":"Compresse elettroliti","brand":"Decathlon","category":"Elettroliti","carbs_g":null,"serving":"1 compressa (dati da verificare)","stock":"da_verificare"},{"id":"magnesium-potassium","name":"Magnesio e potassio","brand":"Da verificare","category":"Integratori","carbs_g":null,"serving":"Marca e dose da verificare","stock":"da_verificare"}]};
+    let inventory=embeddedInventory;
+    try { const response=await fetch('./nutrition-inventory.json',{cache:'no-store'}); if(response.ok) inventory=await response.json(); } catch(fetchError) { /* Inventario incorporato come fallback per il NAS */ }
     const items=Array.isArray(inventory.items)?inventory.items:[];
     const groups=new Map();
     for(const item of items){const cat=item.category||'Altro';if(!groups.has(cat))groups.set(cat,[]);groups.get(cat).push(item);}
