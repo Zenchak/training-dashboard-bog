@@ -476,7 +476,33 @@ function openTripDossier(key,card){
  const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
  addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
  renderTripBaggage(content,key);
- addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
+ if(key==='egitto'){
+  const rides=[
+   ['7 novembre','Aeroporto Cairo (CAI)','Queen Cleopatra Boutique Hotel, Giza'],
+   ['7 novembre','Queen Cleopatra Boutique Hotel, Giza','Giza Pyramids'],
+   ['7 novembre','Giza Pyramids','Grand Egyptian Museum, Giza'],
+   ['7 novembre','Grand Egyptian Museum, Giza','Queen Cleopatra Boutique Hotel, Giza'],
+   ['8 novembre','Queen Cleopatra Boutique Hotel, Giza','Cairo International Airport (CAI)'],
+   ['14 novembre','Cairo International Airport (CAI)','Heaven Hostel, Cairo'],
+   ['15 novembre','Heaven Hostel, Cairo','Cairo International Airport (CAI)']
+  ];
+  const section=document.createElement('section');section.className='trip-block';
+  const h=document.createElement('h3');h.textContent='Itinerario giorno per giorno';section.appendChild(h);
+  const ol=document.createElement('ol');
+  for(const [date,description] of trip.steps){
+   const li=document.createElement('li'),b=document.createElement('b');b.textContent=date;
+   li.append(b,document.createElement('br'),document.createTextNode(description));
+   for(const [day,from,to] of rides.filter(x=>x[0]===date)){
+    const p=document.createElement('p');p.style.cssText='margin:6px 0;font-size:13px';
+    const a=document.createElement('a');a.target='_blank';a.rel='noopener noreferrer';
+    const params=new URLSearchParams({'action':'setPickup','pickup[formatted_address]':from,'dropoff[formatted_address]':to});
+    a.href='https://m.uber.com/ul/?'+params.toString();
+    a.textContent='🚗 Uber · '+from+' → '+to+' ↗';p.appendChild(a);li.appendChild(p);
+   }
+   ol.appendChild(li);
+  }
+  section.appendChild(ol);content.appendChild(section);
+ }else addSection('Itinerario giorno per giorno',trip.steps.map(x=>[x[0],x[1]]));
  addSection('Pernottamenti e sistemazioni',tripLodging[key]);
  
  if(key==='tanzania')addSection('Safari · programma e logistica',[['Operatore','Suricata Safaris · gruppo camping · 27 gennaio–1 febbraio 2027'],['Parchi','Tarangire, Lago Manyara, Serengeti centrale e cratere di Ngorongoro'],['Acconto','480 USD pagati · inclusi nel prezzo totale di 2.400 USD'],['Saldo','1.920 USD da saldare; scadenza e modalità da verificare'],['Assicurazione','Heymondo Premium acquistata; premio da recuperare'],['Alloggi Arusha','26 gennaio e 1 febbraio inclusi; 24 e 25 gennaio extra da quotare · Safari Homes consigliato da Ayman'],['Trasferimenti','Suricata organizza JRO 24/1, pickup hotel 27/1, rientro hotel 1/2, ARK 2/2 · costi extra da confermare'],['Bagagli','Andata 25 kg stiva; interno 23 kg stiva e 7 kg cabina per persona; ritorno 20 kg stiva']]);
