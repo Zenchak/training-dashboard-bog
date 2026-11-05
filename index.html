@@ -1561,16 +1561,9 @@ function gearArtwork(item){
     "trail-tnf":["equipment-north-face-activist","equipment-trail-tnf","equipment-activist-futurelight"],
     "bike-rental-ebike":["equipment-ebike","equipment-bike-rental-ebike","equipment-e-bike"]
   };
-  const savedMedia=window.ZenchakMedia?.items?.()||{};
-  const normalizeMediaKey=value=>String(value).toLowerCase().replace(/[^a-z0-9]/g,"");
-  const matchingSavedSlots=Object.keys(savedMedia).filter(slot=>{
-    const key=normalizeMediaKey(slot);
-    if(item.id==="run-stormer2")return key.includes("stormer");
-    if(item.id==="bike-rental-ebike")return key.includes("ebike")||key.includes("bikenoleggio")||key.includes("bikerental");
-    if(item.id==="trail-tnf")return key.includes("activist")||key.includes("northface");
-    return false;
-  });
-  for(const slot of [...matchingSavedSlots,...(mediaSlots[item.id]||[])]){
+  // Usa esclusivamente gli slot assegnati nelle Impostazioni: niente ricerca
+  // approssimativa per nome che può mostrare l'icona di un altro oggetto.
+  for(const slot of mediaSlots[item.id]||[]){
     const src=window.ZenchakMedia?.src?.(slot,null);
     if(src)return '<span class="equipment-photo-wrap"><img class="equipment-real-photo" data-media-slot="'+slot+'" src="'+src+'" alt="" loading="eager" decoding="async" onerror="this.style.display=\\'none\\';this.nextElementSibling.style.display=\\'block\\'"><span class="equipment-photo-fallback" style="display:none">'+(EQUIPMENT_ILLUSTRATIONS[item.id]||sportIcon("Scarpe"))+'</span></span>';
   }
