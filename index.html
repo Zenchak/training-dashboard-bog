@@ -2078,7 +2078,7 @@ function replacementDetails(item,usage){
     "run-noosa13":{start:500,target:550,description:"Scarpa da corsa su asfalto: prima verifica a 500 km, limite preventivo personalizzato a 550 km. Indicazione prudenziale concordata il 06/11/2026 dopo valutazione fisioterapica; vale anche come riferimento iniziale per future scarpe da asfalto."},
     "trail-hoka":{start:550,target:650,description:"Scarpa da trail: prima verifica a 550 km e limite preventivo orientativo a 650 km (circa 100 km oltre l'asfalto). Controllare già da 600 km; terreno e usura possono anticipare la sostituzione."}
   };
-  const conf=configs[item.id];
+  const conf=configs[item.id] || ((item.category==="run" && item.id!=="run-stormer2")?{start:500,target:550,description:"Scarpa da corsa su asfalto: controllo a 500 km e limite preventivo personalizzato a 550 km; rivalutare secondo usura reale."}:(item.category==="trail" && item.id!=="trail-tnf")?{start:550,target:650,description:"Scarpa da trail: prima verifica a 550 km, ulteriore controllo a 600 km e limite orientativo a 650 km; rivalutare secondo terreno e usura."}:null);
   if(!conf){
     const historic=item.id==="run-stormer2"?"Scarpe usate prima delle Noosa, sostituite nel febbraio 2024.":item.id==="trail-tnf"?"Scarpe precedenti alle HOKA Mafate X, utilizzate per trail e trekking.":"Attrezzatura senza un intervallo di sostituzione definito.";
     return '<section class="gear-panel"><h3>Stato di utilizzo</h3><p>'+historic+'</p><p>Non è stata impostata una soglia di sostituzione: servono controllo fisico, condizioni del battistrada e dello stato della scarpa. I chilometri storici potrebbero essere incompleti.</p></section>';
