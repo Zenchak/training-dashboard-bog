@@ -2075,8 +2075,8 @@ function replacementDetails(item,usage){
   if(item.id==="bike-rental-ebike")
     return '<section class="gear-panel"><h3>🚲 Biciclette a noleggio</h3><p>Queste e-bike non fanno parte dell’attrezzatura di proprietà. Non è previsto un contatore personale di usura o sostituzione.</p></section>';
   const configs={
-    "run-noosa13":{start:600,target:800,description:"Scarpa da corsa su asfalto. Intervallo orientativo di controllo: 600–800 km."},
-    "trail-hoka":{start:500,target:800,description:"Scarpa da trail. Intervallo generico orientativo di controllo: 500–800 km; durata effettiva variabile con terreno e uso."}
+    "run-noosa13":{start:500,target:550,description:"Scarpa da corsa su asfalto: prima verifica a 500 km, limite preventivo personalizzato a 550 km. Indicazione prudenziale concordata il 06/11/2026 dopo valutazione fisioterapica; vale anche come riferimento iniziale per future scarpe da asfalto."},
+    "trail-hoka":{start:550,target:650,description:"Scarpa da trail: prima verifica a 550 km e limite preventivo orientativo a 650 km (circa 100 km oltre l'asfalto). Controllare già da 600 km; terreno e usura possono anticipare la sostituzione."}
   };
   const conf=configs[item.id];
   if(!conf){
