@@ -362,6 +362,27 @@ const tripLodging={
  egitto:[['6–8 novembre','Queen Cleopatra · Giza/Cairo · 2 notti'],['8–9 novembre','Nefertiti Hotel · Luxor · 1 notte'],['9–13 novembre','Crociera TourShare · Luxor–Assuan · 4 notti'],['13–14 novembre','Unique Studio · Assuan · 1 notte'],['14–15 novembre','Heaven Hostel · Cairo · 1 notte']],
  tanzania:[['24–26 gennaio','Arusha · sistemazione da verificare'],['27 gennaio – 1 febbraio','Safari camping Suricata · 5 notti incluse nel pacchetto di 6 giorni'],['2–11 febbraio','Zanzibar · strutture e pernottamenti da completare']]
 };
+function tripReferenceLink(parent,label,url){if(!url)return;const p=document.createElement('p');p.className='sub';const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Sito di riferimento · '+label;p.appendChild(a);parent.appendChild(p)}
+const tripExpenseReferences={
+ 'Voli':[['Nile Air','https://www.nileair.com/'],['Air Cairo','https://aircairo.com/'],['EgyptAir · prenotazione Trip.com','https://www.trip.com/']],
+ 'Crociera':[['TourShare','https://www.tourshare.org/']],
+ 'Assicurazione':[['Heymondo','https://heymondo.it/']],
+ 'Internet / eSIM':[],
+ 'Visti':[['Portale ufficiale e-Visa Egitto','https://visa2egypt.gov.eg/']],
+ 'GEM · ingressi':[['Grand Egyptian Museum','https://gem.eg/']],
+ 'Giza · ingressi':[['Biglietteria monumenti egiziani','https://egymonuments.com/']],
+ 'Giza + GEM · escursione':[],
+ 'Saqqara · escursione':[],
+ 'Saqqara · ingressi':[['Biglietteria monumenti egiziani','https://egymonuments.com/']],
+ 'Menfi · ingressi':[['Biglietteria monumenti egiziani','https://egymonuments.com/']],
+ 'Trasporti':[['Uber','https://www.uber.com/']],
+ 'Abu Simbel':[['Viator · opzione non prenotata','https://www.viator.com/']],
+ 'Mance':[]
+};
+const tripFlightReferences={
+ egitto:[['Nile Air','https://www.nileair.com/'],['Air Cairo','https://aircairo.com/'],['Trip.com · prenotazione EgyptAir','https://www.trip.com/'],['Nile Air','https://www.nileair.com/'],['TourShare','https://www.tourshare.org/']],
+ tanzania:[['Etihad','https://www.etihad.com/'],['Precision Air','https://www.precisionairtz.com/'],['Oman Air','https://www.omanair.com/']]
+};
 function renderEgyptExpenseBars(content){
  const section=document.createElement('section');section.className='egypt-expenses';
  const h=document.createElement('h3');h.textContent='Spese del viaggio · 2 persone';section.appendChild(h);
@@ -394,6 +415,8 @@ function renderEgyptExpenseBars(content){
   summary.append(label,track,amount);el.appendChild(summary);
   const body=document.createElement('div');body.className='expense-detail-body';
   details.forEach(d=>{const p=document.createElement('p');p.textContent=d;body.appendChild(p)});
+  (tripExpenseReferences[name]||[]).forEach(([label,url])=>tripReferenceLink(body,label,url));
+  if(['Internet / eSIM','Giza + GEM · escursione','Saqqara · escursione'].includes(name)){const p=document.createElement('p');p.className='sub';p.textContent='Sito del fornitore non ancora verificato: da aggiungere dalla conferma di acquisto.';body.appendChild(p)}
   el.appendChild(body);section.appendChild(el);
  });
  content.appendChild(section);
@@ -478,7 +501,7 @@ function openTripDossier(key,card){
  const content=$('destinationContent');content.replaceChildren();
  if(key==='egitto'){renderEgyptExpenseBars(content);renderEgyptTodo(content);}
  else {renderTanzaniaExpenses(content);renderTanzaniaTodo(content);}
- const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
+ const addSection=(title,items)=>{const section=document.createElement('section');section.className='trip-block';const h=document.createElement('h3');h.textContent=title;section.appendChild(h);const list=document.createElement('ol');for(const [head,detail,extra] of items){const li=document.createElement('li');const b=document.createElement('b');b.textContent=head;li.appendChild(b);li.appendChild(document.createElement('br'));li.appendChild(document.createTextNode(detail));if(extra){const p=document.createElement('p');p.className='sub';p.textContent=extra;li.appendChild(p)}if(title==='Voli, orari, scali e trasferimenti'){const idx=list.children.length;const ref=(tripFlightReferences[key]||[])[idx];if(ref)tripReferenceLink(li,ref[0],ref[1])}list.appendChild(li)}section.appendChild(list);content.appendChild(section)};
  addSection('Voli, orari, scali e trasferimenti',flightDetails[key]);
  renderTripBaggage(content,key);
  if(key==='egitto'){
