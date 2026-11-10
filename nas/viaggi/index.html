@@ -403,7 +403,11 @@ function renderEgyptExpenseBars(content){
  ['Abu Simbel','≈ 108 €',0,108,['Escursione 14 novembre non ancora confermata come prenotata','Viator 78,18 € per due, ingressi stimati circa 30 €; alternativa TourShare proposta']],
  ['Mance','≈ 3,32 € pagati + stime',3.32,165,['9 novembre · mancia al panettiere di Luxor: 200 EGP in contanti ≈ 3,32 €','Cassa contanti: 2.405 EGP iniziali − 600 EGP taxi − 200 EGP mancia = 1.605 EGP residui ≈ 26,68 €','Mancia Uber 82 EGP già inclusa nei trasporti; non duplicarla','Mance future crociera, guida, Abu Simbel e altri servizi: stima ≈ 165 €']]
  ];
- items.forEach(([name,value,paid,pending,details])=>{
+ const money=n=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n);
+ const totalPaid=items.reduce((sum,item)=>sum+item[2],0);
+ const totalPending=items.reduce((sum,item)=>sum+item[3],0);
+ const moreRows=document.createElement('div');moreRows.hidden=true;
+ items.forEach(([name,value,paid,pending,details],index)=>{
   const el=document.createElement('details');el.className='expense-detail';
   const summary=document.createElement('summary');summary.className='egypt-expense-row';
   const label=document.createElement('span');label.className='egypt-expense-name';label.textContent=name;
@@ -417,8 +421,19 @@ function renderEgyptExpenseBars(content){
   details.forEach(d=>{const p=document.createElement('p');p.textContent=d;body.appendChild(p)});
   (tripExpenseReferences[name]||[]).forEach(([label,url])=>tripReferenceLink(body,label,url));
   if(['Internet / eSIM','Giza + GEM · escursione','Saqqara · escursione'].includes(name)){const p=document.createElement('p');p.className='sub';p.textContent='Sito del fornitore non ancora verificato: da aggiungere dalla conferma di acquisto.';body.appendChild(p)}
-  el.appendChild(body);section.appendChild(el);
+  el.appendChild(body);(index<8?section:moreRows).appendChild(el);
  });
+ if(items.length>8){
+  const more=document.createElement('button');more.type='button';more.className='trip-expenses-more';more.textContent='Altro · '+(items.length-8)+' voci';
+  more.style.cssText='display:block;width:100%;padding:12px;margin:10px 0;border:1px solid var(--line, #aaa);border-radius:12px;background:transparent;color:inherit;font:inherit;cursor:pointer';
+  more.addEventListener('click',()=>{moreRows.hidden=!moreRows.hidden;more.textContent=moreRows.hidden?'Altro · '+(items.length-8)+' voci':'Mostra meno'});
+  section.appendChild(moreRows);section.appendChild(more);
+ }
+ const total=document.createElement('div');total.className='egypt-expense-total';total.style.marginTop='14px';
+ const totalLabel=document.createElement('span');totalLabel.textContent='Totale viaggio · pagato';
+ const totalValue=document.createElement('strong');totalValue.textContent=money(totalPaid);
+ total.append(totalLabel,totalValue);section.appendChild(total);
+ if(totalPending>0){const estimate=document.createElement('p');estimate.className='sub';estimate.style.marginTop='8px';estimate.textContent='Da pagare / stimato: '+money(totalPending)+' · Totale previsto: '+money(totalPaid+totalPending);section.appendChild(estimate)}
  content.appendChild(section);
 }
 function renderEgyptTodo(content){
