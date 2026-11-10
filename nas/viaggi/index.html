@@ -397,7 +397,7 @@ function renderEgyptExpenseBars(content){
  ['Giza + GEM · escursione','≈ 90,62 €',90.62,0,['7 novembre · autista, guida e pranzo per due','Scontrino Queen Cleopatra: 5.452 EGP; biglietti esclusi','Importo EUR indicativo al cambio 60,162 EGP/€']],
  ['Saqqara · escursione','≈ 132,97 €',132.97,0,['8 novembre · autista, guida e pranzo per due','Scontrino Queen Cleopatra del 7 novembre: 8.000 EGP','Ingressi esclusi; conversione indicativa']],
  ['Saqqara · ingressi','29,83 €',29.83,0,['8 novembre · sito di Saqqara e ingresso nella Piramide a Gradoni di Djoser, due persone','Addebito ING Mastercard 29,83 €; non comprende Menfi']],
- ['Menfi · ingressi','≈ 6,65 €',6.65,0,['8 novembre · un biglietto adulto documentato: 200 EGP','Secondo biglietto adulto per Camilla conteggiato come 200 EGP da confermare','Totale previsto 400 EGP ≈ 6,65 €']],
+ ['Menfi · ingressi','≈ 6,65 €',6.65,0,['8 novembre · ingresso Menfi per due persone: 2 × 200 EGP = 400 EGP ≈ 6,65 €','Costo per due registrato su richiesta; foto di un biglietto da 200 EGP']],
  ['Pasti','≈ 28,94 €',28.94,0,['7 novembre · cena per due: 605 EGP ≈ 10,06 €, pagamento Mastercard Paymob (conversione indicativa)','8 novembre · cena all’aeroporto del Cairo: 18,88 € effettivi, Boulevard Cairo Airport, Mastercard ING ore 17:58:59','Totale pasti registrati: ≈ 28,94 €','La cena in aeroporto è stata pagata con carta e non riduce i contanti disponibili']],
  ['Trasporti','≈ 25,65 € pagati + stime',25.65,74.35,['7 novembre · Uber aeroporto Cairo → Queen Cleopatra: corsa 411,49 EGP + mancia 82 EGP = 493,49 EGP ≈ 8,20 €, PayPal','8 novembre sera · taxi a Luxor: 600 EGP ≈ 9,97 €, PAGATO IN CONTANTI','10 novembre · taxi da Karnak alla nave: 450 EGP ≈ 7,48 €, modalità di pagamento da confermare','Cassa Egitto: cambio 40 € → 2.405 EGP l’8 novembre; taxi −600 EGP; mancia al panettiere −200 EGP; saldo registrato 1.005 EGP ≈ 16,70 €; ulteriori 1.650 EGP spesi il 10 novembre con modalità di pagamento da confermare (salvo altre spese non comunicate)','Conversione EGP/EUR al cambio effettivo del contante: 60,162016 EGP/€','Budget residuo trasporti indicativo: 81,83 €; verificare altri trasferimenti']],
  ['Abu Simbel','≈ 108 €',0,108,['Escursione 14 novembre non ancora confermata come prenotata','Viator 78,18 € per due, ingressi stimati circa 30 €; alternativa TourShare proposta']],
@@ -441,10 +441,9 @@ function renderEgyptExpenseBars(content){
 function renderEgyptTodo(content){
  const items=[
  ['Abu Simbel · 14 novembre','Prenotazione ancora da confermare: Viator 78,18 € per due, ingressi esclusi; TourShare ha proposto 130 USD a persona per il 14 novembre, tour privato. Verificare inclusioni e orari rispetto al volo Assuan–Cairo delle 21:20.'],
- ['Trasferimenti ancora da organizzare','Verificare Luxor aeroporto → Nefertiti Hotel (8 novembre), Assuan → aeroporto (14 novembre), Cairo aeroporto → Heaven Hostel (14 novembre) e Heaven Hostel → aeroporto (15 novembre). Uber aeroporto Cairo → Queen Cleopatra del 7 novembre già pagato e registrato.'],
+ ['Trasferimenti ancora da organizzare','Ancora da organizzare: Assuan → aeroporto (14 novembre), Cairo aeroporto → Heaven Hostel (14 novembre) e Heaven Hostel → aeroporto (15 novembre). Luxor aeroporto → Nefertiti Hotel già effettuato l’8 novembre.'],
  ['Check-in tardivo Heaven Hostel · 14 novembre','Confermare arrivo notturno dopo il volo Assuan 21:20 → Cairo 22:45. Check-in notturno Queen Cleopatra del 7 novembre già effettuato.'],
- ['Documenti prossime tappe','Verificare carte d’imbarco dei voli rimanenti, prenotazioni Nefertiti/Unique Studio/Heaven Hostel e conferma crociera offline. GEM e visti già utilizzati; non sono più attività da fare.'],
- ['Menfi · secondo biglietto','Un biglietto adulto da 200 EGP documentato; verificare che anche il secondo sia stato acquistato prima di segnare il totale di 400 EGP come interamente confermato.']
+ ['Documenti prossime tappe','Verificare carte d’imbarco dei voli rimanenti, prenotazioni Unique Studio/Heaven Hostel e conferme offline. GEM e visti già utilizzati; non sono più attività da fare.']
  ];
  const section=document.createElement('section');section.className='trip-block egypt-todo';
  const h=document.createElement('h3');h.textContent='Cosa manca ancora';section.appendChild(h);
