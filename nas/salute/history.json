@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-29",
-  "source": "Referti Habilita 2018–2024 e 26/10/2026; solo valori numerici, senza identificativi personali",
+  "updated": "2026-11-15",
+  "source": "Referti Habilita 2018–2024 e 26/10/2026; solo valori numerici, senza identificativi personali; AVIS ASST Papa Giovanni XXIII 22/10/2026",
   "series": [
     {
       "label": "Glicemia",
@@ -28,7 +28,15 @@
         },
         {
           "year": 2026,
-          "value": 90
+          "value": 90,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 80
         }
       ]
     },
@@ -58,7 +66,15 @@
         },
         {
           "year": 2026,
-          "value": 166
+          "value": 166,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 165
         }
       ]
     },
@@ -84,7 +100,15 @@
         },
         {
           "year": 2026,
-          "value": 55
+          "value": 55,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 57
         }
       ]
     },
@@ -114,7 +138,15 @@
         },
         {
           "year": 2026,
-          "value": 127
+          "value": 127,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 66
         }
       ]
     },
@@ -144,7 +176,15 @@
         },
         {
           "year": 2026,
-          "value": 36
+          "value": 36,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 40
         }
       ]
     },
@@ -166,7 +206,9 @@
         },
         {
           "year": 2026,
-          "value": 31
+          "value": 31,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -188,7 +230,9 @@
         },
         {
           "year": 2026,
-          "value": 20
+          "value": 20,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -202,7 +246,15 @@
         },
         {
           "year": 2026,
-          "value": 1.06
+          "value": 1.06,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 0.92
         }
       ]
     },
@@ -216,7 +268,15 @@
         },
         {
           "year": 2026,
-          "value": 79
+          "value": 79,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 107.2
         }
       ]
     },
@@ -230,7 +290,15 @@
         },
         {
           "year": 2026,
-          "value": 16.2
+          "value": 16.2,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 15.5
         }
       ]
     },
@@ -244,7 +312,15 @@
         },
         {
           "year": 2026,
-          "value": 49
+          "value": 49,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 44.5
         }
       ]
     },
@@ -258,7 +334,15 @@
         },
         {
           "year": 2026,
-          "value": 6.52
+          "value": 6.52,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 5.17
         }
       ]
     },
@@ -272,7 +356,15 @@
         },
         {
           "year": 2026,
-          "value": 5.35
+          "value": 5.35,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 5.09
         }
       ]
     },
@@ -286,7 +378,15 @@
         },
         {
           "year": 2026,
-          "value": 91.6
+          "value": 91.6,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 87.4
         }
       ]
     },
@@ -300,7 +400,15 @@
         },
         {
           "year": 2026,
-          "value": 242
+          "value": 242,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        },
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 196
         }
       ]
     },
@@ -314,7 +422,9 @@
         },
         {
           "year": 2026,
-          "value": 2
+          "value": 2,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -328,7 +438,9 @@
         },
         {
           "year": 2026,
-          "value": 1.08
+          "value": 1.08,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -342,7 +454,9 @@
         },
         {
           "year": 2026,
-          "value": 29.8
+          "value": 29.8,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -356,7 +470,9 @@
         },
         {
           "year": 2026,
-          "value": 32
+          "value": 32,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -370,7 +486,9 @@
         },
         {
           "year": 2026,
-          "value": 1.016
+          "value": 1.016,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -384,7 +502,9 @@
         },
         {
           "year": 2026,
-          "value": 7
+          "value": 7,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -398,7 +518,9 @@
         },
         {
           "year": 2026,
-          "value": 6
+          "value": 6,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -412,7 +534,9 @@
         },
         {
           "year": 2026,
-          "value": 0
+          "value": 0,
+          "date": "2026-10-26",
+          "source": "Habilita"
         }
       ]
     },
@@ -426,9 +550,51 @@
         },
         {
           "year": 2026,
-          "value": 0
+          "value": 0,
+          "date": "2026-10-26",
+          "source": "Habilita"
+        }
+      ]
+    },
+    {
+      "label": "Proteine totali",
+      "unit": "g/L",
+      "values": [
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 76.1
+        }
+      ]
+    },
+    {
+      "label": "Ferritina",
+      "unit": "µg/L",
+      "values": [
+        {
+          "year": 2026,
+          "date": "2026-10-22",
+          "source": "AVIS",
+          "value": 71
         }
       ]
     }
-  ]
+  ],
+  "avisScreening": {
+    "date": "2026-10-22",
+    "source": "AVIS / ASST Papa Giovanni XXIII",
+    "tests": {
+      "HBsAg": "Negativo",
+      "HIV 1/2 antigene e anticorpi": "Negativo",
+      "Anti-HCV": "Negativo",
+      "Sifilide (anti-Treponema pallidum)": "Negativo",
+      "Plasmodium spp.": "Negativo",
+      "Trypanosoma cruzi": "Negativo",
+      "Anti-HBs": {
+        "value": 123.53,
+        "unit": "mUI/mL"
+      }
+    }
+  }
 }
