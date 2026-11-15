@@ -133,6 +133,7 @@ const clinicalTiers={
 'Colesterolo HDL':[{from:55,to:Infinity,label:'Oltre 55 · rischio basso secondo referto',color:'#cdeedc'},{from:35,to:55,label:'35–55 · rischio moderato secondo referto',color:'#fff0ba'},{from:-Infinity,to:35,label:'Sotto 35 · rischio alto secondo referto',color:'#ffc2a8'}],
 'Glicemia':[{from:65,to:100,label:'65–100 · intervallo del laboratorio',color:'#cdeedc'},{from:100,to:126,label:'100–125 · zona grigia / prediabete (se a digiuno)',color:'#fff0ba'},{from:126,to:Infinity,label:'Da 126 · soglia diagnostica da confermare',color:'#ffc2a8'}]
 };
+const avisRanges={'Glicemia':[65,100],'Colesterolo HDL':[35,Infinity],'Trigliceridi':[40,170],'ALT / GPT':[3,46],'Creatinina':[0.3,1.3],'eGFR':[90,Infinity],'Emoglobina':[14,17],'Ematocrito':[43.1,51.5],'Leucociti':[4.2,9.4],'Eritrociti sangue':[4.7,5.82],'MCV':[81.8,95.3],'Piastrine':[150,400],'Proteine totali':[60,80],'Ferritina':[20,250]};
 const priority=['Glicemia','Colesterolo totale','Colesterolo HDL','Trigliceridi','ALT / GPT','eGFR','aPTT'];
 let active=0,expanded=false,series=[];
 const choiceBox=$('health-choices'),chart=$('health-chart');
@@ -142,8 +143,8 @@ function cleanValues(item){return (item.values||[]).filter(p=>Number.isFinite(Nu
 function draw(){
  const item=series[active];if(!item)return;
  const points=cleanValues(item);if(!points.length){chart.textContent='Nessun dato disponibile';return}
- const range=indicative[item.label]||null;
- const rangeFor=year=>item.label==='eGFR'?[90,Infinity]:(Number(year)>=2026?(ranges2026[item.label]||range):range);
+ const range=indicative[item.label]||avisRanges[item.label]||null;
+ const rangeFor=p=>p.source==='AVIS'?(avisRanges[item.label]||range):(item.label==='eGFR'?[90,Infinity]:(Number(p.year)>=2026?(ranges2026[item.label]||range):range));
  choiceBox.querySelectorAll('[data-index]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.index)===active)));
  $('metric-name').textContent=item.label;$('metric-unit').textContent=item.unit||'Valore';
  $('metric-icon').textContent=/urine/i.test(item.label)?'🧪':/colesterolo|trigliceridi/i.test(item.label)?'💧':'🩸';
@@ -163,12 +164,13 @@ function draw(){
  for(let n=0;n<=4;n++){const v=lo+(hi-lo)*n/4,yy=y(v);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e8eef8"/><text x="'+(L-7)+'" y="'+(yy+3)+'" text-anchor="end" font-size="10" fill="#7185aa">'+num(Number(v.toFixed(1)))+'</text>'}
  for(let year=firstYear;year<=lastYear;year++){const xx=x(year);svg+='<line x1="'+xx+'" y1="'+T+'" x2="'+xx+'" y2="'+B+'" stroke="#eef2fa"/>';if(lastYear-firstYear<=10||(year-firstYear)%2===0)svg+='<text x="'+xx+'" y="265" text-anchor="middle" font-size="10" fill="#7185aa">'+year+'</text>'}
  if(range&&!(ranges2026[item.label])){[range[0],range[1]].forEach(v=>{svg+='<text x="'+(L+4)+'" y="'+(y(v)-4)+'" font-size="11" font-weight="750" fill="#008c4c">'+num(v)+'</text>'})}
- const coords=points.map(p=>({x:x(p.year),y:y(p.value),p}));
+ const coords=points.map(p=>({x:x(p.year)+(p.source==='AVIS'?-10:p.source==='Habilita'?10:0),y:y(p.value),p}));
  if(coords.length>1)svg+='<polyline fill="none" stroke="#237cff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" points="'+coords.map(p=>p.x+','+p.y).join(' ')+'"/>';
- for(const c of coords){const rr=rangeFor(c.p.year);const outside=rr&&(Number(c.p.value)<rr[0]||Number(c.p.value)>rr[1]);const color=outside?'#f03a56':'#237cff';svg+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+(outside?5:4)+'" fill="'+(outside?'#f03a56':'white')+'" stroke="'+color+'" stroke-width="2"><title>'+esc(c.p.year+': '+c.p.value+' '+(item.unit||''))+'</title></circle><text x="'+c.x+'" y="'+Math.max(12,c.y-11)+'" text-anchor="middle" font-size="11" fill="'+(outside?'#da2450':'#203763')+'" font-weight="760">'+esc(c.p.value)+'</text>'}
+ for(const c of coords){const rr=rangeFor(c.p);const outside=rr&&(Number(c.p.value)<rr[0]||Number(c.p.value)>rr[1]);const color=outside?'#f03a56':'#237cff';svg+='<circle cx="'+c.x+'" cy="'+c.y+'" r="'+(outside?5:4)+'" fill="'+(outside?'#f03a56':'white')+'" stroke="'+color+'" stroke-width="2"><title>'+esc((c.p.date||c.p.year)+' · '+(c.p.source||'Storico')+': '+c.p.value+' '+(item.unit||''))+'</title></circle><text x="'+c.x+'" y="'+Math.max(12,c.y-11)+'" text-anchor="middle" font-size="11" fill="'+(outside?'#da2450':'#203763')+'" font-weight="760">'+esc(c.p.value)+'</text>'}
  svg+='<text x="3" y="13" font-size="10" fill="#6c82a8">'+esc(item.unit||'')+'</text>';
  chart.innerHTML='<svg role="img" aria-label="Storico '+esc(item.label)+' dal '+firstYear+' al '+lastYear+'" viewBox="0 0 '+W+' '+H+'">'+svg+'</svg>';
  showInsight(item);
+ if(points.some(p=>p.source==='AVIS')){$('metric-personal').textContent+=' Nel grafico i due punti del 2026 sono distinti: AVIS (22/10) a sinistra e Habilita (26/10) a destra; i valori sono confrontati con gli intervalli dei rispettivi laboratori.';}
  const legend=$('metric-explainer');if(legend){const base=insights[item.label]?.[0]||'';legend.textContent=base+(tiers?' Fasce del referto: '+tiers.slice().reverse().map(t=>t.label).join('; ')+'.':'');}
 }
 function addChoice(i,extra){const item=series[i],b=document.createElement('button');b.type='button';b.dataset.index=String(i);b.textContent=item.label;b.setAttribute('aria-pressed','false');if(extra){b.classList.add('extra-choice');b.hidden=!expanded}b.addEventListener('click',()=>{active=i;draw()});choiceBox.append(b)}
