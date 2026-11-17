@@ -189,7 +189,12 @@ header .header-actions{margin-left:auto!important;flex:0 0 auto!important;displa
 
 <dialog id="destinationDialog"><div class="destination-detail"><div class="detail-actions"><button class="detail-favorite" type="button" aria-label="Aggiungi ai preferiti" title="Preferito">♡</button><button class="detail-close" type="button" aria-label="Chiudi scheda">×</button></div><div class="detail-photo"></div><h2 id="destinationTitle"></h2><p class="country" id="destinationCountry"></p><div id="destinationContent"></div></div></dialog>
 <dialog id="editor"><form id="wishForm"><h2 id="formTitle">Aggiungi luogo</h2><label>Destinazione *<input id="place" required maxlength="110" placeholder="Es. Kyoto, Giappone"></label><label>Paese o regione<input id="country" maxlength="100" placeholder="Es. Giappone"></label><label>Note<textarea id="notes" maxlength="1000" placeholder="Cosa vorremmo vedere?"></textarea></label><label>Periodo migliore per visitare<input id="bestTime" maxlength="250" placeholder="Es. maggio–giugno, settembre"></label><label>Posti più belli da vedere<textarea id="highlights" maxlength="500" placeholder="Es. centro storico, parchi, spiagge…"></textarea></label><label>Stato<select id="status"><option value="desiderio">Da visitare</option><option value="programmato">In programma</option><option value="visitato">Visitato</option></select></label><div id="notice" role="status"></div><div class="form-actions"><button class="secondary" id="cancel" type="button">Annulla</button><button id="save" type="submit">Salva</button></div></form></dialog>
-</main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script>
+</main><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* Leaflet fallback: se un CDN non risponde, usa un provider alternativo. */
+if(typeof window.L==='undefined')document.write('<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"><\\/script>');
+if(typeof window.L==='undefined')document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"><\\/script>');
+</script><script>
 (()=>{
 'use strict';
 const KEY='zenchak.viaggi.desideri.v1';
