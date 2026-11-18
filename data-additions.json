@@ -139,5 +139,21 @@
     "startTime": "19:48",
     "equipmentId": "run-noosa13",
     "equipmentAttribution": "ASICS Noosa Tri 14 confermate dall'utente il 5 novembre 2026."
+  },
+  {
+    "date": "2026-11-16",
+    "type": "Corsa",
+    "km": 8.02,
+    "duration": "0:47:22",
+    "dplus": null,
+    "location": "Bergamo",
+    "kcal": null,
+    "kcalSource": "Non verificata dal FIT",
+    "equipmentId": "run-novablast6",
+    "equipmentAttribution": "ASICS Novablast 6 confermate dall'utente, primo utilizzo.",
+    "garminId": "25101325460",
+    "hrAvg": 135,
+    "hrMax": 144,
+    "note": "Easy run di rientro dopo circa tre settimane di stop. Passo medio 5:54/km. ASICS Novablast 6, più ammortizzate delle Noosa Tri 14 ma senza effetto cuscinone. Nessun dolore a tibia o pianta esterna del piede sinistro durante la corsa e il giorno successivo."
   }
 ]
