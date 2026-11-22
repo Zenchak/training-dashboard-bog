@@ -155,5 +155,37 @@
     "hrAvg": 135,
     "hrMax": 144,
     "note": "Easy run di rientro dopo circa tre settimane di stop. Passo medio 5:54/km. ASICS Novablast 6, più ammortizzate delle Noosa Tri 14 ma senza effetto cuscinone. Nessun dolore a tibia o pianta esterna del piede sinistro durante la corsa e il giorno successivo."
+  },
+  {
+    "date": "2026-11-19",
+    "type": "Corsa",
+    "km": 5.54,
+    "duration": "0:32:09",
+    "dplus": null,
+    "location": "Bergamo",
+    "kcal": null,
+    "kcalSource": "Non verificata dal FIT",
+    "equipmentId": "run-novablast6",
+    "equipmentAttribution": "ASICS Novablast 6, confermate come scarpe utilizzate nel periodo pre-gara.",
+    "garminId": "25133844314",
+    "hrAvg": 141,
+    "hrMax": 153,
+    "note": "Corsa pre-gara da Garmin FIT 25133844314_ACTIVITY.fit: 5,54 km in 32:09 (5:48/km), FC media 141 bpm e massima 153 bpm. Split km: 6:06, 6:06, 5:35, 5:35, 5:39; ultimi 540 m a 5:45/km. Allenamento di rifinitura prima della Milano Half Marathon."
+  },
+  {
+    "date": "2026-11-22",
+    "type": "Corsa",
+    "km": 21.27,
+    "duration": "1:40:48",
+    "dplus": null,
+    "location": "Milano",
+    "kcal": null,
+    "kcalSource": "Non verificata dal FIT",
+    "equipmentId": "run-novablast6",
+    "equipmentAttribution": "ASICS Novablast 6 confermate esplicitamente dall'utente per la gara.",
+    "garminId": "25160075851",
+    "hrAvg": 171,
+    "hrMax": 182,
+    "note": "Powerade Milano Half Marathon 2026, pettorale 9272, categoria SM35. TEMPO UFFICIALE CHIP 1:40:48 sulla distanza certificata 21,0975 km (passo 4:47/km); tempo sparo 1:44:47. Classifica finale: 3162/10748 generale, 2825/7431 uomini, 301/697 SM35. Garmin FIT 25160075851_ACTIVITY.fit: 21,27 km in 1:40:48 (passo GPS 4:44/km), FC media 171 bpm, max 182. Primo 5 km ~24:16, km 6-10 ~23:32, km 11-15 ~23:42, km 16-20 ~23:32; ultimo km ~4:34. Obiettivo 1h45 superato di 4:12. Nessun dolore a tibia e piede; fatica intensa negli ultimi 6 km, respirazione gestita, fitte laterali sottocostali transitorie."
   }
 ]
