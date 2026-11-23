@@ -187,5 +187,21 @@
     "hrAvg": 171,
     "hrMax": 182,
     "note": "Powerade Milano Half Marathon 2026, pettorale 9272, categoria SM35. TEMPO UFFICIALE CHIP 1:40:48 sulla distanza certificata 21,0975 km (passo 4:47/km); tempo totale/sparo 1:44:46. Classifica ufficiale da schermata risultati: 2336/10737 assoluta, 2115/7422 maschile, 302/695 SM35. Garmin FIT 25160075851_ACTIVITY.fit: 21,27 km in 1:40:48 (passo GPS 4:44/km), FC media 171 bpm, max 182. Primo 5 km ~24:16, km 6-10 ~23:32, km 11-15 ~23:42, km 16-20 ~23:32; ultimo km ~4:34. Obiettivo 1h45 superato di 4:12. Nessun dolore a tibia e piede; fatica intensa negli ultimi 6 km, respirazione gestita, fitte laterali sottocostali transitorie."
+  },
+  {
+    "date": "2026-11-23",
+    "type": "Bici",
+    "km": 20.84,
+    "duration": "1:09:11",
+    "dplus": 310,
+    "location": "",
+    "kcal": 601,
+    "kcalSource": "Garmin FIT session.total_calories",
+    "equipmentId": "bike-vanrysel",
+    "equipmentAttribution": "Bici Van Rysel AF Discover abituale; attribuzione da verificare.",
+    "garminId": "25174921672",
+    "hrAvg": 121,
+    "hrMax": 173,
+    "note": "Uscita in bici il giorno dopo la Milano Half Marathon. FIT 25174921672_ACTIVITY.fit: 20,84 km, tempo in movimento/timer 1:09:11 (tempo trascorso 1:19:41), FC media 121 bpm, max 173, dislivello positivo 310 m, 601 kcal. L'utente riferisce muscoli non stanchi; lieve fastidio sopra rotula sinistra, avvertito in flessione e alla pressione. Recupero attivo post-gara; evitare ulteriori carichi intensi finché il fastidio non migliora."
   }
 ]
