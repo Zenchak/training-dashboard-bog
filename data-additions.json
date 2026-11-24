@@ -203,5 +203,21 @@
     "hrAvg": 121,
     "hrMax": 173,
     "note": "Uscita in bici il giorno dopo la Milano Half Marathon. FIT 25174921672_ACTIVITY.fit: 20,84 km, tempo in movimento/timer 1:09:11 (tempo trascorso 1:19:41), FC media 121 bpm, max 173, dislivello positivo 310 m, 601 kcal. L'utente riferisce muscoli non stanchi; lieve fastidio sopra rotula sinistra, avvertito in flessione e alla pressione. Recupero attivo post-gara; evitare ulteriori carichi intensi finché il fastidio non migliora."
+  },
+  {
+    "date": "2026-11-24",
+    "type": "Palestra",
+    "km": null,
+    "duration": "1:18:19",
+    "dplus": null,
+    "location": "Palestra",
+    "kcal": 623,
+    "kcalSource": "Garmin FIT session.total_calories",
+    "equipmentId": null,
+    "equipmentAttribution": "",
+    "garminId": "25185967870",
+    "hrAvg": 122,
+    "hrMax": 160,
+    "note": "Sessione in palestra registrata sul Garmin come Pesi. FIT 25185967870_ACTIVITY.fit: durata 1:18:19, FC media 122 bpm, FC max 160 bpm, 623 kcal. Allenamento seguito da personal trainer; il FIT non consente di identificare con certezza gli esercizi specifici. Data e durata verificate sul file."
   }
 ]
