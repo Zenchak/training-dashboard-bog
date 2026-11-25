@@ -219,5 +219,22 @@
     "hrAvg": 122,
     "hrMax": 160,
     "note": "Sessione in palestra registrata sul Garmin come Pesi. FIT 25185967870_ACTIVITY.fit: durata 1:18:19, FC media 122 bpm, FC max 160 bpm, 623 kcal. Allenamento seguito da personal trainer; il FIT non consente di identificare con certezza gli esercizi specifici. Data e durata verificate sul file."
+  },
+  {
+    "date": "2026-11-25",
+    "type": "Nuoto",
+    "km": 2,
+    "duration": "0:57:20",
+    "dplus": null,
+    "location": "Piscina",
+    "kcal": 685,
+    "kcalSource": "Garmin FIT session.total_calories",
+    "equipmentId": null,
+    "equipmentAttribution": "",
+    "garminId": "25191831288",
+    "startTime": "07:05",
+    "hrAvg": 136,
+    "hrMax": 162,
+    "note": "Nuoto in piscina da Garmin FIT 25191831288_ACTIVITY.fit. 2000 m, 80 vasche da 25 m, durata timer 57:20, passo medio complessivo 2:52/100 m incluse pause, FC media 136 bpm e massima 162 bpm. Calorie totali 685 (attive Garmin 637). 8 segmenti/lap registrati. Seduta mattutina dopo mezza maratona del 22/11 e palestra del 24/11."
   }
 ]
