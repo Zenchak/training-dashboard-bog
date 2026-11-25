@@ -1,5 +1,5 @@
 window.AUTO_FAMILY_DATA = {
-  updated: "2026-10-16",
+  updated: "2026-11-25",
   cars: [
     {
       id: "kia-rio",
@@ -7,15 +7,15 @@ window.AUTO_FAMILY_DATA = {
       name: "Kia Rio",
       subtitle: "Rio III (UB) · 2013 · 1.2 benzina G4LA · 1.248 cc",
       plateMasked: "ES•••YH",
-      currentKm: 256846,
-      kmLabel: "chilometraggio registrato il 15/10/2026",
+      currentKm: 260000,
+      kmLabel: "chilometraggio indicativo riferito il 25/11/2026",
       status: "In uso · tagliando appena eseguito",
       statusTone: "ok",
       situation: [
         "Tagliando completo eseguito il 15/10/2026 a 256.846 km (documento Signorelli datato 14/10/2026).",
         "Catena di distribuzione originale: preventivo Signorelli ricevuto il 14/10/2026 e intervento ancora da decidere.",
         "Bollo: domiciliazione bancaria Regione Lombardia attiva dal 03/03/2026.",
-        "Assicurazione Allianz Direct: scadenza contrattuale 27/11/2026; iPatente indica scadenza RCA 11/12/2026 comprensiva del periodo di comporto.",
+        "Assicurazione Allianz Direct rinnovata. Scadenza da certificato: 27/11/2027 alle 00:00.",
         "Permesso residenti ATB zona I1 solo sosta valido fino al 06/07/2027; non abilita al transito ZTL."
       ],
       next: [
@@ -40,21 +40,21 @@ window.AUTO_FAMILY_DATA = {
       ],
       insurance: {
         company:"Allianz Direct",
-        validFrom:"2025-11-27",
-        validTo:"2026-11-27",
-        graceUntil:"2026-12-11",
-        premium:569.53,
-        classInfo:"Bonus Malus CU 1 · classe interna S2",
+        validFrom:"2026-11-27",
+        validTo:"2027-11-27",
+        premium:571.86,
+        classInfo:"Bonus Malus CU 1",
         coverages:[
           "RCA 50.000.000 € / 50.000.000 € · nessuna franchigia",
           "Protezione rivalse",
-          "Danni causati da animali · valore 3.900 € · franchigia 250 €",
+          "Danni causati da animali · convenzionata: 3.600 € e franchigia 125 € · fuori convenzione: 3.000 € e franchigia 250 €",
           "Tutela legale 10.000 €",
           "Assistenza stradale",
           "Infortuni conducente 50.000 € · franchigia 1.500 €"
         ],
-        note:"Premio annuo pagato il 25/11/2025. La polizza contrattuale termina il 27/11/2026; iPatente mostra 11/12/2026 come scadenza RCA comprensiva del periodo di comporto. Nel documento risultano 375,14 € RC, 86,86 € altri rischi, 68,14 € imposte e 39,39 € contributo SSN.",
+        note:"Premio pagato il 25/11/2026. Periodo da certificato: 27/11/2026 ore 00:00 – 27/11/2027 ore 00:00. Percorrenza stimata: 12.000 km/anno. Fascia indicata in polizza: 0–10.000 km/anno.",
         history:[
+          {period:"27/11/2025 → 27/11/2026", company:"Allianz Direct", note:"Premio annuo di 569,53 € pagato il 25/11/2025."},
           {period:"27/11/2024 → 26/11/2025", company:"Allianz Direct", note:"Polizza annuale documentata."},
           {period:"27/11/2023 → 26/11/2024", company:"Allianz Direct", note:"Polizza annuale documentata."},
           {period:"15/03/2023 → 26/11/2023", company:"Allianz Direct", note:"Copertura documentata da emissione del 14/03/2023."},
