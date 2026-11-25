@@ -14,7 +14,7 @@ window.AUTO_FAMILY_DATA = {
       situation: [
         "Tagliando completo eseguito il 15/10/2026 a 256.846 km (documento Signorelli datato 14/10/2026).",
         "Catena di distribuzione originale: preventivo Signorelli ricevuto il 14/10/2026 e intervento ancora da decidere.",
-        "Bollo: domiciliazione bancaria Regione Lombardia attiva dal 03/03/2026.",
+        "Bollo 2026: addebito di 136,97 € programmato per il 30/11/2026 tramite domiciliazione bancaria. In attesa di esito.",
         "Assicurazione Allianz Direct rinnovata. Scadenza da certificato: 27/11/2027 alle 00:00.",
         "Permesso residenti ATB zona I1 solo sosta valido fino al 06/07/2027; non abilita al transito ZTL."
       ],
@@ -63,10 +63,10 @@ window.AUTO_FAMILY_DATA = {
         ]
       },
       tax: {
-        status:"Situazione ufficiale Regione Lombardia verificata il 02/11/2026. Annualità 2021–2025 regolari; 2026 in scadenza con domiciliazione attiva; 2027 già predisposto come futuro.",
+        status:"Situazione ufficiale Regione Lombardia verificata il 02/11/2026. Annualità 2021–2025 regolari; addebito 2026 programmato per il 30/11/2026, come da promemoria di Regione Lombardia del 25/11/2026, in attesa di esito; 2027 già predisposto come futuro.",
         history:[
           {date:"2027-11-30", amount:136.97, detail:"Annualità 2027 · stato FUTURO · validità 11/2027–10/2028 · domiciliazione attiva · importo 136,97 €, di cui 1,00 € commissioni/sanzioni/interessi. Importo ridotto grazie alla domiciliazione."},
-          {date:"2026-11-30", amount:136.97, detail:"Annualità 2026 · IN SCADENZA · validità 11/2026–10/2027 · domiciliazione attiva · importo 136,97 €, di cui 1,00 € commissioni/sanzioni/interessi."},
+          {date:"2026-11-30", amount:136.97, detail:"Annualità 2026 · ADDEBITO PROGRAMMATO · validità 01/11/2026–31/10/2027 · addebito di 136,97 € il 30/11/2026. Regione Lombardia indica circa 7 giorni lavorativi dall’addebito per la registrazione e la comunicazione dell’esito. Ricevuta in attesa."},
           {date:"2026-02-27", amount:163.85, detail:"Annualità 2025 · REGOLARE · validità 11/2025–10/2026 · termine pagamento 01/12/2025. Importo tassa/sanzioni 163,85 €, di cui 3,89 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 165,35 € = 163,85 € + 1,50 € commissione di pagamento."},
           {date:"2026-02-27", amount:170.59, detail:"Annualità 2024 · REGOLARE · validità 11/2024–10/2025 · termine pagamento 02/12/2024. Importo tassa/sanzioni 170,59 €, di cui 10,63 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 172,09 € = 170,59 € + 1,50 € commissione di pagamento."},
           {date:"2026-02-27", amount:177.26, detail:"Annualità 2023 · REGOLARE · validità 11/2023–10/2024 · termine pagamento 30/11/2023. Importo tassa/sanzioni 177,26 €, di cui 17,30 € commissioni/sanzioni/interessi. Pagata il 27/02/2026 via PagoPA: addebito carta 178,76 € = 177,26 € + 1,50 € commissione di pagamento."},
