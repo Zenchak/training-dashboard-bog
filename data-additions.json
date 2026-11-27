@@ -253,5 +253,21 @@
     "hrAvg": 128,
     "hrMax": 138,
     "note": "Corsa facile di recupero quattro giorni dopo Milano Half Marathon. Garmin FIT 25209447752_ACTIVITY.fit: 8,06 km, timer 54:23,8, passo medio circa 6:45/km, FC media 128 e max 138 bpm, 32 m D+, 607 kcal totali. Da chiedere come ha reagito il ginocchio sinistro, precedentemente dolorante sopra la rotula. Scarpe da confermare. Scarpe confermate: ASICS Novablast 6. Ginocchio sinistro: lieve dolore sopra la rotula nei primi 2 km, poi nessun fastidio durante il resto della corsa; monitorare nelle 24 ore successive."
+  },
+  {
+    "date": "2026-11-27",
+    "type": "Corsa",
+    "km": 8.21,
+    "duration": "0:42:11",
+    "dplus": null,
+    "location": "Da confermare",
+    "kcal": 628,
+    "kcalSource": "Garmin FIT session.total_calories",
+    "equipmentId": null,
+    "equipmentAttribution": "Scarpe da confermare",
+    "garminId": "25218689512",
+    "hrAvg": 160,
+    "hrMax": 185,
+    "note": "Garmin FIT 25218689512_ACTIVITY.fit: corsa 8,20583 km, tempo in movimento 42:10,8, passo circa 5:08/km, FC media 160, max 185 bpm, 628 kcal totali. Intensità superiore alla corsa Z2 del 26/11. Da confermare se era la lezione di tecnica a Torre Boldone, quali scarpe e come ha reagito il ginocchio sinistro."
   }
 ]
