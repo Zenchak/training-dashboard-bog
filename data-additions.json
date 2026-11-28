@@ -260,14 +260,30 @@
     "km": 8.21,
     "duration": "0:42:11",
     "dplus": null,
-    "location": "Da confermare",
+    "location": "Torre Boldone, pista di atletica",
     "kcal": 628,
     "kcalSource": "Garmin FIT session.total_calories",
-    "equipmentId": null,
-    "equipmentAttribution": "Scarpe da confermare",
+    "equipmentId": "ASICS Novablast 6",
+    "equipmentAttribution": "Confermato dall'utente: ASICS Novablast 6, +8,21 km",
     "garminId": "25218689512",
     "hrAvg": 160,
     "hrMax": 185,
-    "note": "Garmin FIT 25218689512_ACTIVITY.fit: corsa 8,20583 km, tempo in movimento 42:10,8, passo circa 5:08/km, FC media 160, max 185 bpm, 628 kcal totali. Intensità superiore alla corsa Z2 del 26/11. Da confermare se era la lezione di tecnica a Torre Boldone, quali scarpe e come ha reagito il ginocchio sinistro."
+    "note": "Prima sessione con Haraka Haraka a Torre Boldone: 7 ripetute da 1 km, circa 200 m recupero camminato tra le ripetute, ritmo medio ripetute circa 4:09/km; LAP premuto prima delle ripartenze. FIT 25218689512_ACTIVITY.fit: 8,21 km, timer 42:11, FC 160 media /185 massima, 628 kcal totali. Ginocchio sinistro: fastidio molto lieve superficiale sopra la rotula, tipo livido, senza peggioramento durante la seduta. Scarpe Novablast 6 confermate."
+  },
+  {
+    "date": "2026-11-28",
+    "type": "Escursionismo",
+    "km": 7.16,
+    "duration": "2:36:53",
+    "dplus": 734,
+    "location": "Da confermare",
+    "kcal": 1007,
+    "kcalSource": "Garmin FIT session.total_calories",
+    "equipmentId": null,
+    "equipmentAttribution": "Scarpe da confermare",
+    "garminId": "25226356119",
+    "hrAvg": 108,
+    "hrMax": 157,
+    "note": "Escursionismo Garmin FIT 25226356119_ACTIVITY.fit: 7,15962 km, 734 m D+ e 720 m D-, 2:36:53 timer in attività, 5:32:01 tempo trascorso incluse pause, FC media 108 / max 157 bpm, 1007 kcal totali. Luogo e scarpe da confermare. Giorno successivo a ripetute in pista e a sei giorni dalla mezza maratona."
   }
 ]
